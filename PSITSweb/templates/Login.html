@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <! -- This is for the background -->
+    <div class="ann_bg_1"></div>
+    <div class="ann_bg_2"></div>
+    <! -- This is for the background -->
+
+    <div class="form_modal">
+        <form method="post" action="/PSITSLogin">
+            <h3 style="text-align: center; padding: 0; border: 0; margin: 0;">Welcome to PSITS!</h3>
+            <p style="text-align: center; padding: 0; border: 0; margin: 0; color: red;">{{message}}</p>
+            <div class="form_field">
+                <p>ID Number:</p><input name="id_number" type="text" placeholder="Enter ID Number">
+            </div>
+            <div class="form_field">
+                <p>Password: </p><input name="password" type="password" placeholder="Password">
+            </div>
+            <div class="form_field">
+                <a onclick="home()">Cancel</a>
+                <button>Login</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <! -- This is for the background -->
+    <div class="ann_bg_1"></div>
+    <div class="ann_bg_2"></div>
+    <! -- This is for the background -->
+
+    <div class="contents">
+        <div class="announcement_content">
+            <div class="announcement_title">
+                <h1>Announcements!</h1>
+            </div>
+
+            <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
+                <form action="/PSITS@announce" method="post">
+                    <div class="announcement_field">
+                        <input type="text" name="title" placeholder="Announcement Title">
+                    </div>
+
+                    <div class="announcement_field_content">
+                        <textarea name="content" cols="5" rows="5"></textarea>
+                    </div>
+
+                    <div class="announcement_field">
+                        <button name="submit" type="submit">Post Announcement</button>
+                    </div>
+
+                </form>
+            </div>
+
+            {% for announcement in ANNOUNCEMENTS %}
+            <div class="announcement_thread">
+                <h2>{{announcement.title}}</h2>
+                <h3>{{announcement.date}}</h3>
+                <span>{{announcement.content}}</span>
+                <a style="display:{{admin}}" href="/announcement_removal/{{announcement.uid}}">Remove</a>
+            </div>
+            {% endfor %}
+            <br><br><br>
+        </div>
+
+        <div class="events">
+            <h1>Upcoming Events</h1>
+            <div class="events_thread">
+                <h2>Extravaganza!</h2>
+                <span>August 22, 2022!</span>
+            </div>
+            <div class="events_thread">
+                <h2>Tambay sa UC</h2>
+                <span>September 5, 2022</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="copyright">
+        <p>PSITS &copy; 2022 - Developed by <a href="">Jayharron Mar Abejar</a></p>
+    </div>
+{% endblock %}

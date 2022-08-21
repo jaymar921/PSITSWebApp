@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie-edge,Chome=1">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href='{{url_for("static",filename="base.css")}}'>
+    <link rel="stylesheet" href='{{url_for("static",filename="homepage.css")}}'>
+</head>
+<body>
+    <div class="banner">
+        <img src='{{url_for("static",filename="images/CCS_LOGO.png")}}'>
+        <img src='{{url_for("static",filename="images/PSITS_LOGO.png")}}'>
+        <h1>Philippine Society of Information Technology Students</h1>
+
+        <div class="account">
+            <button style="display: {{login}}" onclick="location.href='/PSITS@Login'">Login</button>
+            <button style="display: {{logout}}" onclick="location.href='/PSITS@Logout'">Logout</button>
+            <p>{{account}}</p>
+        </div>
+    </div>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+
+    </div>
+    <script type="text/javascript" src='{{url_for("static",filename="scripts.js")}}'></script>
+</body>
+</html>
