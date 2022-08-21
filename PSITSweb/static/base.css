@@ -130,6 +130,22 @@ body{
     cursor: pointer;
 }
 
+.form_field button{
+    position: relative;
+    margin: auto;
+    right: 0px;
+    font-size: 1em;
+    color: white;
+    background-color: #002e48;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 5px 10px 5px 10px;
+}
+
+.form_field button:hover{
+    cursor: pointer;
+}
+
 
 @media(max-width: 1000px){
 
