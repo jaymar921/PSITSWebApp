@@ -1,6 +1,6 @@
 # PSITS Web Application
 > A web applications that allows PSITS officers to post an announcements and events
-<img align="left" width="640" height="360" src="https://github.com/jaymar921/PSITSWebApp/blob/master/PSITSweb/static/images/PSITSwebapp.png"/>
+<img align="left" width="548" height="308" src="https://github.com/jaymar921/PSITSWebApp/blob/master/PSITSweb/static/images/PSITSwebapp.png"/>
 
 <h2>Current Features</h2>
 <p> - PSITS Officers to post Announcements</p>
