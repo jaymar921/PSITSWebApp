@@ -22,7 +22,8 @@ def landing_page():
 
 @app.route("/PSITS@Login")
 def login_page():
-    return render_template("Login.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(), login="none")
+    return render_template("Login.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(), login="none",
+                           logout="none")
 
 
 @app.route("/PSITS@announce", methods=['POST'])
