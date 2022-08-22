@@ -12,6 +12,14 @@ def ConnectDB():
 
 
 def getAnnouncements() -> list:
+    """"
+        getAnnouncements will get the data from `announcements` table in `psitswebapp` database
+        table: announcements
+            id - int (auto increment)
+            title - varchar
+            date_published - date
+            content - varchar
+    """
     query: str = "SELECT * FROM ANNOUNCEMENTS"
     db = ConnectDB()
     cursor = db.cursor(dictionary=True)
@@ -102,6 +110,14 @@ def getAccountByID(uid: int) -> Account:
 
 
 def postAnnouncement(title: str, date, content: str):
+    """"
+        postAnnouncement will insert the data to `announcements` table from `psitswebapp` database
+        table: announcements
+            id - int (auto increment) [NO NEED TO CALL]
+            title - varchar
+            date_published - date
+            content - varchar
+    """
     query: str = f"INSERT INTO `announcements` (`title`,`date_published`,`content`) values ('{title}','{date}','{content}') "
     db = ConnectDB()
     cursor = db.cursor(dictionary=True)
@@ -113,6 +129,14 @@ def postAnnouncement(title: str, date, content: str):
 
 
 def removeAnnouncement(uid):
+    """"
+        removeAnnouncement will remove the data from `announcements` table in `psitswebapp` database
+        table: announcements
+            id - int (auto increment) [only call this]
+            title - varchar
+            date_published - date
+            content - varchar
+    """
     query: str = f"DELETE FROM `announcements` where id={uid}"
     db = ConnectDB()
     cursor = db.cursor(dictionary=True)
