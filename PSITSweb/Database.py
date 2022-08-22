@@ -11,6 +11,36 @@ def ConnectDB():
     )
 
 
+def executeQueryReturn(query: str):
+    db = ConnectDB()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return data
+
+
+def executeQueryReturnParam(query: str, param: tuple):
+    db = ConnectDB()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(query, param)
+    data = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return data
+
+
+def executeQueryCommit(query: str):
+    db = ConnectDB()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(query)
+    db.commit()
+    cursor.close()
+    db.close()
+    return None
+
+
 def getAnnouncements() -> list:
     """"
         getAnnouncements will get the data from `announcements` table in `psitswebapp` database
@@ -21,12 +51,7 @@ def getAnnouncements() -> list:
             content - varchar
     """
     query: str = "SELECT * FROM ANNOUNCEMENTS"
-    db = ConnectDB()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(query)
-    data = cursor.fetchall()
-    cursor.close()
-    db.close()
+    data = executeQueryReturn(query)
 
     contents: list = []
     for content in data:
@@ -55,12 +80,7 @@ def getAccount(uid: int, password: str) -> Account:
             password - varchar
         """
     query: str = "SELECT * FROM ACCOUNTS where idno=%s and password=%s"
-    db = ConnectDB()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(query, (uid, password))
-    data: dict = cursor.fetchall()
-    cursor.close()
-    db.close()
+    data: dict = executeQueryReturnParam(query, (uid, password))
 
     if len(data) > 0:
         account = Account(
@@ -89,12 +109,7 @@ def getAccountByID(uid: int) -> Account:
             password - varchar
         """
     query: str = f"SELECT * FROM ACCOUNTS where idno='{uid}'"
-    db = ConnectDB()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(query)
-    data: dict = cursor.fetchall()
-    cursor.close()
-    db.close()
+    data = executeQueryReturn(query)
 
     if len(data) > 0:
         account = Account(
@@ -119,12 +134,7 @@ def postAnnouncement(title: str, date, content: str):
             content - varchar
     """
     query: str = f"INSERT INTO `announcements` (`title`,`date_published`,`content`) values ('{title}','{date}','{content}') "
-    db = ConnectDB()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(query)
-    db.commit()
-    cursor.close()
-    db.close()
+    executeQueryCommit(query)
     return None
 
 
@@ -138,9 +148,4 @@ def removeAnnouncement(uid):
             content - varchar
     """
     query: str = f"DELETE FROM `announcements` where id={uid}"
-    db = ConnectDB()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(query)
-    db.commit()
-    cursor.close()
-    db.close()
+    executeQueryCommit(query)
