@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement
+from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents
 from Util import hashData, isAdmin
 import datetime
 
@@ -9,20 +9,38 @@ app.secret_key = 'PSITS2022BYABEJAR'
 
 @app.route("/PSITS")
 def landing_page():
+    events: list = getEvents()
     if "username" in session:
         if isAdmin(session['username']):
-            return render_template("Homepage.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(),
-                               login="none", logout="block", account=session['username'], admin="block")
+            return render_template("Homepage.html",
+                                   title="PSITS ANNOUNCEMENTS",
+                                   ANNOUNCEMENTS=getAnnouncements(),
+                                   login="none",
+                                   logout="block",
+                                   account=session['username'],
+                                   admin="block",
+                                   events=events)
         else:
-            return render_template("Homepage.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(),
-                                   login="none", logout="block", account=session['username'], admin="none")
-    return render_template("Homepage.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(), login="block",
-                           logout="none", admin="none")
+            return render_template("Homepage.html",
+                                   title="PSITS ANNOUNCEMENTS",
+                                   ANNOUNCEMENTS=getAnnouncements(),
+                                   login="none", logout="block",
+                                   account=session['username'],
+                                   admin="none",
+                                   events=events)
+    return render_template("Homepage.html",
+                           title="PSITS ANNOUNCEMENTS",
+                           ANNOUNCEMENTS=getAnnouncements(),
+                           login="block",
+                           logout="none", admin="none", events=events)
 
 
 @app.route("/PSITS@Login")
 def login_page():
-    return render_template("Login.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(), login="none",
+    return render_template("Login.html",
+                           title="PSITS ANNOUNCEMENTS",
+                           ANNOUNCEMENTS=getAnnouncements(),
+                           login="none",
                            logout="none")
 
 
@@ -57,8 +75,12 @@ def login():
     message = "Account not found!"
     if account.uid is not None:
         message = "Invalid password"
-    return render_template("Login.html", title="PSITS ANNOUNCEMENTS", ANNOUNCEMENTS=getAnnouncements(),
-                           login="none", logout="none", message=message)
+    return render_template("Login.html",
+                           title="PSITS ANNOUNCEMENTS",
+                           ANNOUNCEMENTS=getAnnouncements(),
+                           login="none",
+                           logout="none",
+                           message=message)
 
 
 @app.route("/PSITS@Logout")

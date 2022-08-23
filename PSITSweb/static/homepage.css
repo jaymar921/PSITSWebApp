@@ -1,8 +1,9 @@
 .announcement_content{
-
+    position: relative;
+    left: 68%;
+    transform: translateX(-68%);
     margin: 0;
     padding: 0;
-    border: 1px solid #115982;
     height: 100%;
     overflow: hidden;
 }
@@ -33,9 +34,9 @@
 
 .announcement_content .announcement_thread{
     position: relative;
-    left: 75%;
-    width: 60%;
-    transform: translateX(-75%);
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
     background-color: #002e48;
     border-radius: 20px;
     transition: all 1000ms ease;

@@ -42,14 +42,12 @@
 
         <div class="events">
             <h1>Upcoming Events</h1>
-            <div class="events_thread">
-                <h2>Extravaganza!</h2>
-                <span>August 22, 2022!</span>
-            </div>
-            <div class="events_thread">
-                <h2>Secret!</h2>
-                <span>September 5, 2022!</span>
-            </div>
+            {% for event in events %}
+                <div class="events_thread">
+                    <h2>{{ event.title }}</h2>
+                    <span>{{ event.date_held }}</span>
+                </div>
+            {% endfor %}
         </div>
 
     </div>

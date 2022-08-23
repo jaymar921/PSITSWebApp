@@ -1,5 +1,5 @@
 from mysql import connector
-from Models import Announcement, Account
+from Models import Announcement, Account, Events
 
 
 def ConnectDB():
@@ -11,11 +11,11 @@ def ConnectDB():
     )
 
 
-def executeQueryReturn(query: str):
+def executeQueryReturn(query: str) -> dict:
     db = ConnectDB()
     cursor = db.cursor(dictionary=True)
     cursor.execute(query)
-    data = cursor.fetchall()
+    data: dict = cursor.fetchall()
     cursor.close()
     db.close()
     return data
@@ -51,7 +51,7 @@ def getAnnouncements() -> list:
             content - varchar
     """
     query: str = "SELECT * FROM ANNOUNCEMENTS"
-    data = executeQueryReturn(query)
+    data: dict = executeQueryReturn(query)
 
     contents: list = []
     for content in data:
@@ -63,7 +63,7 @@ def getAnnouncements() -> list:
         )
         contents.append(c)
 
-    return sorted(contents, key=lambda x: x.date, reverse=True)
+    return sorted(contents, key=lambda x: x.uid, reverse=True)
 
 
 def getAccount(uid: int, password: str) -> Account:
@@ -149,3 +149,34 @@ def removeAnnouncement(uid):
     """
     query: str = f"DELETE FROM `announcements` where id={uid}"
     executeQueryCommit(query)
+
+
+def getEvents() -> list:
+    """"
+        getEvents will get the data from `events` table in `psitswebapp` database
+        table: events
+            uid - int
+            title - varchar
+            date_held - date
+            info - varchar
+            required_payment - varchar
+            item_to_be_paid - varchar
+            amount - decimal(10,2)
+    """
+    query: str = "SELECT * FROM EVENTS"
+    data: dict = executeQueryReturn(query)
+
+    events: list = []
+    for e in data:
+        event = Events(
+            e.get('uid'),
+            e.get('title'),
+            e.get('date_held'),
+            e.get('info'),
+            e.get('required_payment'),
+            e.get('item_to_be_paid'),
+            e.get('amount')
+        )
+        events.append(event)
+    print(events)
+    return events
