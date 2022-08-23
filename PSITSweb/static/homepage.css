@@ -168,6 +168,7 @@
     resize: none;
     background-color: white;
     transition: all 1000ms ease;
+    font-size: 1.5em;
 }
 
 .announcement_field input{
@@ -175,7 +176,7 @@
     padding:auto;
     margin: auto;
     border: auto;
-    font-size: 1.1em;
+    font-size: 1.2em;
     width: 98%;
 }
 
@@ -254,6 +255,10 @@
         position: relative;
         border-radius: 10px;
         background-color: white;
+    }
+
+    .announcement_field_content textarea{
+        font-size: 1.2em;
     }
 
 

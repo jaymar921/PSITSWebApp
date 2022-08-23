@@ -7,4 +7,10 @@ def hashData(data: str) -> str:
 
 
 def isAdmin(uid) -> bool:
-    return str(uid).__eq__('19889781')
+    admins: dict = {
+        'ABEJAR': '19889781',
+    }
+    for key, value in admins.items():
+        if str(value).__eq__(str(uid)):
+            return True
+    return False

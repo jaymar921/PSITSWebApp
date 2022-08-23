@@ -178,5 +178,4 @@ def getEvents() -> list:
             e.get('amount')
         )
         events.append(event)
-    print(events)
     return events
