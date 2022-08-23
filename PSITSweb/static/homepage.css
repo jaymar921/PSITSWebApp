@@ -34,9 +34,9 @@
 
 .announcement_content .announcement_thread{
     position: relative;
-    left: 50%;
-    width: 100%;
-    transform: translateX(-50%);
+    left: 70%;
+    width: 60%;
+    transform: translateX(-70%);
     background-color: #002e48;
     border-radius: 20px;
     transition: all 1000ms ease;
