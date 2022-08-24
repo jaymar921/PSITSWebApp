@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <! -- This is for the background -->
+    <div class="ann_bg_1"></div>
+    <div class="ann_bg_2"></div>
+    <! -- This is for the background -->
+
+    <div class="content">
+        <div class="form_general">
+            <form action="" method="post">
+                <h1>Registration</h1>
+                <div>
+                    <label for="idnum">ID Number:</label> <input id="idnum" name="idnum" type="text" placeholder="ID NUMBER" pattern="[0-9]{7,}" required>
+                </div>
+                <div>
+                    <label for="rfid">RFID:</label> <input id="rfid" name="rfid" type="number" placeholder="RFID Code (can leave empty)" pattern="[0-9]{7,}">
+                </div>
+                <div>
+                    <label for="fname">Firstname:</label> <input id="fname" name="firstname" type="text" placeholder="Firstname" pattern="[a-zA-ZÑñ ]{4,}" required>
+                </div>
+                <div>
+                    <label for="lname">Lastname:</label><input id="lname" name="lastname" type="text" placeholder="Lastname" pattern="[a-zA-ZÑñ]{3,}" required>
+                </div>
+                <div>
+                    <label for="course">Course:</label>
+                    <select name="course" id="course">
+                        <option selected value="BSIT">BSIT</option>
+                        <option value="BSCS">BSCS</option>
+                        <option value="ACT">ACT</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="year">Year Level:</label>
+                    <select name="year" id="year">
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="password">Password:</label><input id="password" name="password" type="password" placeholder="Password" onchange="onChange()" required>
+                </div>
+                <div>
+                    <label for="confirm">Confirm Password:</label><input id="confirm" name="confirm" type="password" placeholder="Confirm Password" onchange="onChange()" required>
+                </div>
+
+                <br>
+                <div style="position: relative; margin: auto; padding: auto; text-align: center;">
+                    <button type="reset" onclick="location.href='/PSITS@Login'">Cancel</button>
+                    <button type="submit">Register</button>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+{% endblock %}

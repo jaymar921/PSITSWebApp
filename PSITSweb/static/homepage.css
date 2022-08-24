@@ -130,6 +130,13 @@
     background-color: white;
 }
 
+.events_thread button{
+    padding: 5px 10px 5px 10px;
+    margin: 5px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
 .announcement_field{
     position: relative;
     left: 50%;
@@ -195,6 +202,58 @@
 .events_thread span{
     font-size: 1.2em;
     white-space: pre-line;
+}
+
+.form_general{
+    position: absolute;
+    margin-top: 250px;
+    padding: 0;
+    border: 0;
+    left: 50%;
+    top: 50%;
+    width: 500px;
+    transform: translate(-50%,-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 1.2em;
+}
+
+.form_general h1{
+    text-align: center;
+}
+
+.form_general form div{
+    position: relative;
+    width: 90%;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+    padding: auto;
+}
+
+.form_general div label{
+    position: relative;
+    margin: auto;
+    padding: auto;
+    border: auto;
+    color: white;
+    font-style: bold;
+}
+
+.form_general form div input, select{
+    position: relative;
+    margin-left: 100px;
+    width: 300px;
+    font-size: 1em;
+    background-color: rgba(0,0,0,0.95);
+    border: 0px;
+    padding: 5px 5px 5px 15px;
+    color: white;
+    border-radius: 10px;
+}
+
+*::placeholder {
+    color: gray;
 }
 
 @media(max-width: 1000px){

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <! -- This is for the background -->
+    <div class="ann_bg_1"></div>
+    <div class="ann_bg_2"></div>
+    <! -- This is for the background -->
+
+    <div class="content">
+        <div class="form_general">
+            <form action="" method="post">
+                <h1>Create Event</h1>
+                <div>
+                    <label for="Title">Title:</label> <input id="Title" name="Title" type="text" placeholder="Event Title" required>
+                </div>
+                <div>
+                    <label for="Date">Date Held:</label> <input id="Date" name="date_held" type="date" required>
+                </div>
+                <div>
+                    <label for="Info">Information:</label> <input id="Info" name="Information" type="text" placeholder="Event Information" required>
+                </div>
+                <div>
+                    <label for="ReqP">Required Payment:</label> <input id="ReqP" name="require_payment" type="checkbox" value="YES" onclick="requiredPayment(this)">
+                </div>
+                <div id="item_field" style="display: none;">
+                    <label for="ITEM">Item:</label> <input id="ITEM" name="Item" type="text" placeholder="Ex. T-Shirt/Ticket/Lanyard">
+                </div>
+                <div id="amount_field" style="display: none;">
+                    <label for="Amt">Amount:</label> <input id="Amt" name="Amount" type="number" placeholder="Price of item">
+                </div>
+                <br>
+                <div style="position: relative; margin: auto; padding: auto; text-align: center;">
+                    <button type="reset" onclick="location.href='/PSITS'">Cancel</button>
+                    <button type="submit">Create</button>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

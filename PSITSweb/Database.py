@@ -124,6 +124,25 @@ def getAccountByID(uid: int) -> Account:
     return Account(None, None, None, None, None, None)
 
 
+def registerAccountDB(account: Account, password: str):
+    """
+        getAccount will get the data from `account` table in `psitswebapp` database
+        table: accounts
+        attributes:
+            idno - int
+            rfid - varchar
+            firstname - varchar
+            lastname - varchar
+            course - varchar
+            year - int
+            password - varchar
+        """
+    query: str = f"INSERT INTO `accounts` (`idno`,`rfid`,`firstname`,`lastname`,`course`,`year`,`password`) values " \
+                 f"({account.uid},'{account.rfid}','{account.firstname}'" \
+                 f",'{account.lastname}','{account.course}',{account.year},'{password}');"
+    executeQueryCommit(query)
+
+
 def postAnnouncement(title: str, date, content: str):
     """"
         postAnnouncement will insert the data to `announcements` table from `psitswebapp` database
@@ -148,6 +167,39 @@ def removeAnnouncement(uid):
             content - varchar
     """
     query: str = f"DELETE FROM `announcements` where id={uid}"
+    executeQueryCommit(query)
+
+
+def addEvent(event: Events):
+    """"
+        addEvent will save the data to `events` table in `psitswebapp` database
+        table: events
+            uid - int
+            title - varchar
+            date_held - date
+            info - varchar
+            required_payment - varchar
+            item_to_be_paid - varchar
+            amount - decimal(10,2)
+        """
+    query: str = f"INSERT INTO `events` values ({int(event.uid)}, '{event.title}', '{event.date_held}', '{event.info}'"\
+                 f", '{event.required_payment}', '{event.item}', {float(int(event.amount))})"
+    executeQueryCommit(query)
+
+
+def removeEvent(uid):
+    """"
+         removeEvent will remove the data from `events` table in `psitswebapp` database
+            table: events
+                uid - int
+                title - varchar
+                date_held - date
+                info - varchar
+                required_payment - varchar
+                item_to_be_paid - varchar
+                amount - decimal(10,2)
+    """
+    query: str = f"DELETE FROM `events` where uid={uid}"
     executeQueryCommit(query)
 
 
