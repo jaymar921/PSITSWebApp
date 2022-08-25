@@ -17,7 +17,9 @@
         <div class="account">
             <button style="display: {{login}}" onclick="location.href='/PSITS@Login'">Login</button>
             <button style="display: {{logout}}" onclick="location.href='/PSITS@Logout'">Logout</button>
-            <p>{{account}}</p>
+            {% if account_data != null %}
+                <p style="font-style: bold; color: red;">{{account_data.lastname | upper }}</p>
+            {% endif %}
         </div>
     </div>
     <div class="content">

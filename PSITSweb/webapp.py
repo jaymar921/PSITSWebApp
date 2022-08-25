@@ -12,19 +12,25 @@ app = Flask(__name__)
 app.secret_key = 'PSITS2022BYABEJAR'
 
 
+@app.route("/")
+def webpage():
+    return redirect(url_for("landing_page"))
+
+
 @app.route("/PSITS")
 def landing_page():
     events: list = getEvents()
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("Homepage.html",
-                                   title="PSITS ANNOUNCEMENTS",
+                                   title="PSITS ADMIN",
                                    ANNOUNCEMENTS=getAnnouncements(),
                                    login="none",
                                    logout="block",
                                    account=session['username'],
                                    admin="block",
-                                   events=events)
+                                   events=events,
+                                   account_data=getAccountByID(session['username']))
         else:
             return render_template("Homepage.html",
                                    title="PSITS ANNOUNCEMENTS",
@@ -32,7 +38,8 @@ def landing_page():
                                    login="none", logout="block",
                                    account=session['username'],
                                    admin="none",
-                                   events=events)
+                                   events=events,
+                                   account_data=getAccountByID(session['username']))
     return render_template("Homepage.html",
                            title="PSITS ANNOUNCEMENTS",
                            ANNOUNCEMENTS=getAnnouncements(),
@@ -43,7 +50,7 @@ def landing_page():
 @app.route("/PSITS@Login")
 def login_page():
     return render_template("Login.html",
-                           title="PSITS ANNOUNCEMENTS",
+                           title="PSITS login",
                            ANNOUNCEMENTS=getAnnouncements(),
                            login="none",
                            logout="none")
@@ -80,12 +87,12 @@ def remove_announcement(uid):
 def login():
     account_id: str = request.form['id_number']
     password: str = request.form['password']
-    account = getAccount(account_id, hashData(password))
+    account = getAccount(int(account_id), hashData(password))
     if account.uid is not None:
         session['username'] = account.uid
         return redirect(url_for("landing_page"))
 
-    account = getAccountByID(account_id)
+    account = getAccountByID(int(account_id))
     message = "Account not found!"
     if account.uid is not None:
         message = "Invalid password"
@@ -168,6 +175,19 @@ def removeEventPage(uid):
     return redirect(url_for("landing_page"))
 
 
+@app.route("/PSITS@Students")
+def psits_students_list():
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if isAdmin(session['username']):
+        return render_template("StudentsList.html",
+                               logout='block', login='none', account_data=getAccountByID(session['username']),
+                               admin='block', title='PSITS STUDENTS LIST')
+    else:
+        return redirect(url_for('cant_find_link'))
+
+
 @app.route("/PSITS@Logout")
 def logout():
     session.clear()
@@ -181,7 +201,7 @@ def cant_find_link():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404Page.html", logout="none", login="none"), 404
+    return render_template("404Page.html", logout="none", login="none", title="PSITS I'm lost!"), 404
 
 
 if __name__ == '__main__':

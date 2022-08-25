@@ -157,6 +157,10 @@
     border-radius: 15px;
 }
 
+.announcement_field button:hover{
+    cursor: pointer;
+}
+
 .announcement_field_content{
     position: relative;
     left: 50%;

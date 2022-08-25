@@ -6,6 +6,10 @@ function createNewEvent(){
     location.href="/PSITS@NewEvent"
 }
 
+function studentsInfo(){
+    location.href="/PSITS@Students"
+}
+
 // PSITS@Event
 function requiredPayment(checkbox){
     document.getElementById('item_field').style.display = checkbox.checked ? 'block':'none';
