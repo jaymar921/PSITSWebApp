@@ -3,7 +3,7 @@ import random
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
-    addEvent, removeEvent, registerAccountDB
+    addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents
 from PSITSweb.Models import Events, Account
 from Util import hashData, isAdmin
 import datetime
@@ -175,17 +175,80 @@ def removeEventPage(uid):
     return redirect(url_for("landing_page"))
 
 
-@app.route("/PSITS@Students")
+@app.route("/PSITS@Students", methods=['POST', 'GET'])
 def psits_students_list():
     if 'username' not in session:
         return render_template("404Page.html", logout="none", login="none",
                                message="Only administrators can access this page!")
-    if isAdmin(session['username']):
+    if not isAdmin(session['username']):
+        return redirect(url_for('cant_find_link'))
+
+    if request.method == 'GET':
+        print("get called")
+        # Get the search
+        search: str = flask.request.values.get('search')
+        print(search)
+        return render_template("StudentsList.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
+    else:
+        search: str = flask.request.values.get('search')
+        updated_account = Account(
+            request.form['idnum'],
+            request.form['rfid'],
+            request.form['firstname'],
+            request.form['lastname'],
+            request.form['course'],
+            request.form['year']
+        )
+        updateAccount(updated_account)
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST')
-    else:
+                               admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
+
+
+@app.route("/PSITS@StudentRemove/<uid>")
+def psits_remove_student(uid):
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if not isAdmin(session['username']):
         return redirect(url_for('cant_find_link'))
+    removeAccount(uid)
+    return redirect(url_for("psits_students_list"))
+
+
+@app.route("/PSITS@Events", methods=['POST', 'GET'])
+def psits_events_list():
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if not isAdmin(session['username']):
+        return redirect(url_for('cant_find_link'))
+
+    if request.method == 'GET':
+        print("get called")
+        # Get the search
+        search: str = flask.request.values.get('search')
+        print(search)
+        return render_template("Events.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='PSITS STUDENTS LIST', events=getSearchEvents(search))
+    else:
+        search: str = flask.request.values.get('search')
+        updated_account = Account(
+            request.form['idnum'],
+            request.form['rfid'],
+            request.form['firstname'],
+            request.form['lastname'],
+            request.form['course'],
+            request.form['year']
+        )
+        updateAccount(updated_account)
+        return render_template("Events.html",
+                               logout='block', login='none', account_data=getAccountByID(session['username']),
+                               admin='block', title='PSITS STUDENTS LIST', events=getSearchEvents(search))
+
 
 
 @app.route("/PSITS@Logout")
@@ -196,7 +259,7 @@ def logout():
 
 @app.route("/CannotFindLink")
 def cant_find_link():
-    return render_template("404Page.html", logout="none", login="none")
+    return render_template("404Page.html", logout="none", login="none", title="PSITS I'm lost :<")
 
 
 @app.errorhandler(404)

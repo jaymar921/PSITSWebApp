@@ -95,6 +95,38 @@ def getAccount(uid: int, password: str) -> Account:
     return Account(None, None, None, None, None, None)
 
 
+def getAllAccounts(search: str):
+    query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%' or lastname like" \
+                 f" '%{search}%' "
+    if search is None:
+        query = "SELECT * FROM ACCOUNTS"
+    data = executeQueryReturn(query)
+    accounts: list = []
+    for acc in data:
+        account = Account(
+            acc['idno'],
+            acc['rfid'],
+            acc['firstname'],
+            acc['lastname'],
+            acc['course'],
+            acc['year']
+        )
+        accounts.append(account)
+    return accounts
+
+
+def updateAccount(account: Account):
+    query: str = f"UPDATE `accounts` SET rfid='{account.rfid}',firstname='{account.firstname}'," \
+                 f"lastname='{account.lastname}',course='{account.course}',year={account.year} where" \
+                 f" idno={account.uid}"
+    executeQueryCommit(query)
+
+
+def removeAccount(uid):
+    query: str = f"DELETE FROM `accounts` where idno={uid}"
+    executeQueryCommit(query)
+
+
 def getAccountByID(uid: int) -> Account:
     """
         getAccount will get the data from `account` table in `psitswebapp` database
@@ -216,6 +248,38 @@ def getEvents() -> list:
             amount - decimal(10,2)
     """
     query: str = "SELECT * FROM EVENTS"
+    data: dict = executeQueryReturn(query)
+
+    events: list = []
+    for e in data:
+        event = Events(
+            e.get('uid'),
+            e.get('title'),
+            e.get('date_held'),
+            e.get('info'),
+            e.get('required_payment'),
+            e.get('item_to_be_paid'),
+            e.get('amount')
+        )
+        events.append(event)
+    return events
+
+
+def getSearchEvents(search) -> list:
+    """"
+        getEvents will get the data from `events` table in `psitswebapp` database
+        table: events
+            uid - int
+            title - varchar
+            date_held - date
+            info - varchar
+            required_payment - varchar
+            item_to_be_paid - varchar
+            amount - decimal(10,2)
+    """
+    query: str = f"SELECT * FROM EVENTS where uid like '%{search}%' or title like '%{search}%'"
+    if search is None:
+        query = "SELECT * FROM EVENTS"
     data: dict = executeQueryReturn(query)
 
     events: list = []

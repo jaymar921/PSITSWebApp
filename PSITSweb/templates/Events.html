@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div>
+    <div class="information_container">
+
+      <div class="information_content">
+        <h1>Events List</h1>
+      </div>
+      <form action="" method="get">
+        <div class="information_menu">
+
+          <div class="menu_item">
+            <button type="reset" onclick="home()">PSITS</button>
+            <button type="submit">Search</button>
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH UID | TITLE ">
+          </div>
+
+        </div>
+        <br>
+        <div class="information_content">
+          <table>
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>TITLE</th>
+                <th>DATE HELD</th>
+                <th>INFO</th>
+                <th>REQUIRE PAYMENT</th>
+                <th>ITEM TO SELL</th>
+                <th>AMOUNT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for event in events %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{event.uid}}idnum" type="text" value="{{event.uid}}" hidden>
+                  <td><input name="uid" id="{{event.uid}}uid" type="text" value="{{event.uid}}" disabled></td>
+                  <td><input name="title" id="{{event.uid}}title" type="text" value="{{event.title}}" disabled></td>
+                  <td><input name="date_held" id="{{event.uid}}date_held" type="date" value="{{event.date_held}}" disabled></td>
+                  <td><input name="info" id="{{event.uid}}info" type="text" value="{{event.info}}" disabled></td>
+                  <td><input name="required_payment" id="{{event.uid}}required_payment" type="text" value="{{event.required_payment}}" disabled></td>
+                  <td><input name="item" id="{{event.uid}}item" type="text" value="{{event.item}}" disabled></td>
+                  <td><input name="amount" id="{{event.uid}}amount" type="text" value="{{event.amount}}" disabled></td>
+                  <td><a id="{{event.uid}}edit" onclick="">✎</a><button id="{{event.uid}}button" type="submit" hidden>💾</button>  <a onclick="">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <hr>
+      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+      </form>
+    </div>
+
+  </div>
+
+
+{% endblock %}

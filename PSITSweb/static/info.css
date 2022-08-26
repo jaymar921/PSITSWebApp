@@ -1,0 +1,75 @@
+.information_container{
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 1px solid black;
+    width: 800px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.information_content{
+    text-align: center;
+    color: white;
+}
+
+.information_menu{
+    position: relative;
+    display: flex;
+}
+
+.menu_item{
+    margin: auto;
+}
+
+.menu_item button{
+    position: relative;
+    color: white;
+    background-color: #002e48;
+    border: 2px solid aqua;
+    font-size: 1.2em;
+}
+
+.menu_item input{
+    position: relative;
+    color: black;
+    border: 2px solid white;
+    padding: 0px 10px 0px 10px;
+    font-size: 1.2em;
+}
+
+.information_content table{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: black;
+    border: 2px solid gray;
+    width: 700px;
+}
+
+.information_content table thead tr th{
+    margin: auto;
+    padding: 10px;
+}
+
+.information_content table tbody tr td a:hover{
+    cursor: pointer;
+}
+
+.information_content table tbody tr td input:disabled{
+    text-align: center;
+    border: 0px;
+    background-color: white;
+    color: gray;
+}
+.information_content table tbody tr td input{
+    text-align: center;
+    border: 0px;
+    background-color: gray;
+    color: black;
+}
+
