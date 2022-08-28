@@ -6,6 +6,7 @@
     <! -- This is for the background -->
 
     <div class="content">
+        <br><br><br>
         <div class="form_general">
             <form action="" method="post">
                 <h1>Registration</h1>
@@ -38,7 +39,9 @@
                         <option value="4">4</option>
                     </select>
                 </div>
-
+                <div>
+                    <label for="email">Email:</label><input id="email" name="email" type="text" placeholder="your@email.com" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" required>
+                </div>
                 <div>
                     <label for="password">Password:</label><input id="password" name="password" type="password" placeholder="Password" onchange="onChange()" required>
                 </div>

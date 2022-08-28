@@ -12,15 +12,15 @@
       <div class="information_content">
         <h1>Students List</h1>
       </div>
-      <form action="" method="get">
-        <div class="information_menu">
 
+        <div class="information_menu">
+          <form action="" method="get">
           <div class="menu_item">
             <button type="reset" onclick="home()">PSITS</button>
             <button type="submit">Search</button>
             <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME">
           </div>
-
+          </form>
         </div>
         <br>
         <div class="information_content">
@@ -33,6 +33,7 @@
                 <th>FIRSTNAME</th>
                 <th>COURSE</th>
                 <th>YEAR</th>
+                <th>EMAIL</th>
                 <th>ACTION</th>
               </tr>
             </thead>
@@ -49,6 +50,7 @@
                   <td><input name="firstname" id="{{account.uid}}firstname" type="text" value="{{account.firstname}}" disabled></td>
                   <td><input name="course" id="{{account.uid}}course" type="text" value="{{account.course}}" disabled></td>
                   <td><input name="year" id="{{account.uid}}year" type="text" value="{{account.year}}" disabled></td>
+                  <td><input name="email" id="{{account.uid}}email" type="text" value="{{account.email}}" disabled></td>
                   <td><a id="{{account.uid}}edit" onclick="edit_studentInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteStudent('{{account.uid}}')">❌</a></td>
                 </form>
               </tr>
@@ -64,7 +66,7 @@
       <br>
       <hr>
       <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
-      </form>
+
     </div>
 
   </div>

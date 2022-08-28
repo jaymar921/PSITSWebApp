@@ -1,12 +1,15 @@
+import datetime
 import random
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session
+
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
-    addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents
-from PSITSweb.Models import Events, Account
+    addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
+    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById
+from PSITSweb.EmailAPI import pushEmail
+from PSITSweb.Models import Events, Account, Email, OrderAccount
 from Util import hashData, isAdmin
-import datetime
 
 app = Flask(__name__)
 app.secret_key = 'PSITS2022BYABEJAR'
@@ -20,6 +23,7 @@ def webpage():
 @app.route("/PSITS")
 def landing_page():
     events: list = getEvents()
+
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("Homepage.html",
@@ -49,6 +53,8 @@ def landing_page():
 
 @app.route("/PSITS@Login")
 def login_page():
+    if 'username' in session:
+        return redirect(url_for("landing_page"))
     return render_template("Login.html",
                            title="PSITS login",
                            ANNOUNCEMENTS=getAnnouncements(),
@@ -67,7 +73,8 @@ def post_announcement():
         if isAdmin(session['username']):
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
         else:
-            return render_template("404Page.html", logout="none", login="none", message="Don't try to break the page :<")
+            return render_template("404Page.html", logout="none", login="none",
+                                   message="Don't try to break the page :<")
 
     return redirect(url_for("landing_page"))
 
@@ -115,6 +122,7 @@ def registerAccount():
         lastname = request.form['lastname']
         course = request.form['course']
         year = request.form['year']
+        email = request.form['email']
         password = hashData(request.form['password'])
         account = Account(
             idno,
@@ -122,10 +130,20 @@ def registerAccount():
             firstname,
             lastname,
             course,
-            year
+            year,
+            email
         )
         registerAccountDB(account, password)
-        return redirect(url_for("login_page"))
+        content = f"""
+           Dear {firstname},
+           
+           We are happy to know that you've signed up for PSITS!
+           This email is auto generated, please do not reply :)
+        """
+        try:
+            pushEmail(Email('Welcome to PSITS', email, content))
+        finally:
+            return redirect(url_for("login_page"))
 
 
 @app.route("/PSITS@NewEvent", methods=['GET', 'POST'])
@@ -158,7 +176,8 @@ def EventHandlerPSITS():
             info=event_info,
             required_payment=event_reqP,
             item=event_item,
-            amount=event_amt
+            amount=event_amt,
+            open='NO'
         )
         addEvent(event)
         return redirect(url_for("landing_page"))
@@ -184,13 +203,11 @@ def psits_students_list():
         return redirect(url_for('cant_find_link'))
 
     if request.method == 'GET':
-        print("get called")
         # Get the search
         search: str = flask.request.values.get('search')
-        print(search)
         return render_template("StudentsList.html",
-                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                                admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
+                               logout='block', login='none', account_data=getAccountByID(session['username']),
+                               admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
     else:
         search: str = flask.request.values.get('search')
         updated_account = Account(
@@ -199,7 +216,8 @@ def psits_students_list():
             request.form['firstname'],
             request.form['lastname'],
             request.form['course'],
-            request.form['year']
+            request.form['year'],
+            request.form['email']
         )
         updateAccount(updated_account)
         return render_template("StudentsList.html",
@@ -227,28 +245,195 @@ def psits_events_list():
         return redirect(url_for('cant_find_link'))
 
     if request.method == 'GET':
-        print("get called")
         # Get the search
         search: str = flask.request.values.get('search')
-        print(search)
-        return render_template("Events.html",
-                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                                admin='block', title='PSITS STUDENTS LIST', events=getSearchEvents(search))
-    else:
-        search: str = flask.request.values.get('search')
-        updated_account = Account(
-            request.form['idnum'],
-            request.form['rfid'],
-            request.form['firstname'],
-            request.form['lastname'],
-            request.form['course'],
-            request.form['year']
-        )
-        updateAccount(updated_account)
         return render_template("Events.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST', events=getSearchEvents(search))
+                               admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
+    else:
+        search: str = flask.request.values.get('search')
+        event: Events = Events(
+            request.form['idnum'],
+            request.form['title'],
+            request.form['date_held'],
+            request.form['info'],
+            request.form['required_payment'],
+            request.form['item'],
+            request.form['amount'],
+            request.form['open']
+        )
+        if request.form['open'] == 'YES':
+            # Email Request
+            orders: list = getOrder(event.uid, 'RESERVED')
+            for order in orders:
+                user_message = f"Hello {getAccountByID(order.account_uid).firstname}!\n\n" \
+                               f"Our {event.title} is now available for an order! The {event.item} is " \
+                               f"priced at P{event.amount}. Login to PSITS page to order now!"
+                if getAccountByID(order.account_uid).email is not None or "":
+                    pushEmail(Email("PSITS - "+event.title, getAccountByID(order.account_uid).email, user_message))
+        updateEvent(event)
+        return render_template("Events.html",
+                               logout='block', login='none', account_data=getAccountByID(session['username']),
+                               admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
 
+
+@app.route("/PSITS@EventRemove/<uid>")
+def psits_remove_event(uid):
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if not isAdmin(session['username']):
+        return redirect(url_for('cant_find_link'))
+    removeEvent(uid)
+    return redirect(url_for("psits_events_list"))
+
+
+@app.route("/PSITS@OrderForm/<event_uid>")
+def psits_order_form_uid(event_uid):
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    session['order_message'] = event_uid
+    return redirect(url_for('psits_order_form'))
+
+
+@app.route("/PSITSOrderForm")
+def psits_order_form():
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    event_uid = session['order_message']
+    order_account = getOrderAccount(event_uid, session['username'])
+    event = getEvent(event_uid)
+    user_message: str = ""
+    account_status = ""
+    # if user is not yet reserved, ask for reservation
+    if order_account.status is None:
+        user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                       f"{event.title} is now available for reservations! You can " \
+                       f"request for a reservation for faster process and we'll email " \
+                       f"you once we're ready. Make sure that your email address is active."
+        account_status = "NOT-RESERVED"
+    elif order_account.status == 'RESERVED':
+        if event.open_for_payment == 'YES':
+            account_status = "ORDER"
+            user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                           f"Our {event.title} is now available for a  pre-order! The {event.item} is " \
+                           f"priced at P{event.amount}. You can enter the amount of item you want " \
+                           f"to purchase."
+        else:
+            user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                           f"We are currently not ready for a pre-ordering of {event.item}s, " \
+                           f"however you already have reserved a slot for pre-order which is great! " \
+                           f"Just come back soon or wait for the announcements from " \
+                           f"PSITS page, " \
+                           f"we will also notify you by email."
+    elif order_account.status == 'ORDERED':
+        user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                       f"You have ordered {order_account.quantity} {event.item}" \
+                       f"{'s' if int(order_account.quantity) > 1 else ''} which totals to " \
+                       f"P{int(order_account.quantity) * int(event.amount)}, if you have time, you can" \
+                       f" visit the PSITS office at 5th floor UC Main bldg. located near room 539 for the payment."
+    elif order_account.status == 'PAID':
+        user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                       f"You already paid the {order_account.quantity} {event.item}" \
+                       f"{'s' if int(order_account.quantity) > 1 else ''} that you have requested " \
+                       f"and your reference code is: {order_account.reference}. Please wait for the" \
+                       f" announcement of the claiming schedule at the PSITS page. Thank you :D"
+    return render_template('OrderForm.html',
+                           title='PSITS Order',
+                           logout='none',
+                           login='none',
+                           event=event,
+                           user_message=user_message,
+                           account_status=account_status)
+
+
+@app.route("/PSITSOrderHandler", methods=['POST'])
+def order_handler():
+    """
+        status return
+            NOT-RESERVED (creates order reservation)
+            RESERVED
+            ORDERED
+            PAID
+            CLAIMED
+    """
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    event_uid = session['order_message']
+    status = request.form['status']
+    if status == 'NOT-RESERVED':
+        createOrder(OrderAccount(None, event_uid, session['username'], 'RESERVED', 0, ''))
+    elif status == 'ORDER':
+        order = getOrderAccount(event_uid, session['username'])
+        order.status = 'ORDERED'
+        order.quantity = request.form['quantity']
+        updateOrder(order)
+        order_account = getOrderAccount(event_uid, session['username'])
+        event = getEvent(event_uid)
+        user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
+                       f"You have ordered {order_account.quantity} {event.item}" \
+                       f"{'s' if int(order_account.quantity) > 1 else ''} which totals to " \
+                       f"P{int(order_account.quantity) * int(event.amount)}, if you have time, you can" \
+                       f" visit the PSITS office at 5th floor UC Main bldg. located near room 539 for the payment."
+        pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
+    return redirect(url_for('landing_page'))
+
+
+@app.route("/PSITS@Orders", methods=['GET', 'POST'])
+def psits_orders_list():
+    if "username" not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if not isAdmin(session['username']):
+        return redirect(url_for('cant_find_link'))
+
+    search: str = flask.request.values.get('search')
+    orders = getAllOrders(search)
+    total = 0.0
+    paid = 0.0
+    ordered = 0.0
+    for order in orders:
+        total += order.total
+        if order.order_account.status is not None:
+            if order.order_account.status == 'PAID' or order.order_account.status == 'CLAIMED':
+                paid += order.total
+            if order.order_account.status == 'ORDERED':
+                ordered += order.total
+    """"
+        temp = orders.copy()
+        
+        new_order = []
+        if len(orders) > 100:
+            for i in range(0, 100):
+                new_order.append(temp[i])
+            orders = new_order
+    """
+    if request.method == 'GET':
+
+        return render_template("OrderList.html", logout='block', login='none',
+                               account_data=getAccountByID(session['username']),
+                               admin='block', title='PSITS ORDERS LIST', orders=orders, total=total,
+                               reserve=ordered, paid=paid)
+    else:
+        order_id = request.form['order_id']
+        status = request.form['status']
+        if status == 'PAID':
+            order = getOrderById(order_id)
+            if order is not None:
+                if order.status != status:
+                    order.status = status
+                    order.reference = request.form['reference']
+                    updateOrder(order)
+        elif status == 'CLAIMED':
+            order = getOrderById(order_id)
+            if order is not None:
+                if order.status != status:
+                    order.status = status
+                    updateOrder(order)
+        return redirect(url_for('psits_orders_list'))
 
 
 @app.route("/PSITS@Logout")
@@ -264,7 +449,13 @@ def cant_find_link():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404Page.html", logout="none", login="none", title="PSITS I'm lost!"), 404
+    return render_template("404Page.html", logout="none", login="none", title="PSITS I'm lost!", message=e), 404
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Cache-Control', 'no-store,no-cache,must-revalidate,post-check=0,pre-check=0')
+    return response
 
 
 if __name__ == '__main__':

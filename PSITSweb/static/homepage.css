@@ -98,7 +98,7 @@
 
 .contents{
     display:flex;
-    z-index:2;
+    z-index:3;
 }
 
 .events{
@@ -108,7 +108,7 @@
 
     //background-color: #002e48;
     background: rgba(0, 0, 0, 0.8);
-    z-index:3;
+    z-index:5;
 
     overflow-y: scroll;
     transition: all 1000ms ease;
@@ -128,6 +128,7 @@
     position: relative;
     border-radius: 10px;
     background-color: white;
+    z-index: 4;
 }
 
 .events_thread button{
@@ -256,8 +257,75 @@
     border-radius: 10px;
 }
 
+.input_form{
+    font-size: 1em;
+    background-color: rgba(0,0,0,0.95);
+    border-radius: 10px;
+    color: white;
+    width: 10ch;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+}
+
 *::placeholder {
     color: gray;
+}
+
+.event_modal{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    background-color: white;
+    z-index: 1;
+    transform: translate(-50%,-50%);
+    border: 1px solid black;
+}
+
+.event_modal_close_button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid black;
+    padding: 2px;
+    background-color: white;
+    transition: all 300ms ease;
+}
+
+.event_modal_close_button:hover{
+    cursor: pointer;
+    background-color: pink;
+    color: green;
+}
+
+.event_modal_content{
+    text-align: center;
+}
+
+.event_button{
+    font-size: 1.5em;
+    border: 0px;
+    border-radius: 5px;
+    color: white;
+    background-color: #002e48;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.event_button:hover{
+    cursor: pointer;
+}
+
+.message_box{
+    position: relative;
+    text-align: justify;
+    white-space: pre-line;
+    width: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.2);
+    padding: 20px;
 }
 
 @media(max-width: 1000px){

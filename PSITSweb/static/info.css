@@ -16,7 +16,7 @@
     color: white;
 }
 
-.information_menu{
+.information_menu form{
     position: relative;
     display: flex;
 }
@@ -33,6 +33,11 @@
     font-size: 1.2em;
 }
 
+.menu_item button:hover{
+    cursor: pointer;
+}
+
+
 .menu_item input{
     position: relative;
     color: black;
@@ -48,12 +53,10 @@
     background-color: white;
     color: black;
     border: 2px solid gray;
-    width: 700px;
 }
 
 .information_content table thead tr th{
-    margin: auto;
-    padding: 10px;
+    padding: 2px;
 }
 
 .information_content table tbody tr td a:hover{
@@ -65,11 +68,31 @@
     border: 0px;
     background-color: white;
     color: gray;
+    font-size: 0.9em;
 }
 .information_content table tbody tr td input{
     text-align: center;
     border: 0px;
     background-color: gray;
     color: black;
+    font-size: 0.9em;
 }
+
+.information_content table tbody tr td select{
+    margin: auto;
+    background-color: gray;
+    color: black;
+    border: 0px;
+    text-align: center;
+    width: 15ch;
+}
+
+.information_content table tbody tr td select:disabled{
+    text-align: center;
+    border: 0px;
+    background-color: white;
+    color: gray;
+}
+
+
 

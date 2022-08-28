@@ -12,15 +12,15 @@
       <div class="information_content">
         <h1>Events List</h1>
       </div>
-      <form action="" method="get">
-        <div class="information_menu">
 
+        <div class="information_menu">
+        <form action="" method="get">
           <div class="menu_item">
             <button type="reset" onclick="home()">PSITS</button>
             <button type="submit">Search</button>
             <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH UID | TITLE ">
           </div>
-
+        </form>
         </div>
         <br>
         <div class="information_content">
@@ -33,7 +33,8 @@
                 <th>INFO</th>
                 <th>REQUIRE PAYMENT</th>
                 <th>ITEM TO SELL</th>
-                <th>AMOUNT</th>
+                <th>PRICE</th>
+                <th>OPEN FOR PAYMENT</th>
                 <th>ACTION</th>
               </tr>
             </thead>
@@ -48,10 +49,31 @@
                   <td><input name="title" id="{{event.uid}}title" type="text" value="{{event.title}}" disabled></td>
                   <td><input name="date_held" id="{{event.uid}}date_held" type="date" value="{{event.date_held}}" disabled></td>
                   <td><input name="info" id="{{event.uid}}info" type="text" value="{{event.info}}" disabled></td>
-                  <td><input name="required_payment" id="{{event.uid}}required_payment" type="text" value="{{event.required_payment}}" disabled></td>
+                  <td>
+                    <select name="required_payment" id="{{event.uid}}required_payment" onchange="required_payment_check(this, {{event.uid}})" disabled>
+                      {% if event.required_payment == 'YES' %}
+                        <option value="YES" selected>YES</option>
+                        <option value="NO">NO</option>
+                      {% else %}
+                        <option value="YES">YES</option>
+                        <option value="NO" selected>NO</option>
+                      {% endif %}
+                    </select>
+                  </td>
                   <td><input name="item" id="{{event.uid}}item" type="text" value="{{event.item}}" disabled></td>
-                  <td><input name="amount" id="{{event.uid}}amount" type="text" value="{{event.amount}}" disabled></td>
-                  <td><a id="{{event.uid}}edit" onclick="">✎</a><button id="{{event.uid}}button" type="submit" hidden>💾</button>  <a onclick="">❌</a></td>
+                  <td><input name="amount" id="{{event.uid}}amount" type="number" step="2.5" value="{{event.amount}}" disabled></td>
+                  <td>
+                    <select name="open" id="{{event.uid}}open_for_payment" onchange="open_payment_notification({{event.uid}})" disabled>
+                      {% if event.open_for_payment == 'YES' %}
+                        <option value="YES" selected>YES</option>
+                        <option value="NO">NO</option>
+                      {% else %}
+                        <option value="YES">YES</option>
+                        <option value="NO" selected>NO</option>
+                      {% endif %}
+                    </select>
+                  </td>
+                  <td><a id="{{event.uid}}edit" onclick="edit_eventInfo('{{event.uid}}')">✎</a><button id="{{event.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteEvent({{event.uid}})">❌</a></td>
                 </form>
               </tr>
               {% endfor %}
@@ -67,7 +89,7 @@
       <br>
       <hr>
       <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
-      </form>
+
     </div>
 
   </div>

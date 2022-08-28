@@ -48,25 +48,93 @@ function edit_studentInfo(uid){
         document.getElementById(uid+"firstname").disabled=false;
         document.getElementById(uid+"course").disabled=false;
         document.getElementById(uid+"year").disabled=false;
+        document.getElementById(uid+"email").disabled=false;
         document.getElementById(uid+"edit").style.display='none';
         document.getElementById(uid+"button").hidden=false;
-    }else{
-        document.getElementById(uid+"rfid").disabled=true;
-        document.getElementById(uid+"lastname").disabled=true;
-        document.getElementById(uid+"firstname").disabled=true;
-        document.getElementById(uid+"course").disabled=true;
-        document.getElementById(uid+"year").disabled=true;
-        document.getElementById(uid+"edit").style.display='block';
     }
 
 }
 
+function update_order(uid){
+    if(document.getElementById(uid+"uid").disabled == true){
+        if(document.getElementById(uid+"status").value === "ORDERED" || document.getElementById(uid+"status").value === "PAID"){
+            document.getElementById(uid+"status").disabled=false;
+            document.getElementById(uid+"button").hidden=false;
+            document.getElementById(uid+"edit").hidden=true;
+        }
+    }
+}
+
+function on_paid_order(status, uid){
+    if(status === "PAID"){
+        document.getElementById(uid+"reference").disabled=false;
+        document.getElementById(uid+"reference").required=true;
+    }else{
+        document.getElementById(uid+"reference").disabled=true;
+        document.getElementById(uid+"reference").required=false;
+    }
+}
+
+function edit_eventInfo(uid){
+    if(document.getElementById(uid+"uid").disabled == true){
+        document.getElementById(uid+"title").disabled=false;
+        document.getElementById(uid+"date_held").disabled=false;
+        document.getElementById(uid+"info").disabled=false;
+        document.getElementById(uid+"required_payment").disabled=false;
+        document.getElementById(uid+"item").disabled=false;
+        document.getElementById(uid+"amount").disabled=false;
+        document.getElementById(uid+"button").hidden=false;
+        document.getElementById(uid+"open_for_payment").disabled=false;
+        document.getElementById(uid+"edit").style.display='none';
+    }
+}
+
+function open_payment_notification(uid){
+    if(document.getElementById(uid+'open_for_payment').value==='YES')
+        if(confirm("Do you confirm that selecting 'YES' option for 'Open for Payment' will notify all accounts that are in reservation") === false){
+            document.getElementById(uid+'open_for_payment').value='NO'
+        }
+}
+
+function order_sum_total(qty, amount){
+    document.getElementById('total_display').innerHTML="Total: "+(parseInt(qty)*parseInt(amount)).toFixed(2);
+    document.getElementById('total_amount').innerHTML=(parseInt(qty)*parseInt(amount)).toFixed(2);
+}
+
+function required_payment_check(selector, uid){
+    if(selector != null){
+        if(selector.value == "NO"){
+            document.getElementById(uid+"item").value='';
+            document.getElementById(uid+"amount").value=0.0;
+        }
+    }
+}
 function deleteStudent(uid){
-    if(confirm("Are you sure you want to delete id["+uid+"]?") === true){
+    if(confirm("Are you sure you want to delete student id["+uid+"]?") === true){
         location.href="/PSITS@StudentRemove/"+uid;
     }
 }
 
+function deleteEvent(uid){
+    if(confirm("Are you sure you want to delete event id["+uid+"]?") === true){
+        location.href="/PSITS@EventRemove/"+uid;
+    }
+}
+
+function deleteAnnouncement(uid){
+    if(confirm("Are you sure you want to delete this announcement?") === true){
+        location.href="/announcement_removal/"+uid;
+    }
+}
+
+function closeEventModal(){
+    location.href='/PSITS'
+}
+
 function showEvents(){
     location.href="/PSITS@Events"
+}
+
+function showOrders(){
+    location.href="/PSITS@Orders"
 }

@@ -6,9 +6,11 @@
     <div class="ann_bg_2"></div>
     <! -- This is for the background -->
 
-    <div class="contents">
-        <div class="announcement_content">
 
+    <div class="contents">
+
+        <div class="announcement_content">
+            <br>
             <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
                 <br>
                 <h1>ADMINISTRATION</h1>
@@ -18,6 +20,10 @@
                 <br>
                 <div class="announcement_field">
                     <button onclick="showEvents()">EVENTS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="showOrders()">ORDERS</button>
                 </div>
                 <br>
             </div>
@@ -48,7 +54,7 @@
                 <h2>{{announcement.title}}</h2>
                 <h3>{{announcement.date}}</h3>
                 <span>{{announcement.content}}</span>
-                <a style="display:{{admin}}" href="/announcement_removal/{{announcement.uid}}">Remove</a>
+                <a style="display:{{admin}}"  onclick="deleteAnnouncement({{announcement.uid}})">Remove</a>
             </div>
             {% endfor %}
             <br><br><br>
@@ -60,14 +66,24 @@
                 <button onclick="createNewEvent()">Add Event</button>
             </div>
             {% for event in events %}
+                {% if event.requirePayment() and account_data !=null %}
+                <div class="events_thread" style="cursor:pointer;" onclick="location.href='/PSITS@OrderForm/{{event.uid}}'">
+                    <h2>{{ event.title }}</h2>
+                    <span>{{ event.info }}</span>
+                </div>
+                {% elif event.requirePayment() %}
+                <div class="events_thread" style="cursor:pointer;" onclick="location.href='/PSITS@Login'">
+                    <h2>{{ event.title }}</h2>
+                    <span>{{ event.info }}</span>
+                </div>
+                {% else %}
                 <div class="events_thread">
                     <h2>{{ event.title }}</h2>
-                    <span>{{ event.date_held }}</span>
-                    <a style="display:{{admin}}; color: red;" href="/event_removal/{{event.uid}}">Remove</a>
+                    <span>{{ event.info }}</span>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
-
     </div>
     <div class="copyright">
         <p>PSITS &copy; 2022 - Developed by <a href="">Abejar and Company</a></p>

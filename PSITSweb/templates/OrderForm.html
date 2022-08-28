@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div id="event_modal" class="event_modal">
+    <button class="event_modal_close_button" onclick="closeEventModal()">❌</button>
+    <div class="event_modal_content">
+      <form action="/PSITSOrderHandler" method="post">
+        <h1>{{event.title}}</h1>
+        <p>{{event.info}}</p>
+        <p class="message_box">{{user_message}}</p>
+        {% if account_status == 'NOT-RESERVED' %}
+          <input type="text" name="status" value="{{account_status}}" hidden>
+          <button class="event_button" type="submit">Reserve now!</button>
+        {% elif account_status == 'ORDER' %}
+          <input type="text" name="status" value="{{account_status}}" hidden>
+          <input class="input_form" id="quantity" type="number" name="quantity" value="1" onchange="order_sum_total(this.value, {{event.amount}})">
+          <br>
+          <input id="total_amount" type="number" name="total" step="2" value="{{event.amount}}" hidden>
+          <p id="total_display" style="font-size: 1.2em; font-weight: bold;">Total: {{event.amount}}</p>
+          <button class="event_button" type="submit">Order</button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

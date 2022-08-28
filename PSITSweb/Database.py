@@ -1,5 +1,5 @@
 from mysql import connector
-from Models import Announcement, Account, Events
+from Models import Announcement, Account, Events, OrderAccount, Order
 
 
 def ConnectDB():
@@ -89,10 +89,11 @@ def getAccount(uid: int, password: str) -> Account:
             data[0]['firstname'],
             data[0]['lastname'],
             data[0]['course'],
-            data[0]['year']
+            data[0]['year'],
+            data[0]['email']
         )
         return account
-    return Account(None, None, None, None, None, None)
+    return Account(None, None, None, None, None, None, None)
 
 
 def getAllAccounts(search: str):
@@ -109,7 +110,8 @@ def getAllAccounts(search: str):
             acc['firstname'],
             acc['lastname'],
             acc['course'],
-            acc['year']
+            acc['year'],
+            acc['email']
         )
         accounts.append(account)
     return accounts
@@ -117,8 +119,8 @@ def getAllAccounts(search: str):
 
 def updateAccount(account: Account):
     query: str = f"UPDATE `accounts` SET rfid='{account.rfid}',firstname='{account.firstname}'," \
-                 f"lastname='{account.lastname}',course='{account.course}',year={account.year} where" \
-                 f" idno={account.uid}"
+                 f"lastname='{account.lastname}',course='{account.course}',year={account.year}" \
+                 f", email='{account.email}' where idno={account.uid}"
     executeQueryCommit(query)
 
 
@@ -150,10 +152,11 @@ def getAccountByID(uid: int) -> Account:
             data[0]['firstname'],
             data[0]['lastname'],
             data[0]['course'],
-            data[0]['year']
+            data[0]['year'],
+            data[0]['email']
         )
         return account
-    return Account(None, None, None, None, None, None)
+    return Account(None, None, None, None, None, None, None)
 
 
 def registerAccountDB(account: Account, password: str):
@@ -169,9 +172,9 @@ def registerAccountDB(account: Account, password: str):
             year - int
             password - varchar
         """
-    query: str = f"INSERT INTO `accounts` (`idno`,`rfid`,`firstname`,`lastname`,`course`,`year`,`password`) values " \
-                 f"({account.uid},'{account.rfid}','{account.firstname}'" \
-                 f",'{account.lastname}','{account.course}',{account.year},'{password}');"
+    query: str = f"INSERT INTO `accounts` (`idno`,`rfid`,`firstname`,`lastname`,`course`,`year`,`email`,`password`)" \
+                 f" values ({account.uid},'{account.rfid}','{account.firstname}'" \
+                 f",'{account.lastname}','{account.course}',{account.year},'{account.email}','{password}');"
     executeQueryCommit(query)
 
 
@@ -214,8 +217,8 @@ def addEvent(event: Events):
             item_to_be_paid - varchar
             amount - decimal(10,2)
         """
-    query: str = f"INSERT INTO `events` values ({int(event.uid)}, '{event.title}', '{event.date_held}', '{event.info}'"\
-                 f", '{event.required_payment}', '{event.item}', {float(int(event.amount))})"
+    query: str = f"INSERT INTO `events` values ({int(event.uid)}, '{event.title}', '{event.date_held}', '{event.info}'" \
+                 f", '{event.required_payment}', '{event.item}', {float(int(event.amount))},'{event.open_for_payment}')"
     executeQueryCommit(query)
 
 
@@ -247,7 +250,7 @@ def getEvents() -> list:
             item_to_be_paid - varchar
             amount - decimal(10,2)
     """
-    query: str = "SELECT * FROM EVENTS"
+    query: str = "SELECT * FROM EVENTS ORDER BY date_held ASC"
     data: dict = executeQueryReturn(query)
 
     events: list = []
@@ -259,10 +262,18 @@ def getEvents() -> list:
             e.get('info'),
             e.get('required_payment'),
             e.get('item_to_be_paid'),
-            e.get('amount')
+            e.get('amount'),
+            e.get('open')
         )
         events.append(event)
     return events
+
+
+def getEvent(uid):
+    for event in getEvents():
+        if int(event.uid) == int(uid):
+            return event
+    return None
 
 
 def getSearchEvents(search) -> list:
@@ -277,9 +288,9 @@ def getSearchEvents(search) -> list:
             item_to_be_paid - varchar
             amount - decimal(10,2)
     """
-    query: str = f"SELECT * FROM EVENTS where uid like '%{search}%' or title like '%{search}%'"
+    query: str = f"SELECT * FROM EVENTS where uid like '%{search}%' or title like '%{search}%' ORDER BY date_held ASC"
     if search is None:
-        query = "SELECT * FROM EVENTS"
+        query = "SELECT * FROM EVENTS ORDER BY date_held ASC"
     data: dict = executeQueryReturn(query)
 
     events: list = []
@@ -291,7 +302,114 @@ def getSearchEvents(search) -> list:
             e.get('info'),
             e.get('required_payment'),
             e.get('item_to_be_paid'),
-            e.get('amount')
+            e.get('amount'),
+            e.get('open'),
         )
         events.append(event)
     return events
+
+
+def updateEvent(event: Events):
+    query: str = f"UPDATE `events` SET title='{event.title}',date_held='{event.date_held}'," \
+                 f"info='{event.info}',required_payment='{event.required_payment}'," \
+                 f"item_to_be_paid='{event.item}',amount={event.amount}, open='{event.open_for_payment}' " \
+                 f"where uid={event.uid}"
+    executeQueryCommit(query)
+
+
+def getOrderAccount(event_uid, account_uid):
+    query: str = f"SELECT * FROM `order_account` where account_id={account_uid} and event_uid={event_uid} " \
+                 f"and account_status!='CLAIMED'"
+    data: dict = executeQueryReturn(query)
+
+    for d in data:
+        order = OrderAccount(
+            d.get('uid'),
+            d.get('event_uid'),
+            d.get('account_id'),
+            d.get('account_status'),
+            d.get('quantity'),
+            d.get('payment_reference')
+        )
+        return order
+    return OrderAccount(None, None, None, None, None, None)
+
+
+def getOrder(event_uid, status):
+    query: str = f"SELECT * FROM `order_account` where event_uid={event_uid} and account_status='{status}'"
+    data: dict = executeQueryReturn(query)
+    orders: list = []
+    for d in data:
+        order = OrderAccount(
+            d.get('uid'),
+            d.get('event_uid'),
+            d.get('account_id'),
+            d.get('account_status'),
+            d.get('quantity'),
+            d.get('payment_reference')
+        )
+        orders.append(order)
+    return orders
+
+
+def getOrderById(uid):
+    query: str = f"SELECT * FROM `order_account` where uid={uid}"
+    data: dict = executeQueryReturn(query)
+    if len(data) > 0:
+        order = OrderAccount(
+            data[0]['uid'],
+            data[0]['event_uid'],
+            data[0]['account_id'],
+            data[0]['account_status'],
+            data[0]['quantity'],
+            data[0]['payment_reference']
+        )
+        return order
+    return None
+
+
+def updateOrder(order: OrderAccount):
+    query: str = f"UPDATE `order_account` SET account_status='{order.status}', quantity={order.quantity}, " \
+                 f"payment_reference='{order.reference}' where uid={order.uid}"
+    executeQueryCommit(query)
+
+
+def createOrder(order: OrderAccount):
+    query: str = f"INSERT INTO `order_account`(event_uid,account_id,account_status,quantity,payment_reference) " \
+                 f"values({order.event_uid},{order.account_uid},'{order.status}',{order.quantity},'{order.reference}')"
+    executeQueryCommit(query)
+
+
+def getAllOrders(search: str):
+    if search is None:
+        search = ''
+    if search != '':  # if there is an input
+        if search.lower() == 'all':
+            search = ""
+        elif len(getSearchEvents(search)) > 0:
+            search = f" where event_uid like {getSearchEvents(search)[0].uid}"
+        elif len(getAllAccounts(search)) > 0:
+            search = f" where account_id like {getAllAccounts(search)[0].uid}"
+        else:
+            search = f" where account_status like '%{search}%'"
+
+    query: str = f"SELECT * FROM `order_account` {search}"
+    data: dict = executeQueryReturn(query)
+    orders: list = []
+
+    for d in data:
+        order_account = OrderAccount(
+            d.get('uid'),
+            d.get('event_uid'),
+            d.get('account_id'),
+            d.get('account_status'),
+            d.get('quantity'),
+            d.get('payment_reference')
+        )
+        order = Order(
+            getEvent(order_account.event_uid),
+            getAccountByID(order_account.account_uid),
+            order_account
+        )
+        orders.append(order)
+    return orders

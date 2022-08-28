@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div>
+    <div class="information_container">
+
+      <div class="information_content">
+        <h1>Orders List</h1>
+      </div>
+
+        <div class="information_menu">
+        <form action="" method="get">
+          <div class="menu_item">
+            <button type="reset" onclick="home()">PSITS</button>
+            <button type="submit">Search</button>
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH EVENT | STUDENT | STATUS ">
+          </div>
+        </form>
+
+        </div>
+        <br>
+        <div class="information_content">
+          <div class="menu_item">
+            <h1 style="color: aqua;"> Orders: ₱{{reserve}}  |  Total: ₱{{paid}}/{{total}}  </h1>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ORDER ID</th>
+                <th>EVENT</th>
+                <th>STUDENT</th>
+                <th>STATUS</th>
+                <th>ITEM</th>
+                <th>QUANTITY</th>
+                <th>AMOUNT</th>
+                <th>REFERENCE</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for order in orders %}
+              <form method="post" action="">
+                <tr>
+                  <input name="order_id" id="{{order.order_account.uid}}idnum" type="text" value="{{order.order_account.uid}}" hidden>
+                  <td><input name="uid" id="{{order.order_account.uid}}uid" type="text" value="{{order.order_account.uid}}" disabled></td>
+                  <td><input name="event" id="{{order.order_account.uid}}event" type="text" value="{{order.event.title}}" disabled></td>
+                  <td><input name="student" id="{{order.order_account.uid}}student" type="text" value="{{order.account.lastname}}, {{order.account.firstname}}" disabled></td>
+                  <td>
+                    <select name="status" id="{{order.order_account.uid}}status" onchange="on_paid_order(this.value, {{order.order_account.uid}})" disabled>
+                      {% if order.order_account.status == 'ORDERED' %}
+                        <option value="ORDERED" selected>ORDERED</option>
+                        <option value="PAID">PAID</option>
+                      {% elif order.order_account.status == 'RESERVED' %}
+                        <option value="RESERVED" selected>RESERVED</option>
+                      {% elif order.order_account.status == 'PAID' %}
+                        <option value="PAID" selected>PAID</option>
+                        <option value="CLAIMED">CLAIMED</option>
+                      {% elif order.order_account.status == 'CLAIMED' %}
+                        <option value="CLAIMED" selected>CLAIMED</option>
+                      {% endif %}
+                    </select>
+                  </td>
+                  <td><input name="item" id="{{order.order_account.uid}}item" type="text" value="{{order.event.item}}" disabled></td>
+                  <td><input name="quantity" id="{{order.order_account.uid}}quantity" type="text" value="{{order.order_account.quantity}}" disabled></td>
+                  <td><input name="amount" id="{{order.order_account.uid}}amount" type="text" value="{{order.total}}" disabled></td>
+                  <td><input name="reference" id="{{order.order_account.uid}}reference" type="text" value="{{order.order_account.reference}}" disabled></td>
+                  <td><a id="{{order.order_account.uid}}edit" onclick="update_order({{order.order_account.uid}})">✎</a><button id="{{order.order_account.uid}}button" type="submit" hidden>💾</button></td>
+                </tr>
+              </form>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <p style="text-align: center; color: white;">To avoid human error in transaction data, the delete action was removed. (Delete data from MySQL server manually)</p>
+      <hr>
+      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+
+    </div>
+
+  </div>
+{% endblock %}
