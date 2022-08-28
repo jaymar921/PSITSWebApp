@@ -5,4 +5,5 @@
 <h2>Current Features</h2>
 <p> - PSITS Officers to post Announcements</p>
 <p> - PSITS Officers to create Events</p>
+<p> - Students can reserve/order items </p>
 <p> - Login/Logout for students/admins</p>
