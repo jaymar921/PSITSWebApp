@@ -33,13 +33,19 @@
             </div>
 
             <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
-                <form action="/PSITS@announce" method="post">
+                <form action="/PSITS@announce" method="post" enctype="multipart/form-data">
                     <div class="announcement_field">
                         <input type="text" name="title" placeholder="Announcement Title">
                     </div>
 
                     <div class="announcement_field_content">
                         <textarea name="content" cols="5" rows="5"></textarea>
+                    </div>
+                    <div class="announcement_field">
+                        <input class="file_input" type="file" name="file">
+                    </div>
+                    <div class="announcement_field">
+                        <p style="color: white; text-align: center;">Accept only PNG</p>
                     </div>
 
                     <div class="announcement_field">
@@ -52,8 +58,11 @@
             {% for announcement in ANNOUNCEMENTS %}
             <div class="announcement_thread">
                 <h2>{{announcement.title}}</h2>
-                <h3>{{announcement.date}}</h3>
+                <h3>({{announcement.date}})</h3>
                 <span>{{announcement.content}}</span>
+                {% if announcement.image_location != '' %}
+                <img class="announcement_image" src="{{ url_for('download_file', filename=announcement.image_location) }}">
+                {% endif %}
                 <a style="display:{{admin}}"  onclick="deleteAnnouncement({{announcement.uid}})">Remove</a>
             </div>
             {% endfor %}
@@ -83,9 +92,19 @@
                 </div>
                 {% endif %}
             {% endfor %}
+            <br>
+
+            <div class="copyright show_on_small_screen">
+
+                <p>PSITS &copy; 2022 - Developed by <a href="">Abejar and Company</a></p>
+            </div>
         </div>
+
+
     </div>
-    <div class="copyright">
+    <div class="copyright hide_on_small_screen">
+
         <p>PSITS &copy; 2022 - Developed by <a href="">Abejar and Company</a></p>
     </div>
+
 {% endblock %}

@@ -30,4 +30,4 @@ def pushEmail(email: Email):
         response = requests.post('https://api.magicbell.com/notifications', headers=headers, json=data)
         print(f'An email was sent to {email.recipient}')
     finally:
-        print('Email API was called')
+        None

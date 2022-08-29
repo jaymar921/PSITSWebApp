@@ -1,3 +1,7 @@
+create database psitswebapp;
+
+use psitswebapp;
+
 create table announcements(
     id int not null auto_increment,
     title varchar(100) not null,
@@ -38,17 +42,3 @@ create table order_account(
 	foreign key(account_id) references accounts(idno)
 ) engine = innodb;
 
-
-
-
-
-
-/*
-    in events accounts.
-    user can have account_status null at first place
-
-    account_status can be
-    RESERVED,
-    PAID,
-    CLAIMED
-*/

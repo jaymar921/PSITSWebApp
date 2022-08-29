@@ -168,10 +168,10 @@ body{
     }
 
     .copyright p{
-        position: relative;
-        left: 180px;
+        position: absolute;
         width: 50ch;
         font-size: 0.8em;
+        text-align: center;
     }
 
     .banner img{
@@ -209,10 +209,10 @@ body{
     }
 
     .copyright p{
-        position: relative;
-        left: 10px;
+        position: absolute;
         width: 50ch;
         font-size: 0.4em;
+        text-align: center;
     }
 
     .banner img{

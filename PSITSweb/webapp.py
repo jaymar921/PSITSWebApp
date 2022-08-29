@@ -1,8 +1,9 @@
 import datetime
+import os
 import random
 
 import flask
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
     addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
@@ -11,7 +12,12 @@ from PSITSweb.EmailAPI import pushEmail
 from PSITSweb.Models import Events, Account, Email, OrderAccount
 from Util import hashData, isAdmin
 
+
+UPLOAD_FOLDER = 'SERVER_FILES/'
+ALLOWED_EXTENSION = {'png'}
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
 
 
@@ -23,12 +29,26 @@ def webpage():
 @app.route("/PSITS")
 def landing_page():
     events: list = getEvents()
+    announcements = getAnnouncements()
+
+    # Load the Photos if exist
+    for announcement in announcements:
+        if checkImageExist(announcement.title+".png"):
+            announcement.image_location = f"{announcement.title}.png"
+
+    # show the latest 10 announcement
+    temp = announcements.copy()
+    if len(announcements) > 10:
+        announcements: list = []
+        for i in range(0, 10):
+            announcements.append(temp[i])
+        temp.clear()
 
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("Homepage.html",
                                    title="PSITS ADMIN",
-                                   ANNOUNCEMENTS=getAnnouncements(),
+                                   ANNOUNCEMENTS=announcements,
                                    login="none",
                                    logout="block",
                                    account=session['username'],
@@ -38,7 +58,7 @@ def landing_page():
         else:
             return render_template("Homepage.html",
                                    title="PSITS ANNOUNCEMENTS",
-                                   ANNOUNCEMENTS=getAnnouncements(),
+                                   ANNOUNCEMENTS=announcements,
                                    login="none", logout="block",
                                    account=session['username'],
                                    admin="none",
@@ -46,7 +66,7 @@ def landing_page():
                                    account_data=getAccountByID(session['username']))
     return render_template("Homepage.html",
                            title="PSITS ANNOUNCEMENTS",
-                           ANNOUNCEMENTS=getAnnouncements(),
+                           ANNOUNCEMENTS=announcements,
                            login="block",
                            logout="none", admin="none", events=events)
 
@@ -72,6 +92,15 @@ def post_announcement():
     if "username" in session:
         if isAdmin(session['username']):
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
+
+            if 'file' in request.files:
+                file = request.files['file']
+                ext = file.filename.split(".")[1]
+                if ext in ALLOWED_EXTENSION:
+                    file.filename = title + "." + ext
+                    path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                    file.save(path)
+
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")
@@ -337,7 +366,7 @@ def psits_order_form():
     elif order_account.status == 'PAID':
         user_message = f"Hello {getAccountByID(session['username']).firstname}!\n\n" \
                        f"You already paid the {order_account.quantity} {event.item}" \
-                       f"{'s' if int(order_account.quantity) > 1 else ''} that you have requested " \
+                       f"{'s' if int(order_account.quantity) > 1 else ''} that you have ordered " \
                        f"and your reference code is: {order_account.reference}. Please wait for the" \
                        f" announcement of the claiming schedule at the PSITS page. Thank you :D"
     return render_template('OrderForm.html',
@@ -458,5 +487,14 @@ def after_request(response):
     return response
 
 
+def checkImageExist(name: str):
+    return os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], name))
+
+
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=False, port=5000)

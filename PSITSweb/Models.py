@@ -4,6 +4,7 @@ class Announcement:
         self.title = title
         self.date = date
         self.content = content
+        self.image_location = ''
 
     def __repr__(self):
         return str(self.uid)

@@ -11,14 +11,14 @@
             <h3 style="text-align: center; padding: 0; border: 0; margin: 0;">Welcome to PSITS!</h3>
             <p style="text-align: center; padding: 0; border: 0; margin: 0; color: red;">{{message}}</p>
             <div class="form_field">
-                <p>ID Number:</p><input name="id_number" type="text" placeholder="Enter ID Number">
+                <p>ID Number:</p><input name="id_number" type="text" pattern="[0-9]{7,}" placeholder="Enter ID Number" required>
             </div>
             <div class="form_field">
-                <p>Password: </p><input name="password" type="password" placeholder="Password">
+                <p>Password: </p><input name="password" type="password" placeholder="Password" required>
             </div>
             <div class="form_field">
                 <a onclick="home()">Cancel</a>
-                <button>Login</button>
+                <button type="submit">Login</button>
                 <a onclick="register()">Register</a>
             </div>
         </form>

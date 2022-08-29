@@ -24,3 +24,4 @@ def isAdmin(uid) -> bool:
         if str(value).__eq__(str(uid)):
             return True
     return False
+
