@@ -1,5 +1,5 @@
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order
+from PSITSweb.Models import Announcement, Account, Events, OrderAccount, Order
 
 
 def ConnectDB():

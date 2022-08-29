@@ -5,12 +5,12 @@ import random
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
-from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
+from PSITSweb.Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
     addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
     updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById
 from PSITSweb.EmailAPI import pushEmail
 from PSITSweb.Models import Events, Account, Email, OrderAccount
-from Util import hashData, isAdmin
+from PSITSweb.Util import hashData, isAdmin
 
 
 UPLOAD_FOLDER = 'SERVER_FILES/'
