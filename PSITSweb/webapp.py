@@ -6,9 +6,10 @@ import socket
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
-from PSITSweb.Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, getEvents, \
+from PSITSweb.Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
+    getEvents, \
     addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
-    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById
+    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, databaseInit
 from PSITSweb.EmailAPI import pushEmail
 from PSITSweb.Models import Events, Account, Email, OrderAccount
 from PSITSweb.Util import hashData, isAdmin
@@ -500,5 +501,6 @@ def download_file(filename):
 if __name__ == '__main__':
     hostname = socket.gethostname()
     IPAddr = socket.gethostbyname(hostname)
+    databaseInit()
     print("Server running on "+IPAddr+":5000")
     serve(app, host="0.0.0.0", port=5000)
