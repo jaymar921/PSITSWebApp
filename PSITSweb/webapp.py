@@ -1,6 +1,7 @@
 import datetime
 import os
 import random
+import socket
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
@@ -11,7 +12,7 @@ from PSITSweb.Database import getAnnouncements, getAccount, getAccountByID, post
 from PSITSweb.EmailAPI import pushEmail
 from PSITSweb.Models import Events, Account, Email, OrderAccount
 from PSITSweb.Util import hashData, isAdmin
-
+from waitress import serve
 
 UPLOAD_FOLDER = 'SERVER_FILES/'
 ALLOWED_EXTENSION = {'png'}
@@ -497,4 +498,7 @@ def download_file(filename):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=False, port=5000)
+    hostname = socket.gethostname()
+    IPAddr = socket.gethostbyname(hostname)
+    print("Server running on "+IPAddr+":5000")
+    serve(app, host="0.0.0.0", port=5000)
