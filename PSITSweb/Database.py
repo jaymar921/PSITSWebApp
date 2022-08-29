@@ -1,3 +1,5 @@
+import datetime
+
 from mysql import connector
 from PSITSweb.Models import Announcement, Account, Events, OrderAccount, Order
 
@@ -64,6 +66,13 @@ def databaseInit():
                         foreign key(account_id) references accounts(idno)
                     ) engine = innodb;
                 """)
+        cursor.execute("""
+                            create table logging(
+                                uid int not null auto_increment primary key,
+                                date datetime not null,
+                                message varchar(150) not null
+                            ) engine = innodb;
+                        """)
         print(f"PSITS Webapp successfully created a database [{DATABASE_NAME}]")
         print(f"PSITS Webapp successfully created a tables [announcements,accounts,events,order_account]")
     print(f"All is set... ")
@@ -480,3 +489,13 @@ def getAllOrders(search: str):
         )
         orders.append(order)
     return orders
+
+
+def getTime():
+    return f"[{datetime.datetime.now()}] "
+
+
+def databaseLog(message):
+    print(f"{getTime()}: {message}")
+    query = f"INSERT INTO `logging` (date, message) values ('{datetime.datetime.now()}','{message}')"
+    executeQueryCommit(query)

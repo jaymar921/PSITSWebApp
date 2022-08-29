@@ -42,3 +42,9 @@ create table order_account(
 	foreign key(account_id) references accounts(idno)
 ) engine = innodb;
 
+create table logging(
+    uid int not null auto_increment primary key,
+    date datetime not null,
+    message varchar(150) not null
+) engine = innodb;
+

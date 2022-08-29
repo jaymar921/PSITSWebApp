@@ -9,7 +9,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from PSITSweb.Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
     getEvents, \
     addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
-    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, databaseInit
+    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
+    databaseInit, databaseLog
 from PSITSweb.EmailAPI import pushEmail
 from PSITSweb.Models import Events, Account, Email, OrderAccount
 from PSITSweb.Util import hashData, isAdmin
@@ -35,7 +36,7 @@ def landing_page():
 
     # Load the Photos if exist
     for announcement in announcements:
-        if checkImageExist(announcement.title+".png"):
+        if checkImageExist(announcement.title + ".png"):
             announcement.image_location = f"{announcement.title}.png"
 
     # show the latest 10 announcement
@@ -94,15 +95,17 @@ def post_announcement():
     if "username" in session:
         if isAdmin(session['username']):
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
-
+            databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
             if 'file' in request.files:
                 file = request.files['file']
-                ext = file.filename.split(".")[1]
-                if ext in ALLOWED_EXTENSION:
-                    file.filename = title + "." + ext
-                    path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-                    file.save(path)
-
+                if file is not None:
+                    if file.filename != '':
+                        ext = file.filename.split(".")[1]
+                        if ext in ALLOWED_EXTENSION:
+                            file.filename = title + "." + ext
+                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                            file.save(path)
+                            databaseLog(f"Announcement [{title}] comes with an image")
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")
@@ -115,6 +118,7 @@ def remove_announcement(uid):
     if "username" in session:
         if isAdmin(session['username']):
             removeAnnouncement(uid)
+            databaseLog(f"Removed announcement [{uid}]")
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")
@@ -128,6 +132,7 @@ def login():
     account = getAccount(int(account_id), hashData(password))
     if account.uid is not None:
         session['username'] = account.uid
+        databaseLog(f"Account ID [{session['username']}] has logged in")
         return redirect(url_for("landing_page"))
 
     account = getAccountByID(int(account_id))
@@ -171,6 +176,7 @@ def registerAccount():
            We are happy to know that you've signed up for PSITS!
            This email is auto generated, please do not reply :)
         """
+        databaseLog(f"New account created. Account ID [{account.uid}]")
         try:
             pushEmail(Email('Welcome to PSITS', email, content))
         finally:
@@ -195,7 +201,7 @@ def EventHandlerPSITS():
         event_reqP = request.form.get('require_payment')
         event_item = request.form['Item']
         event_amt = request.form['Amount']
-
+        databaseLog(f"Created Event [{event_title}]")
         if event_amt == '' or event_amt is None:
             event_amt = 0
         if event_reqP is None:
@@ -219,6 +225,7 @@ def removeEventPage(uid):
     if "username" in session:
         if isAdmin(session['username']):
             removeEvent(uid)
+            databaseLog(f"Removed Event ID [{uid}]")
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")
@@ -251,6 +258,7 @@ def psits_students_list():
             request.form['email']
         )
         updateAccount(updated_account)
+        databaseLog(f"Updated account ID [{updated_account.uid}]")
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
                                admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
@@ -264,6 +272,7 @@ def psits_remove_student(uid):
     if not isAdmin(session['username']):
         return redirect(url_for('cant_find_link'))
     removeAccount(uid)
+    databaseLog(f"Removed account ID [{uid}]")
     return redirect(url_for("psits_students_list"))
 
 
@@ -301,8 +310,9 @@ def psits_events_list():
                                f"Our {event.title} is now available for an order! The {event.item} is " \
                                f"priced at P{event.amount}. Login to PSITS page to order now!"
                 if getAccountByID(order.account_uid).email is not None or "":
-                    pushEmail(Email("PSITS - "+event.title, getAccountByID(order.account_uid).email, user_message))
+                    pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
         updateEvent(event)
+        databaseLog(f"Updated event ID [{event.uid}] -- {event.title}")
         return render_template("Events.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
                                admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
@@ -316,6 +326,7 @@ def psits_remove_event(uid):
     if not isAdmin(session['username']):
         return redirect(url_for('cant_find_link'))
     removeEvent(uid)
+    databaseLog(f"Removed event ID [{uid}]")
     return redirect(url_for("psits_events_list"))
 
 
@@ -397,6 +408,7 @@ def order_handler():
     status = request.form['status']
     if status == 'NOT-RESERVED':
         createOrder(OrderAccount(None, event_uid, session['username'], 'RESERVED', 0, ''))
+        databaseLog(f"Order request | Account ID [{session['username']}] - status: RESERVATION")
     elif status == 'ORDER':
         order = getOrderAccount(event_uid, session['username'])
         order.status = 'ORDERED'
@@ -410,6 +422,8 @@ def order_handler():
                        f"P{int(order_account.quantity) * int(event.amount)}, if you have time, you can" \
                        f" visit the PSITS office at 5th floor UC Main bldg. located near room 539 for the payment."
         pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
+        databaseLog(f"Order request | Account ID [{session['username']}] - status: ORDERED "
+                    f"{request.form['quantity']} {event.item}{'s' if int(order_account.quantity) > 1 else ''}")
     return redirect(url_for('landing_page'))
 
 
@@ -469,6 +483,7 @@ def psits_orders_list():
 
 @app.route("/PSITS@Logout")
 def logout():
+    databaseLog(f"Account ID [{session['username']}] has logged out")
     session.clear()
     return redirect(url_for("landing_page"))
 
@@ -500,7 +515,7 @@ def download_file(filename):
 
 if __name__ == '__main__':
     hostname = socket.gethostname()
-    IPAddr = socket.gethostbyname(hostname)
+    IPAddress = socket.gethostbyname(hostname)
     databaseInit()
-    print("Server running on "+IPAddr+":5000")
+    databaseLog(f"Server Started, running on {IPAddress}:5000")
     serve(app, host="0.0.0.0", port=5000)
