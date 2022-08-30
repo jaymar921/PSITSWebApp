@@ -304,6 +304,7 @@ def addEvent(event: Events):
             required_payment - varchar
             item_to_be_paid - varchar
             amount - decimal(10,2)
+            open - varchar(3)
         """
     query: str = f"INSERT INTO `events` values ({int(event.uid)}, '{event.title}', '{event.date_held}', '{event.info}'" \
                  f", '{event.required_payment}', '{event.item}', {float(int(event.amount))},'{event.open_for_payment}')"

@@ -16,9 +16,14 @@ def isAdmin(uid) -> bool:
         'ABELLANA': '21471909',
         'DUCAL': '19880152',
         'ANIBAN': '21496369',
-        'CEMPRON': '19841998',
+        'CEMPRON':   '19841998',
         'COSTILLAS': '21540950',
-        'LEYROS': '21435474'
+        'LEYROS': '21435474',
+        'PADOLINA': '21400973',
+        'DE LOS REYES': '19903483',
+        'FLORENTINO': '18725242',
+        'CUICO': '19888957',
+        'OPINA': '19884253'
     }
     for key, value in admins.items():
         if str(value).__eq__(str(uid)):
