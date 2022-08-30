@@ -165,6 +165,7 @@ def getAccount(uid: int, password: str) -> Account:
             lastname - varchar
             course - varchar
             year - int
+            email - varchar
             password - varchar
         """
     query: str = "SELECT * FROM ACCOUNTS where idno=%s and password=%s"
@@ -218,18 +219,6 @@ def removeAccount(uid):
 
 
 def getAccountByID(uid: int) -> Account:
-    """
-        getAccount will get the data from `account` table in `psitswebapp` database
-        table: accounts
-        attributes:
-            idno - int
-            rfid - varchar
-            firstname - varchar
-            lastname - varchar
-            course - varchar
-            year - int
-            password - varchar
-        """
     query: str = f"SELECT * FROM ACCOUNTS where idno='{uid}'"
     data = executeQueryReturn(query)
 
@@ -258,6 +247,7 @@ def registerAccountDB(account: Account, password: str):
             lastname - varchar
             course - varchar
             year - int
+            email - varchar
             password - varchar
         """
     query: str = f"INSERT INTO `accounts` (`idno`,`rfid`,`firstname`,`lastname`,`course`,`year`,`email`,`password`)" \
@@ -283,11 +273,7 @@ def postAnnouncement(title: str, date, content: str):
 def removeAnnouncement(uid):
     """"
         removeAnnouncement will remove the data from `announcements` table in `psitswebapp` database
-        table: announcements
             id - int (auto increment) [only call this]
-            title - varchar
-            date_published - date
-            content - varchar
     """
     query: str = f"DELETE FROM `announcements` where id={uid}"
     executeQueryCommit(query)
@@ -312,33 +298,11 @@ def addEvent(event: Events):
 
 
 def removeEvent(uid):
-    """"
-         removeEvent will remove the data from `events` table in `psitswebapp` database
-            table: events
-                uid - int
-                title - varchar
-                date_held - date
-                info - varchar
-                required_payment - varchar
-                item_to_be_paid - varchar
-                amount - decimal(10,2)
-    """
     query: str = f"DELETE FROM `events` where uid={uid}"
     executeQueryCommit(query)
 
 
 def getEvents() -> list:
-    """"
-        getEvents will get the data from `events` table in `psitswebapp` database
-        table: events
-            uid - int
-            title - varchar
-            date_held - date
-            info - varchar
-            required_payment - varchar
-            item_to_be_paid - varchar
-            amount - decimal(10,2)
-    """
     query: str = "SELECT * FROM EVENTS ORDER BY date_held ASC"
     data: dict = executeQueryReturn(query)
 
@@ -366,17 +330,6 @@ def getEvent(uid):
 
 
 def getSearchEvents(search) -> list:
-    """"
-        getEvents will get the data from `events` table in `psitswebapp` database
-        table: events
-            uid - int
-            title - varchar
-            date_held - date
-            info - varchar
-            required_payment - varchar
-            item_to_be_paid - varchar
-            amount - decimal(10,2)
-    """
     query: str = f"SELECT * FROM EVENTS where uid like '%{search}%' or title like '%{search}%' ORDER BY date_held ASC"
     if search is None:
         query = "SELECT * FROM EVENTS ORDER BY date_held ASC"

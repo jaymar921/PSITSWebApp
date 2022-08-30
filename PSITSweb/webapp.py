@@ -23,6 +23,18 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
 
+"""
+      ____  ____ ___ _____ ____  
+     |  _ \/ ___|_ _|_   _/ ___| 
+     | |_) \___ \| |  | | \___ \ 
+     |  __/ ___) | |  | |  ___) |
+     |_|   |____/___| |_| |____/ 
+    A web application that handles announcements and events
+    for UC CCS Students developed by Jayharron Mar Abejar and 
+    this private project is open for collaboration to students
+    who are willing to collaborate.
+"""
+
 
 @app.route("/")
 def webpage():
