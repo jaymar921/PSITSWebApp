@@ -1,10 +1,11 @@
 import requests
 
-from PSITSweb.Models import Email
+from Models import Email
 
 
 def pushEmail(email: Email):
     try:
+        # DO NOT SHARE THIS API KEY AND API SECRET
         headers = {
             'X-MAGICBELL-API-SECRET': 'jxJA5ivlksSWGYeTo8Rtv8+8YBbYIPssKeuFpWNj',
             'X-MAGICBELL-API-KEY': 'c4ff39e59865e6d4807ae3d38c44975801aeb39c',
@@ -29,5 +30,6 @@ def pushEmail(email: Email):
 
         response = requests.post('https://api.magicbell.com/notifications', headers=headers, json=data)
         print(f'An email was sent to {email.recipient}')
-    finally:
+    except:
+        print(f'There was an error sending email to {email.recipient}')
         None

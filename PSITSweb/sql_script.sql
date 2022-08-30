@@ -28,7 +28,8 @@ create table events (
     info varchar(100) not null,
     required_payment varchar(3) not null,
     item_to_be_paid varchar(30),
-    amount decimal(10,2)
+    amount decimal(10,2),
+    open varchar(5)
 ) engine = innodb;
 
 create table order_account(

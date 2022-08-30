@@ -18,5 +18,5 @@ echo  to exit: do 'ctrl + C'
 echo.     
 echo python -m PSITSweb.webapp                       
 echo ---------------------------------
-python -m PSITSweb.webapp
+python PSITSweb\webapp.py
 pause
