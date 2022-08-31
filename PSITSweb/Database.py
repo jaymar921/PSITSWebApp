@@ -144,10 +144,10 @@ def getAnnouncements() -> list:
     contents: list = []
     for content in data:
         c = Announcement(
-            uid=content.get('ID'),
-            title=content.get('TITLE'),
-            date=content.get('DATE_PUBLISHED'),
-            content=content.get('CONTENT')
+            uid=content.get('id'),
+            title=content.get('title'),
+            date=content.get('date_published'),
+            content=content.get('content')
         )
         contents.append(c)
 
