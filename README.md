@@ -29,17 +29,22 @@ Contributors
 
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/26346911?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dennis Durano</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/89179755?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Rey Vincent de los Reyes</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/63870042?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Nathaniel Tiempo</b>
-</p>
-</p>
-<p align="right">
-    
-</p>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/26346911?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dennis Durano</b>
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/64396407?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Harold Cuico</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/69587526?s=64&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Trisha Ann Cempron</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/89179755?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Rey Vincent de los Reyes</b>
+</p>
+<p align="left">
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/63870042?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Nathaniel Tiempo</b>
+</p>
+<p align="left">
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/64396407?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Harold Cuico</b>
+</p>
+<p align="left">
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/69587526?s=64&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Trisha Ann Cempron</b>
+</p>
+
+<p align="left">
     <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/71303778?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Roi Alexis Joshua Florentino</b>
 </p>
+
