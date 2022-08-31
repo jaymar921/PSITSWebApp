@@ -6,7 +6,7 @@
     
 </p>
 
-> Developed  by Jayharron Mar Abejar (Software Developer)
+> Developed  by Jayharron Mar Abejar (Project Owner)
 
 PSITS web application allows PSITS officers to manage announcements, selling tickets/t-shirts, and create events! UC Main CCS students can create an account for reservation/order of event merch purpose. After account registration, students will be emailed by the Email API for success registration, their email addresses will be used for notification purpose such as availability of reserved event products (Tickets/Lanyard/T-shirt).
 
@@ -20,31 +20,37 @@ The project is open for collaboration for students from UC Main and other campus
 - MySQL for Database
 - Magic Bell Email API
 
-### Collaborators
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+## The Team 
 Project Owner
 <p align="left">
-    <kbd><img width="64" height="64"  src="https://avatars.githubusercontent.com/u/72720429?s=96&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Jayharron Mar Abejar</b>
+    <kbd><img width="64" height="64"  src="https://avatars.githubusercontent.com/u/72720429?s=96&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Jayharron Mar Abejar</b>&nbsp;&nbsp;(Back-End developer)
     
 Contributors
 
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/26346911?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dennis Durano</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/26346911?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dennis Durano</b>&nbsp;&nbsp;(Adviser)
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/89179755?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Rey Vincent de los Reyes</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/89179755?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Rey Vincent de los Reyes</b>&nbsp;&nbsp;(Front-End developer)
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/63870042?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Nathaniel Tiempo</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/63870042?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Nathaniel Tiempo</b>&nbsp;&nbsp;(Front-End developer)
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/64396407?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Harold Cuico</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/64396407?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Harold Cuico</b>&nbsp;&nbsp;(Back-End developer)
 </p>
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/69587526?s=64&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Trisha Ann Cempron</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/69587526?s=64&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Trisha Ann Cempron</b>&nbsp;&nbsp;(Front-End developer)
 </p>
 
 <p align="left">
-    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/71303778?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Roi Alexis Joshua Florentino</b>
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/71303778?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Roi Alexis Joshua Florentino</b>&nbsp;&nbsp;(Front-End developer)
 </p>
 
