@@ -33,6 +33,10 @@ app.secret_key = 'PSITS2022BYABEJAR'
     for UC CCS Students developed by Jayharron Mar Abejar and 
     this private project is open for collaboration to students
     who are willing to collaborate.
+    
+    - Collaborators: [Please indicate your names below]
+        - Rey Vincent de los Reyes
+        - 
 """
 
 
