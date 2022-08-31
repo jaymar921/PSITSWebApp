@@ -16,3 +16,4 @@
 <p> (Flask) for microweb framework </p>
 <p> (MagicBell) Email API </p>
 <p> (JavaScript/CSS) for Front-End </p>
+<p> (<a href="http://203.177.71.218:5000/PSITS">Server</a>) The server is hosted at UC Banilad campus</p>
