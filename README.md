@@ -26,7 +26,7 @@ The project is open for collaboration for students from UC Main and other campus
 
 &nbsp;
 
-## The Team 
+## The main team 
 Project Owner
 <p align="left">
     <kbd><img width="64" height="64"  src="https://avatars.githubusercontent.com/u/72720429?s=96&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Jayharron Mar Abejar</b>&nbsp;&nbsp;(Back-End developer)
