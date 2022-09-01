@@ -39,8 +39,8 @@ create table order_account(
 	account_status varchar(50) not null,
 	quantity int not null,
 	payment_reference varchar(50) not null,
-	foreign key(event_uid) references events(uid),
-	foreign key(account_id) references accounts(idno)
+	foreign key(event_uid) references events(uid) on delete cascade on update cascade,
+	foreign key(account_id) references accounts(idno) on delete cascade on update cascade
 ) engine = innodb;
 
 create table logging(
