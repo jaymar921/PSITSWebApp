@@ -54,3 +54,7 @@ Contributors
     <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/71303778?s=120&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Roi Alexis Joshua Florentino</b>&nbsp;&nbsp;(Front-End developer)
 </p>
 
+<p align="left">
+    <kbd><img width="32" height="32"  src="https://scontent.fceb2-1.fna.fbcdn.net/v/t39.30808-1/278951687_720085795664522_6387224270193367037_n.jpg?stp=dst-jpg_p100x100&_nc_cat=101&ccb=1-7&_nc_sid=7206a8&_nc_eui2=AeGtv-1iFwdIqRJV8Y09y7YHtgjzMQgUKde2CPMxCBQp17fOXbs0oYShi1n3bBLH1BumKJhSsAhha8qw66LCgegR&_nc_ohc=aM79tyjcA0MAX-zJlau&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fceb2-1.fna&oh=00_AT9ZtO-rg_1dIY1WKKgNfoRlDLYjnyWLbdSSH4U00CgKKQ&oe=63175736"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mariella Ferrer</b>&nbsp;&nbsp;(Front-End developer)
+</p>
+
