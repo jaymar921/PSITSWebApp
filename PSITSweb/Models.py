@@ -1,3 +1,8 @@
+from warnings import warn
+
+from Util import deprecated
+
+
 class Announcement:
     def __init__(self, uid, title, date, content):
         self.uid = uid
@@ -21,6 +26,7 @@ class Account:
         self.email = email
 
 
+@deprecated("Events class is deprecated, use Event")
 class Events:
     def __init__(self, uid, title, date_held, info, required_payment, item, amount, open):
         self.uid = uid
@@ -38,8 +44,10 @@ class Events:
         return self.required_payment == "YES"
 
 
+@deprecated("OrderAccount class is deprecated, use Orders")
 class OrderAccount:
     def __init__(self, uid, event_uid, account_uid, status, quantity, reference):
+        warn("This class is deprecated", DeprecationWarning, stacklevel=2)
         self.uid = uid
         self.event_uid = event_uid
         self.account_uid = account_uid
@@ -55,9 +63,49 @@ class Email:
         self.content: str = content
 
 
+@deprecated("Order class is deprecated, use Orders")
 class Order:
     def __init__(self, event: Events, account: Account, order_account: OrderAccount):
         self.event = event
         self.account = account
         self.order_account = order_account
         self.total = float(event.amount)*int(order_account.quantity)
+
+
+"""
+    Version 1.1
+    Classes Order, OrderAccount and Events are deprecated
+    
+    use Event, Merchandise and Orders
+"""
+
+
+class Event:
+    def __init__(self, uid, title, date_published, information, image_file):
+        self.uid = uid
+        self.title = title
+        self.date_published = date_published
+        self.information = information
+        self.image_file = image_file
+
+
+class Merchandise:
+    def __init__(self, uid, title, info, price, discount, stock):
+        self.uid = uid
+        self.title = title
+        self.info = info
+        self.price = price
+        self.discount = discount
+        self.stock = stock
+
+
+class MerchOrder:
+    def __init__(self, uid, acc_id, order_date, merch_id, status, quantity, add_info, reference):
+        self.uid = uid
+        self.account_id = acc_id
+        self.order_date = order_date
+        self.merchandise_id = merch_id
+        self.status = status
+        self.quantity = quantity
+        self.additional_info = add_info
+        self.reference = reference

@@ -1,7 +1,9 @@
 import datetime
 
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order
+from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder
+import TestApplication
+from Util import deprecated
 
 DATABASE_NAME = "psitswebapp"
 USERNAME = "root"
@@ -9,6 +11,16 @@ PASSWORD = ""
 HOST = "127.0.0.1"
 
 
+"""
+    PSITS version 1.0
+    
+    This is legacy code, try not to use them,
+    start using the module/functions on line
+    530+ where newly updated tables where added
+"""
+
+
+# This module is useful for initialization
 def databaseInit() -> True:
     try:
         mysqldb = connector.connect(
@@ -72,14 +84,51 @@ def databaseInit() -> True:
                         ) engine = innodb;
                     """)
             cursor.execute("""
+                           create table event(
+                                uid int not null auto_increment primary key,
+                                title varchar(100) not null,
+                                date_published date not null,
+                                information varchar(2999) not null,
+                                image_file varchar(200) not null
+                            ) engine = innodb;
+                            """)
+            cursor.execute("""
+                            create table merchandise(
+                                uid int not null auto_increment primary key,
+                                title varchar(100) not null,
+                                information varchar(2999) not null,
+                                price decimal(10,2) not null,
+                                discount int not null, -- can be changed, in percentage form
+                                stock int not null
+                            ) engine = innodb;
+                             """)
+            cursor.execute("""
+                            create table orders(
+                                uid int not null auto_increment primary key,
+                                account_id int not null,
+                                FOREIGN KEY (account_id) REFERENCES accounts(idno) on delete cascade on update cascade,
+                                order_date date not null,
+                                merch_id int not null,
+                                FOREIGN KEY (merch_id) REFERENCES merchandise(uid) on delete cascade on update cascade,
+                                status varchar(20) not null,
+                                quantity int not null,
+                                additional_info varchar(200),
+                                reference varchar(100)
+                            ) engine = innodb;
+                             """)
+            cursor.execute("""
                                 create table logging(
                                     uid int not null auto_increment primary key,
                                     date datetime not null,
                                     message varchar(150) not null
                                 ) engine = innodb;
                             """)
+            print("\n")
+            TestApplication.TestDatabase()
+            print("\n")
             print(f"PSITS Webapp successfully created a database [{DATABASE_NAME}]")
-            print(f"PSITS Webapp successfully created a tables [announcements,accounts,events,order_account]")
+            print(f"PSITS Webapp successfully created a legacy tables [announcements,accounts,events,order_account]")
+            print(f"PSITS Webapp successfully created a v1.1 tables [merchandise, event, orders]")
         print(f"All is set... ")
     except:
         print("There was an issue connecting to database, the app will not start")
@@ -279,6 +328,7 @@ def removeAnnouncement(uid):
     executeQueryCommit(query)
 
 
+@deprecated("addEvent() is deprecated")
 def addEvent(event: Events):
     """"
         addEvent will save the data to `events` table in `psitswebapp` database
@@ -297,11 +347,13 @@ def addEvent(event: Events):
     executeQueryCommit(query)
 
 
+@deprecated("removeEvent() is deprecated")
 def removeEvent(uid):
     query: str = f"DELETE FROM `events` where uid={uid}"
     executeQueryCommit(query)
 
 
+@deprecated("getEvents() is deprecated")
 def getEvents() -> list:
     query: str = "SELECT * FROM EVENTS ORDER BY date_held ASC"
     data: dict = executeQueryReturn(query)
@@ -322,6 +374,7 @@ def getEvents() -> list:
     return events
 
 
+@deprecated("getEvent(uid) is deprecated")
 def getEvent(uid):
     for event in getEvents():
         if int(event.uid) == int(uid):
@@ -329,6 +382,7 @@ def getEvent(uid):
     return None
 
 
+@deprecated("getSearchEvents(search) is deprecated")
 def getSearchEvents(search) -> list:
     query: str = f"SELECT * FROM EVENTS where uid like '%{search}%' or title like '%{search}%' ORDER BY date_held ASC"
     if search is None:
@@ -351,6 +405,7 @@ def getSearchEvents(search) -> list:
     return events
 
 
+@deprecated("updateEvent(event: Event) is deprecated")
 def updateEvent(event: Events):
     query: str = f"UPDATE `events` SET title='{event.title}',date_held='{event.date_held}'," \
                  f"info='{event.info}',required_payment='{event.required_payment}'," \
@@ -359,6 +414,7 @@ def updateEvent(event: Events):
     executeQueryCommit(query)
 
 
+@deprecated("getOrderAccount(event_id, account_id) is deprecated")
 def getOrderAccount(event_uid, account_uid):
     query: str = f"SELECT * FROM `order_account` where account_id={account_uid} and event_uid={event_uid} " \
                  f"and account_status!='CLAIMED'"
@@ -377,6 +433,7 @@ def getOrderAccount(event_uid, account_uid):
     return OrderAccount(None, None, None, None, None, None)
 
 
+@deprecated("getOrder(event_id, status) is deprecated")
 def getOrder(event_uid, status):
     query: str = f"SELECT * FROM `order_account` where event_uid={event_uid} and account_status='{status}'"
     data: dict = executeQueryReturn(query)
@@ -394,6 +451,7 @@ def getOrder(event_uid, status):
     return orders
 
 
+@deprecated("getOrderById(uid) is deprecated")
 def getOrderById(uid):
     query: str = f"SELECT * FROM `order_account` where uid={uid}"
     data: dict = executeQueryReturn(query)
@@ -410,18 +468,21 @@ def getOrderById(uid):
     return None
 
 
+@deprecated("updateOrder(OrderAccount) is deprecated")
 def updateOrder(order: OrderAccount):
     query: str = f"UPDATE `order_account` SET account_status='{order.status}', quantity={order.quantity}, " \
                  f"payment_reference='{order.reference}' where uid={order.uid}"
     executeQueryCommit(query)
 
 
+@deprecated("createOrder(OrderAccount) is deprecated")
 def createOrder(order: OrderAccount):
     query: str = f"INSERT INTO `order_account`(event_uid,account_id,account_status,quantity,payment_reference) " \
                  f"values({order.event_uid},{order.account_uid},'{order.status}',{order.quantity},'{order.reference}')"
     executeQueryCommit(query)
 
 
+@deprecated("getAllOrders(search) is deprecated")
 def getAllOrders(search: str):
     if search is None:
         search = ''
@@ -465,3 +526,179 @@ def databaseLog(message):
     print(f"{getTime()}: {message}")
     query = f"INSERT INTO `logging` (date, message) values ('{datetime.datetime.now()}','{message}')"
     executeQueryCommit(query)
+
+
+"""
+    PSITS version 1.1
+    Prepared by Jayharron Mar Abejar (back-end developer),
+    New tables where added into the database and new
+    functions are created
+    
+    Events, OrderAccount and Order table have been
+    set to deprecated so please avoid using them
+    
+    The reason why I did not remove the code because the
+    old PSITS webapp system is still using the legacy code
+"""
+
+
+# This function will insert a new Event into the database
+# requires a Event object as argument
+# @returns nothing
+def CREATEEvent(event: Event):
+    query: str = f"insert into `event`(title,date_published,information,image_file) values ('{event.title}'," \
+                 f"'{event.date_published}','{event.information}','{event.image_file}')"
+    executeQueryCommit(query)
+
+
+# This function will retrieve all the Event from the the database
+# @returns a list of 'Event'
+def GETAllEvent() -> list:
+    return SEARCHEvent("all")
+
+
+# This function will retrieve all the Event from the the database
+# with a condition
+# @returns a list of 'Event'
+def SEARCHEvent(search: str) -> list:
+    query: str = f"select * from `event`"
+    if search != "" and search.lower() != "all":
+        query = f"select * from `event` where title like '%{search}%' or information like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    events = []
+    for event in data:
+        events.append(
+            Event(
+                event['uid'],
+                event['title'],
+                event['date_published'],
+                event['information'],
+                event['image_file']
+            )
+        )
+    return events
+
+
+# This function will delete an Event from the database given
+# given the UID of the Event,
+# @returns nothing
+def DELETEEvent(uid):
+    executeQueryCommit(f"delete from `event` where uid = {uid}")
+
+
+# This function will update an event from the Event uid argument
+# @returns nothing
+def UPDATEEvent(event: Event):
+    query: str = f"update `event` set title='{event.title}',date_published='{event.date_published}'," \
+                 f"information='{event.information}',image_file='{event.image_file}' where uid={event.uid}"
+    executeQueryCommit(query)
+
+
+# This function will insert a new Merchandise into the table
+# @requires a Merchandise object as argument
+def CREATEMerchandise(merch: Merchandise):
+    query: str = f"insert into `merchandise` values ('{merch.title}','{merch.info}'," \
+                 f"'{merch.price}',{merch.price},{merch.discount},{merch.stock})"
+    executeQueryCommit(query)
+
+
+# This function will retrieve all the Merchandise data from the database
+# @returns a list of Merchandise
+def GETAllMerchandise() -> list:
+    return SEARCHMerchandise("all")
+
+
+# This function will retrieve all the Merchandise data from the database
+# that matches with the search argument
+# @returns a list of Merchandise
+def SEARCHMerchandise(search: str) -> list:
+    query: str = "select * from `merchandise`"
+    if search != '' and search.lower() != 'all':
+        query = f"select * from `merchandise` where title like '%{search}%' or information like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    merchandise = []
+    for merch in data:
+        merchandise.append(
+            Merchandise(
+                merch['uid'],
+                merch['title'],
+                merch['information'],
+                merch['price'],
+                merch['discount'],
+                merch['stock']
+            )
+        )
+    return merchandise
+
+
+# This function will update the Merchandise table from Merchandise uid argument
+# @returns nothing
+def UPDATEMerchandise(merch: Merchandise):
+    query: str = f"update `merchandise` set title='{merch.title}',information='{merch.info}'," \
+                 f"price={merch.price},discount={merch.discount},stock={merch.discount} where uid={merch.uid}"
+    executeQueryCommit(query)
+
+
+# This function will delete a merchandise from the merchandise table given
+# a uid argument
+# @returns nothing
+def DELETEMerchandise(uid):
+    executeQueryCommit(f"delete from `merchandise` where uid = {uid}")
+
+
+# This function will add a new MerchOrder into the Order table in the database
+# requires MerchOrder data as argument
+# @returns nothing
+def CREATEMerchOrder(order: MerchOrder):
+    query: str = f"insert into `orders`(account_id,order_date,merch_id,status,quantity,additional_info,reference)" \
+                 f" values ({order.account_id},'{order.order_date}',{order.merchandise_id}," \
+                 f"'{order.status}',{order.quantity},'{order.additional_info}','{order.reference}')"
+    executeQueryCommit(query)
+
+
+# This function will retrieve all the MerchOrder data from the database
+# @returns a list of MerchOrder
+def GETAllMerchOrder() -> list:
+    return SEARCHMerchOrder("all")
+
+
+# This function will retrieve all the MerchOrder data from the database
+# that matches with the search argument
+# @returns a list of MerchOrder
+def SEARCHMerchOrder(search: str) -> list:
+    query: str = "select * from `orders`"
+    if search != '' and search.lower() != 'all':
+        query = f"select * from `orders` where title like '%{search}%' or information like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    orders = []
+    for order in data:
+        orders.append(
+            MerchOrder(
+                order['uid'],
+                order['account_id'],
+                order['order_date'],
+                order['merch_id'],
+                order['status'],
+                order['quantity'],
+                order['additional_info'],
+                order['reference']
+            )
+        )
+    return orders
+
+
+# This function will update the orders table from MerchOrder uid argument
+# @returns nothing
+def UPDATEMerchOrder(merch: MerchOrder):
+    query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
+                 f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
+                 f"additional_info='{merch.additional_info}'," \
+                 f"reference='{merch.reference}' where uid={merch.uid}"
+    executeQueryCommit(query)
+
+
+# This function will delete a MerchOrder from the orders table given
+# a uid argument
+# @returns nothing
+def DELETEMerchOrder(uid):
+    executeQueryCommit(f"delete from `orders` where uid = {uid}")
