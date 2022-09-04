@@ -534,4 +534,6 @@ if __name__ == '__main__':
     IPAddress = socket.gethostbyname(hostname)
     if databaseInit():
         databaseLog(f"Server Started, running on {IPAddress}:5000")
+        # use this if you are debugging the app
+        # app.run(host="0.0.0.0", port=5000, debug=True)
         serve(app, host="0.0.0.0", port=5000)
