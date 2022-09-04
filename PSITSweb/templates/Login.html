@@ -1,26 +1,57 @@
 {% extends 'base.html' %}
 {% block content %}
+<br /><br /><br class="line_1" /><br class="line_1" />
+<a class="backButton" onclick="home()">Back</a>
 
-    <! -- This is for the background -->
-    <div class="ann_bg_1"></div>
-    <div class="ann_bg_2"></div>
-    <! -- This is for the background -->
+<div class="welcome">
+    <h1>WELCOME TO PSITS MAIN PORTAL!</h1>
+</div>
 
-    <div class="form_modal">
-        <form method="post" action="/PSITSLogin">
-            <h3 style="text-align: center; padding: 0; border: 0; margin: 0;">Welcome to PSITS!</h3>
-            <p style="text-align: center; padding: 0; border: 0; margin: 0; color: red;">{{message}}</p>
-            <div class="form_field">
-                <p>ID Number:</p><input name="id_number" type="text" pattern="[0-9]{7,}" placeholder="Enter ID Number" required>
-            </div>
-            <div class="form_field">
-                <p>Password: </p><input name="password" type="password" placeholder="Password" required>
-            </div>
-            <div class="form_field">
-                <a onclick="home()">Cancel</a>
-                <button type="submit">Login</button>
-                <a onclick="register()">Register</a>
-            </div>
-        </form>
+<div class="form_modal">
+    <div class="formHeader">
+        <h3>LOG IN</h3>
     </div>
+    <form method="post" action="/PSITSLogin">
+
+        
+        <div class="form_field">
+            <i class="fa-solid fa-user"></i><input name="id_number" class="id_number" type="text" pattern="[0-9]{7,}" placeholder="I.D. No." required>
+        </div>
+
+        <div class="form_field">
+            <i class="fa-solid fa-lock"></i><input name="password" class="password" id="password" type="password" placeholder="Password" required>
+            <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+        </div>
+        <p class="errorForm">{{message}}</p>
+       
+        <div class="form_field">
+
+            <button type="submit">Login</button>
+
+        </div>
+        <br />
+        <hr>
+        <div class="form_field">
+
+            <div class="registerSection">
+                <p>Don’t have an account yet? </p><a onclick="register()">Register</a>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function () {
+        // toggle the type attribute
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+        // toggle the icon
+        this.classList.toggle("fa-eye");
+    });
+
+</script>
 {% endblock %}

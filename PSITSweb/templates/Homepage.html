@@ -1,110 +1,118 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <! -- This is for the background -->
-    <div class="ann_bg_1"></div>
-    <div class="ann_bg_2"></div>
-    <! -- This is for the background -->
 
 
-    <div class="contents">
 
-        <div class="announcement_content">
+
+<div class="contents">
+
+        
+
+    <div class="announcement_content">
+        <br>
+        <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
             <br>
-            <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
-                <br>
-                <h1>ADMINISTRATION</h1>
-                <div class="announcement_field">
-                    <button onclick="studentsInfo()">STUDENTS</button>
-                </div>
-                <br>
-                <div class="announcement_field">
-                    <button onclick="showEvents()">EVENTS</button>
-                </div>
-                <br>
-                <div class="announcement_field">
-                    <button onclick="showOrders()">ORDERS</button>
-                </div>
-                <br>
+            <h1>ADMINISTRATION</h1>
+            <div class="announcement_field">
+                <button onclick="studentsInfo()">STUDENTS</button>
             </div>
-
-            <div class="announcement_title">
-                <h1>Announcements!</h1>
+            <br>
+            <div class="announcement_field">
+                <button onclick="showEvents()">EVENTS</button>
             </div>
-
-            <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
-                <form action="/PSITS@announce" method="post" enctype="multipart/form-data">
-                    <div class="announcement_field">
-                        <input type="text" name="title" placeholder="Announcement Title">
-                    </div>
-
-                    <div class="announcement_field_content">
-                        <textarea name="content" cols="5" rows="5"></textarea>
-                    </div>
-                    <div class="announcement_field">
-                        <input class="file_input" type="file" name="file">
-                    </div>
-                    <div class="announcement_field">
-                        <p style="color: white; text-align: center;">Accept only PNG</p>
-                    </div>
-
-                    <div class="announcement_field">
-                        <button name="submit" type="submit">Post Announcement</button>
-                    </div>
-
-                </form>
+            <br>
+            <div class="announcement_field">
+                <button onclick="showOrders()">ORDERS</button>
             </div>
-
-            {% for announcement in ANNOUNCEMENTS %}
-            <div class="announcement_thread">
-                <h2>{{announcement.title}}</h2>
-                <h3>({{announcement.date}})</h3>
-                <span>{{announcement.content}}</span>
-                {% if announcement.image_location != '' %}
-                <img class="announcement_image" src="{{ url_for('download_file', filename=announcement.image_location) }}">
-                {% endif %}
-                <a style="display:{{admin}}"  onclick="deleteAnnouncement({{announcement.uid}})">Remove</a>
-            </div>
-            {% endfor %}
-            <br><br><br>
+            <br>
         </div>
 
-        <div class="events">
-            <h1>Upcoming Events</h1>
-            <div class="events_thread" style="display: {{admin}};">
-                <button onclick="createNewEvent()">Add Event</button>
-            </div>
-            {% for event in events %}
-                {% if event.requirePayment() and account_data !=null %}
-                <div class="events_thread" style="cursor:pointer;" onclick="location.href='/PSITS@OrderForm/{{event.uid}}'">
-                    <h2>{{ event.title }}</h2>
-                    <span>{{ event.info }}</span>
-                </div>
-                {% elif event.requirePayment() %}
-                <div class="events_thread" style="cursor:pointer;" onclick="location.href='/PSITS@Login'">
-                    <h2>{{ event.title }}</h2>
-                    <span>{{ event.info }}</span>
-                </div>
-                {% else %}
-                <div class="events_thread">
-                    <h2>{{ event.title }}</h2>
-                    <span>{{ event.info }}</span>
-                </div>
-                {% endif %}
-            {% endfor %}
-            <br>
-
-            <div class="copyright show_on_small_screen">
-
-                <p>PSITS &copy; 2022 - Developed by <a href="">Abejar and Company</a></p>
-            </div>
+        <div class="announcement_title">
+            <br /><br />
+            <h1>ANNOUNCEMENTS!</h1>
+            <br /><br />
         </div>
+        {% if account_data %}
+        <div class="announcement_thread" style="display:{{admin}};">
+            <form action="/PSITS@announce" method="post" enctype="multipart/form-data">
+                <div class="announcement_field">
+                    <input type="text" name="title" placeholder="Announcement Title" required>
+                </div>
 
+                <div class="announcement_field_content">
+                    <textarea name="content" cols="5" rows="5" required placeholder="What's on your mind, {{account_data.firstname}}?"></textarea>
+                </div>
+                <div class="announcement_field">
+                    <label for="file_input">Include image:  <i>**Accept only PNG</i></label> <br />
+                    <input class="file_input" type="file" name="file" accept=".png" >
+                </div>
+       
+                <hr>
+                <div class="announcement_field">
+                    <button name="submit" type="submit" class="normalButton">Post Announcement</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        <br />
 
+        {% for announcement in ANNOUNCEMENTS %}
+        <div class="announcement_thread">
+            <h2>{{announcement.title}}</h2>
+
+            <h3>({{announcement.date}})</h3>
+            <hr>
+            <span>{{announcement.content}}</span>
+            {% if announcement.image_location != '' %}
+            <img class="announcement_image" id="{{announcement.uid}}" onclick="zoomPicture({{announcement.uid}})"
+                src="{{ url_for('download_file', filename=announcement.image_location) }}">
+            {% endif %}
+            <a style="display:{{admin}}" onclick="deleteAnnouncement({{announcement.uid}})" class="removePost" >Remove</a>
+            <br />
+            <br />
+            <br />
+        </div>
+        {% endfor %}
+        <br><br><br>
     </div>
-    <div class="copyright hide_on_small_screen">
+    <hr>
+    <div class="events">
+        <h1>Upcoming Events</h1>
 
-        <p>PSITS &copy; 2022 - Developed by <a href="">Abejar and Company</a></p>
-    </div>
+   
+            <button class="normalButton" style="display: {{admin}};" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
+        
+            <br />
+        {% for event in events %}
+            {% if event.requirePayment() and account_data !=null %}
+            <div class="events_thread clickable" style="cursor:pointer;" onclick="location.href='/PSITS@OrderForm/{{event.uid}}'">
+                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
+                <hr>
+                <br />
+                <span class="info">{{ event.info }}</span>
+            </div>
+            {% elif event.requirePayment() %}
+            <div class="events_thread clickable" style="cursor:pointer;" onclick="location.href='/PSITS@Login'">
+                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i> {{ event.title }}</h2>
+                <hr>
+                <br />
+                <span class="info">{{ event.info }}</span>
+            </div>
+            {% else %}
+            <div class="events_thread">
+                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
+                <hr>
+                <br />
+                <span class="info">{{ event.info }}</span>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <br>
+    </div> 
+  
 
+
+
+</div>
 {% endblock %}

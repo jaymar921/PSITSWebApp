@@ -1,34 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="ie-edge,Chome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge,Chome=1">
     <title>{{title}}</title>
     <link rel="stylesheet" href='{{url_for("static",filename="base.css")}}'>
     <link rel="stylesheet" href='{{url_for("static",filename="homepage.css")}}'>
     <link rel="stylesheet" href='{{url_for("static",filename="info.css")}}'>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
-<body>
-    <div class="banner">
-        <img src='{{url_for("static",filename="images/CCS_LOGO.png")}}'>
-        <img src='{{url_for("static",filename="images/PSITS_LOGO.png")}}' style="cursor: pointer;" onclick="location.href='/'">
-        <h1>Philippine Society of Information Technology Students</h1>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-        <div class="account">
-            <button style="display: {{login}}" onclick="location.href='/PSITS@Login'">Login</button>
-            <button style="display: {{logout}}" onclick="location.href='/PSITS@Logout'">Logout</button>
-            {% if account_data != null %}
-                <p style="font-style: bold; color: red;">{{account_data.lastname | upper }}</p>
-            {% endif %}
+    <!-- FONT AWESOME SCRIPT -->
+    <script src="https://kit.fontawesome.com/1719fcf850.js" crossorigin="anonymous"></script>
+    <!--SRCs for Log Out Modal-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script type="text/javascript" src='{{url_for("static",filename="scripts.js")}}'></script>
+   
+</head>
+
+<body>
+  <div class="wrapper">   
+      
+        <!-- The Modal -->
+        <div class="modal" id="logoutModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Log Out</h4>
+              </div>
+              
+              <!-- Modal body -->
+              <div class="modal-body">
+                Do you really want to log out?
+              </div>
+              
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <a href="/PSITS@Logout">YES</a>
+                <a data-dismiss="modal">NO</a>
+              </div>
+              
+            </div>
+          </div>
         </div>
+        
+ 
+    <div class="banner">
+    <nav>
+        <div class="logo">
+            <img src='{{url_for("static",filename="images/PSITS_LOGO.png")}}' style="cursor: pointer;"
+                onclick="location.href='/'">
+            <h1>Philippine Society of Information Technology Students</h1>
+        </div>
+        <input type="checkbox" id="click">
+        <label for="click" class="menu-btn">
+        <i class="fas fa-bars"></i>
+        </label>
+        <ul>
+            {% if account_data != null %}
+    
+            <li><p>USER: {{account_data.lastname | upper }}</p></li>
+            {% endif %}
+           <li onclick="location.href='/PSITS'"><a>HOME</a></li>
+           <li><a>ABOUT US</a></li>
+           <li><hr class="bannerLine"style="display:none;"></li>
+
+            <li style="display: {{login}}" onclick="location.href='/PSITS@Login'"><a>LOG IN</a></li>
+            <li style="display: {{logout}}" ><a data-toggle="modal" data-target="#logoutModal">LOG OUT</a></li>
+        </ul>
+     </nav>
     </div>
     <div class="content">
         {% block content %}
         {% endblock %}
 
     </div>
-    <script type="text/javascript" src='{{url_for("static",filename="scripts.js")}}'></script>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="footerPage">
+
+        <div class="footerUpper">
+        <ul>
+          <li>CONTACT US</li>
+          <br />
+          <li><a href="https://www.facebook.com/PSITS.UCmain"><i class="fa-brands fa-square-facebook"></i> PSITS.UCmain</a></li>
+
+          <li><i class="fa-solid fa-envelope"></i> psits.ccsmain@gmail.com</li>
+        </ul>
+        <ul>
+          <li>OUR SERVICE</li>
+          <br />
+          <li><a href="">Announcements</a></li>
+          <li><a href="">Events</a></li>
+          <li><a href="">Merchandise</a></li>
+        </ul>
+      </div>
+      <br />
+      <hr>
+      <br />
+      <div class="footerLower">
+        <p>PSITS&copy;2022 - Developed by PSITS OFFICERS and CO.</p>
+      </div>
+   
+    </div>
+  </div>
+
 </body>
 </html>
