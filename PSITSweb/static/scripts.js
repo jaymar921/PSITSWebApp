@@ -1,6 +1,9 @@
+
 function home(){
    location.href="/PSITS";
 }
+
+
 
 function createNewEvent(){
     location.href="/PSITS@NewEvent"

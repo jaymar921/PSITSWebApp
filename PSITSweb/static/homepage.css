@@ -1,3 +1,4 @@
+/*
 .announcement_content{
     position: relative;
     left: 68%;
@@ -9,7 +10,7 @@
     overflow: hidden;
 }
 
-.ann_bg_1{
+/* .ann_bg_1{
     position: fixed;
     width: 100%;
     height: 100%;
@@ -25,8 +26,9 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-}
+} */
 
+/*
 .announcement_content h1{
     color: white;
     text-align: center;
@@ -358,7 +360,7 @@
     transition: all 1000ms ease;
 }
 
-@media(max-width: 1000px){
+/* @media(max-width: 1000px){
 
     .contents{
         display:block;
@@ -414,7 +416,7 @@
     .events{
         //background-color: #002e48;
         background: rgba(0, 0, 0, 0.4);
-    }
+    } 
 
     .events_thread{
         margin-top: 5px;
@@ -516,4 +518,4 @@
 
 
 
-}
+} 
