@@ -25,11 +25,7 @@ def isAdmin(uid) -> bool:
         'FLORENTINO': '18725242',
         'CUICO': '19888957',
         'OPINA': '19884253',
-<<<<<<< HEAD
-        'TIEMPO':'19924414'
-=======
         'TIEMPO' : '19924414'
->>>>>>> c1a8beb45b47dc02a0494817087b02a425e93f62
     }
     for key, value in admins.items():
         if str(value).__eq__(str(uid)):
@@ -54,5 +50,5 @@ def contentVerifier(content: str) -> str:
     text = content.replace("'", "\\'")
     text = text.replace('"', "\\\"")
     text = text.replace('`', "\\`")
-    text = text.replace('\\', "\\\\")
+    print(text)
     return text

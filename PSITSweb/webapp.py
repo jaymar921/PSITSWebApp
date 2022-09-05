@@ -107,11 +107,11 @@ def post_announcement():
     date_time = datetime.datetime.now()
 
     title: str = contentVerifier(request.form['title'])
-    content: str = contentVerifier(request.form['content'])
+    content: str = request.form['content']
 
     if "username" in session:
         if isAdmin(session['username']):
-            postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
+            postAnnouncement(title, date_time.strftime("%Y-%m-%d"), contentVerifier(content))
             ID = getLatestAnnouncement()
             databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
             if 'file' in request.files:
@@ -528,8 +528,9 @@ def psits_orders_list():
                     updateOrder(order)
         return redirect(url_for('psits_orders_list'))
 
+
 @app.route("/PSITS@AboutUs")
-def aboutus():
+def about_us():
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("aboutUs.html",
@@ -550,6 +551,7 @@ def aboutus():
                            title="About Us PSITS",
                            login="block",
                            logout="none", admin="none")
+
 
 @app.route("/PSITS@Logout")
 def logout():
