@@ -6,10 +6,10 @@ import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
-    getEvents, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
-    updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
+    removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount,\
+    getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
-    getLatestAnnouncement
+    getLatestAnnouncement, DELETEEvent
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise
 from Util import hashData, isAdmin
@@ -110,7 +110,7 @@ def post_announcement():
     if "username" in session:
         if isAdmin(session['username']):
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
-            ID = getLatestAnnouncement();
+            ID = getLatestAnnouncement()
             databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
             if 'file' in request.files:
                 file = request.files['file']
@@ -334,31 +334,33 @@ def psits_events_list():
     if request.method == 'GET':
         # Get the search
         search: str = flask.request.values.get('search')
-        return render_template("Events.html",
+        return render_template("EventList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
+                               admin='block', title='PSITS EVENTS LIST', events=SEARCHEvent(search))
     else:
         search: str = flask.request.values.get('search')
         event: Event = Event(
             request.form['idnum'],
             request.form['title'],
-            request.form['date_held'],
-            request.form['info']
+            request.form['date_published'],
+            request.form['information'],
+            request.form['image_file']
         )
-        if request.form['open'] == 'YES':
-            # Email Request
-            orders: list = getOrder(event.uid, 'RESERVED')
-            for order in orders:
-                user_message = f"Hello {getAccountByID(order.account_uid).firstname}!\n\n" \
-                               f"Our {event.title} is now available for an order! The {event.item} is " \
-                               f"priced at P{event.amount}. Login to PSITS page to order now!"
-                if getAccountByID(order.account_uid).email is not None or "":
-                    pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
-        updateEvent(event)
-        databaseLog(f"Updated event ID [{event.uid}] -- {event.title}")
-        return render_template("Events.html",
+        UPDATEEvent(event)
+        # if request.form['open'] == 'YES':
+        # Email Request
+        #    orders: list = getOrder(event.uid, 'RESERVED')
+        #    for order in orders:
+        #        user_message = f"Hello {getAccountByID(order.account_uid).firstname}!\n\n" \
+        #                       f"Our {event.title} is now available for an order! The {event.item} is " \
+        #                       f"priced at P{event.amount}. Login to PSITS page to order now!"
+        #        if getAccountByID(order.account_uid).email is not None or "":
+        #            pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
+        # updateEvent(event)
+        databaseLog(f"Updated event ID [{event.uid}] by [{session['username']}] -- {event.title}")
+        return render_template("EventList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
+                               admin='block', title='PSITS EVENTS LIST', events=SEARCHEvent(search))
 
 
 @app.route("/PSITS@EventRemove/<uid>")
@@ -368,7 +370,7 @@ def psits_remove_event(uid):
                                message="Only administrators can access this page!")
     if not isAdmin(session['username']):
         return redirect(url_for('cant_find_link'))
-    removeEvent(uid)
+    DELETEEvent(uid)
     databaseLog(f"Removed event ID [{uid}]")
     return redirect(url_for("psits_events_list"))
 
@@ -564,4 +566,5 @@ if __name__ == '__main__':
         # use this if you are debugging the app
         app.run(host="0.0.0.0", port=5000, debug=True)
         #
+        # Production
         # serve(app, host="0.0.0.0", port=5000)

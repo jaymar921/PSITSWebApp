@@ -79,6 +79,7 @@ function on_paid_order(status, uid){
     }
 }
 
+// deprecated
 function edit_eventInfo(uid){
     if(document.getElementById(uid+"uid").disabled == true){
         document.getElementById(uid+"title").disabled=false;
@@ -89,6 +90,17 @@ function edit_eventInfo(uid){
         document.getElementById(uid+"amount").disabled=false;
         document.getElementById(uid+"button").hidden=false;
         document.getElementById(uid+"open_for_payment").disabled=false;
+        document.getElementById(uid+"edit").style.display='none';
+    }
+}
+
+function EDITEventList(uid){
+    if(document.getElementById(uid+"uid").disabled == true){
+        document.getElementById(uid+"title").disabled=false;
+        document.getElementById(uid+"date_published").disabled=false;
+        document.getElementById(uid+"information").disabled=false;
+        document.getElementById(uid+"image_file").disabled=false;
+        document.getElementById(uid+"save").hidden=false;
         document.getElementById(uid+"edit").style.display='none';
     }
 }

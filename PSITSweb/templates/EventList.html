@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div>
+    <div class="information_container">
+
+      <div class="information_content">
+        <h1>Events List</h1>
+      </div>
+
+        <div class="information_menu">
+        <form action="" method="get">
+          <div class="menu_item">
+            <button type="reset" onclick="home()">PSITS</button>
+            <button type="submit">Search</button>
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH UID | TITLE ">
+          </div>
+        </form>
+        </div>
+        <br>
+        <div class="information_content">
+          <table>
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>TITLE</th>
+                <th>DATE HELD</th>
+                <th>INFO</th>
+                <th>IMAGE FILE</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for event in events %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{event.uid}}idnum" type="text" value="{{event.uid}}" hidden>
+                  <td><input name="uid" id="{{event.uid}}uid" type="text" value="{{event.uid}}" disabled></td>
+                  <td><input name="title" id="{{event.uid}}title" type="text" value="{{event.title}}" disabled></td>
+                  <td><input name="date_published" id="{{event.uid}}date_published" type="date" value="{{event.date_published}}" disabled></td>
+                  <td><input name="information" id="{{event.uid}}information" type="text" value="{{event.information}}" disabled></td>
+                  <td><input name="image_file" id="{{event.uid}}image_file" type="text" value="{{event.image_file}}" disabled></td>
+
+                  <td><a id="{{event.uid}}edit" onclick="EDITEventList('{{event.uid}}')">✎</a><button id="{{event.uid}}save" type="submit" hidden>💾</button>  <a onclick="deleteEvent({{event.uid}})">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+
+    </div>
+
+  </div>
+
+
+{% endblock %}

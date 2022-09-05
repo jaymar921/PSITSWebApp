@@ -8,7 +8,7 @@ from Util import deprecated
 DATABASE_NAME = "psitswebapp"
 USERNAME = "root"
 PASSWORD = ""
-HOST = "192.168.56.1"
+HOST = "127.0.0.1"
 
 
 """
@@ -572,8 +572,9 @@ def GETAllEvent() -> list:
 # @returns a list of 'Event'
 def SEARCHEvent(search: str) -> list:
     query: str = f"select * from `event`"
-    if search != "" and search.lower() != "all":
-        query = f"select * from `event` where title like '%{search}%' or information like '%{search}%'"
+    if search is not None:
+        if search != "" and search.lower() != "all":
+            query = f"select * from `event` where title like '%{search}%' or information like '%{search}%'"
     data: dict = executeQueryReturn(query)
     events = []
     for event in data:
@@ -623,8 +624,9 @@ def GETAllMerchandise() -> list:
 # @returns a list of Merchandise
 def SEARCHMerchandise(search: str) -> list:
     query: str = "select * from `merchandise`"
-    if search != '' and search.lower() != 'all':
-        query = f"select * from `merchandise` where title like '%{search}%' or information like '%{search}%'"
+    if search is not None:
+        if search != '' and search.lower() != 'all':
+            query = f"select * from `merchandise` where title like '%{search}%' or information like '%{search}%'"
     data: dict = executeQueryReturn(query)
     merchandise = []
     for merch in data:
@@ -677,8 +679,9 @@ def GETAllMerchOrder() -> list:
 # @returns a list of MerchOrder
 def SEARCHMerchOrder(search: str) -> list:
     query: str = "select * from `orders`"
-    if search != '' and search.lower() != 'all':
-        query = f"select * from `orders` where title like '%{search}%' or information like '%{search}%'"
+    if search is not None:
+        if search != '' and search.lower() != 'all':
+            query = f"select * from `orders` where title like '%{search}%' or information like '%{search}%'"
     data: dict = executeQueryReturn(query)
     orders = []
     for order in data:
