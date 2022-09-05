@@ -37,6 +37,7 @@ app.secret_key = 'PSITS2022BYABEJAR'
         - Rey Vincent de los Reyes
         - Harold Cuico
         - Nathaniel Tiempo
+        - Ferrer Mariella
 """
 
 
