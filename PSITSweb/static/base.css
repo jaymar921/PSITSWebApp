@@ -1,13 +1,17 @@
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:500'); */
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
+@font-face{
+    font-family: 'MaterialDesign';
+    src: url('{{url_for('static', filename='fonts/materialdesign.ttf')}}');
+}
 
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
+    font-family: "MaterialDesign", sans-serif;
 
 
 }
@@ -578,7 +582,7 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
     color: #3b3b3b;
-
+    white-space: pre-line;
     text-align: center;
     overflow-wrap: break-word;
    
@@ -730,8 +734,6 @@ body {
     color: white;
     width: 100%;
     padding:20px;
-    border:1px solid red;
-
 }
 
 .footerPage hr {
