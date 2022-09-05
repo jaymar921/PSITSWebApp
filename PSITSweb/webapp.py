@@ -35,7 +35,8 @@ app.secret_key = 'PSITS2022BYABEJAR'
     
     - Collaborators: [Please indicate your names below]
         - Rey Vincent de los Reyes
-        - 
+        - Harold Cuico
+        - Nathaniel Tiempo
 """
 
 
