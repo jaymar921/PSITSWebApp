@@ -14,6 +14,7 @@ function studentsInfo(){
 }
 
 // PSITS@Event
+//NOTICE!!!
 function requiredPayment(checkbox){
     document.getElementById('item_field').style.display = checkbox.checked ? 'block':'none';
     document.getElementById('amount_field').style.display = checkbox.checked ? 'block':'none';

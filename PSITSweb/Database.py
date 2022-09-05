@@ -8,7 +8,7 @@ from Util import deprecated
 DATABASE_NAME = "psitswebapp"
 USERNAME = "root"
 PASSWORD = ""
-HOST = "127.0.0.1"
+HOST = "192.168.56.1"
 
 
 """

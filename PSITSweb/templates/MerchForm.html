@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+    <! -- This is for the background -->
+    <div class="ann_bg_1"></div>
+    <div class="ann_bg_2"></div>
+    <! -- This is for the background -->
+
+    <div class="content">
+        <div class="form_general">
+            <form action="/PSITS@Merch" method="post"  enctype="multipart/form-data">
+                <h1>Create Merch</h1>
+                <div>
+                    <label for="Merch">Merch:</label> <input id="Merch" name="Merch" type="text" placeholder="Event Title" required>
+                </div>
+                <div>
+                    <label for="Info">Information:</label> <input id="Info" name="Info" type="text" required>
+                </div>
+                <div>
+                    <label for="Price">Price:</label> <input id="Price" name="Price" type="number" required>
+                </div>
+                <div>
+                    <label for="Discount">Discount:</label> <input id="Discount" name="Discount" type="number" required>
+                </div>
+                <div>
+                    <label for="Stock">Stock:</label> <input id="Stock" name="Stock" type="number" required>
+                </div>
+                <br>
+                <div style="position: relative; margin: auto; padding: auto; text-align: center;">
+                    <button type="reset" onclick="location.href='/PSITS'">Cancel</button>
+                    <button type="submit">Create</button>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -85,28 +85,12 @@
         
             <br />
         {% for event in events %}
-            {% if event.requirePayment() and account_data !=null %}
-            <div class="events_thread clickable" style="cursor:pointer;" onclick="location.href='/PSITS@OrderForm/{{event.uid}}'">
-                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
-                <hr>
-                <br />
-                <span class="info">{{ event.info }}</span>
-            </div>
-            {% elif event.requirePayment() %}
-            <div class="events_thread clickable" style="cursor:pointer;" onclick="location.href='/PSITS@Login'">
-                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i> {{ event.title }}</h2>
-                <hr>
-                <br />
-                <span class="info">{{ event.info }}</span>
-            </div>
-            {% else %}
             <div class="events_thread">
                 <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
                 <hr>
                 <br />
-                <span class="info">{{ event.info }}</span>
+                <span class="info">{{ event.information }}</span>
             </div>
-            {% endif %}
         {% endfor %}
         <br>
     </div> 

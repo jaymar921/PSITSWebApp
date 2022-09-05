@@ -1,18 +1,16 @@
 import datetime
 import os
-import random
 import socket
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
-    getEvents, \
-    addEvent, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
+    getEvents, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
     updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
-    databaseInit, databaseLog
+    databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise
 from EmailAPI import pushEmail
-from Models import Events, Account, Email, OrderAccount
+from Models import Event, Account, Email, OrderAccount, Merchandise
 from Util import hashData, isAdmin
 from waitress import serve
 
@@ -47,7 +45,7 @@ def webpage():
 
 @app.route("/PSITS")
 def landing_page():
-    events: list = getEvents()
+    events: list = GETAllEvent()
     announcements = getAnnouncements()
 
     # Load the Photos if exist
@@ -206,33 +204,34 @@ def EventHandlerPSITS():
             return redirect(url_for('cant_find_link'))
         account = session['username']
         if isAdmin(account):
-            return render_template("EventForm.html", login='none', logout='block', account=account)
+            return render_template("NewEventForm.html", login='none', logout='block', account=account)
         else:
             return redirect(url_for('cant_find_link'))
     else:
-        event_id = random.randint(100, 99999)
-        event_title = request.form['Title']
-        event_date = request.form['date_held']
-        event_info = request.form['Information']
-        event_reqP = request.form.get('require_payment')
-        event_item = request.form['Item']
-        event_amt = request.form['Amount']
-        databaseLog(f"Created Event [{event_title}]")
-        if event_amt == '' or event_amt is None:
-            event_amt = 0
-        if event_reqP is None:
-            event_reqP = 'NO'
-        event = Events(
-            uid=event_id,
-            title=event_title,
-            date_held=event_date,
-            info=event_info,
-            required_payment=event_reqP,
-            item=event_item,
-            amount=event_amt,
-            open='NO'
+        event_title = request.form["Title"]
+        event_date = request.form["date_held"]
+        event_info = request.form["Information"]
+        event = Event(
+            None,
+            event_title,
+            event_date,
+            event_info,
+            "-"
         )
-        addEvent(event)
+        CREATEEvent(event)
+        event = SEARCHEvent(event_title)[0]
+        if 'event_image' in request.files:
+            file = request.files['event_image']
+            if file is not None:
+                if file.filename != '':
+                    ext = file.filename.split(".")[1]
+                    if ext in ALLOWED_EXTENSION:
+                        file.filename = "event" + str(event.uid) + "." + ext
+                        event.image_file = "event" + str(event.uid) + "." + ext
+                        path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                        file.save(path)
+                        databaseLog(f"Event [{event.title}] comes with an image")
+        UPDATEEvent(event)
         return redirect(url_for("landing_page"))
 
 
@@ -245,6 +244,36 @@ def removeEventPage(uid):
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")
+    return redirect(url_for("landing_page"))
+
+
+@app.route("/PSITS@Merch", methods=['POST', 'GET'])
+def addMerch():
+    if flask.request.method == 'GET':
+        if 'username' not in session:
+            return redirect(url_for('cant_find_link'))
+        account = session['username']
+        if isAdmin(account):
+            print("is admin")
+            return render_template("MerchForm.html", login='none', logout='block', account=account)
+        else:
+            return redirect(url_for('cant_find_link'))
+    else:
+        merchName = request.form["Merch"]
+        info = request.form["Info"]
+        price = request.form["Price"]
+        discount = request.form["Discount"]
+        stock = request.form["Stock"]
+
+        merch = Merchandise(
+            None,
+            merchName,
+            info,
+            price,
+            discount,
+            stock
+        )
+    CREATEMerchandise(merch)
     return redirect(url_for("landing_page"))
 
 
@@ -308,15 +337,11 @@ def psits_events_list():
                                admin='block', title='PSITS EVENTS LIST', events=getSearchEvents(search))
     else:
         search: str = flask.request.values.get('search')
-        event: Events = Events(
+        event: Event = Event(
             request.form['idnum'],
             request.form['title'],
             request.form['date_held'],
-            request.form['info'],
-            request.form['required_payment'],
-            request.form['item'],
-            request.form['amount'],
-            request.form['open']
+            request.form['info']
         )
         if request.form['open'] == 'YES':
             # Email Request
@@ -535,6 +560,6 @@ if __name__ == '__main__':
     if databaseInit():
         databaseLog(f"Server Started, running on {IPAddress}:5000")
         # use this if you are debugging the app
-        # app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=5000, debug=True)
         #
-        serve(app, host="0.0.0.0", port=5000)
+        # serve(app, host="0.0.0.0", port=5000)
