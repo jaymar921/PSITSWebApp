@@ -25,7 +25,7 @@
 </head>
 
 <body>
-  <div class="wrapper">   
+
       
         <!-- The Modal -->
         <div class="modal" id="logoutModal">
@@ -56,9 +56,14 @@
     <div class="banner">
     <nav>
         <div class="logo">
+            <img src='{{url_for("static",filename="images/uc.png")}}' style="cursor: pointer;"
+                onclick="location.href='/'">
+            <img src='{{url_for("static",filename="images/CCS_LOGO.png")}}' style="cursor: pointer;"
+                onclick="location.href='/'">
             <img src='{{url_for("static",filename="images/PSITS_LOGO.png")}}' style="cursor: pointer;"
                 onclick="location.href='/'">
-            <h1>Philippine Society of Information Technology Students</h1>
+            <h1 class="headerLong">Philippine Society of Information Technology Students</h1>
+            <h1 class="headerShort">PSITS</h1>
         </div>
         <input type="checkbox" id="click">
         <label for="click" class="menu-btn">
@@ -70,7 +75,8 @@
             <li><p>USER: {{account_data.lastname | upper }}</p></li>
             {% endif %}
            <li onclick="location.href='/PSITS'"><a>HOME</a></li>
-           <li><a>ABOUT US</a></li>
+           <li><a href="{{url_for('aboutus')}}">ABOUT US</a></li>
+           <li><a href="">MERCH</a></li>
            <li><hr class="bannerLine"style="display:none;"></li>
 
             <li style="display: {{login}}" onclick="location.href='/PSITS@Login'"><a>LOG IN</a></li>
@@ -105,16 +111,18 @@
           <li><a href="">Events</a></li>
           <li><a href="">Merchandise</a></li>
         </ul>
+    
       </div>
-      <br />
-      <hr>
-      <br />
+   
       <div class="footerLower">
+           <br />
+        <hr>
+        <br />
         <p>PSITS&copy;2022 - Developed by PSITS OFFICERS and CO.</p>
       </div>
    
     </div>
-  </div>
+
 
 </body>
 </html>

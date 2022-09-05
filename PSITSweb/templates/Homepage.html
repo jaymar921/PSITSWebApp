@@ -11,21 +11,31 @@
 
     <div class="announcement_content">
         <br>
-        <div class="announcement_thread" style="background-color: rgba(0,0,0,0.65);display:{{admin}};">
-            <br>
+        <br>
+       
+        <div class="announcement_thread" style="display:{{admin}};">
+           
             <h1>ADMINISTRATION</h1>
+            <hr>
+            <br />
+            <div class="adminActions">
             <div class="announcement_field">
-                <button onclick="studentsInfo()">STUDENTS</button>
+                <button onclick="studentsInfo()" class="normalButton"><i class="fa-solid fa-user"></i> STUDENTS</button>
             </div>
             <br>
             <div class="announcement_field">
-                <button onclick="showEvents()">EVENTS</button>
+                <button onclick="showEvents()" class="normalButton"><i class="fa-solid fa-calendar-days"></i> EVENTS</button>
             </div>
             <br>
             <div class="announcement_field">
-                <button onclick="showOrders()">ORDERS</button>
+                <button onclick="showOrders()" class="normalButton" > <i class="fa-sharp fa-solid fa-cart-shopping"></i> ORDERS</button>
             </div>
             <br>
+            <div class="announcement_field">
+                <button onclick="" class="normalButton"><i class="fa-solid fa-shirt"></i> MERCH</button>
+            </div>
+            <br>
+        </div>
         </div>
 
         <div class="announcement_title">
@@ -65,7 +75,7 @@
             <hr>
             <span>{{announcement.content}}</span>
             {% if announcement.image_location != '' %}
-            <img class="announcement_image" id="{{announcement.uid}}" onclick="zoomPicture({{announcement.uid}})"
+            <img class="announcement_image" id="{{announcement.uid}}" onclick="zoomPicture({{announcement.uid}})" loading="lazy"
                 src="{{ url_for('download_file', filename=announcement.image_location) }}">
             {% endif %}
             <a style="display:{{admin}}" onclick="deleteAnnouncement({{announcement.uid}})" class="removePost" >Remove</a>

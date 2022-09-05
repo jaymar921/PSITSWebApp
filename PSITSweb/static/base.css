@@ -12,24 +12,21 @@
 
 }
 
-html,
+
 body {
     background-color: #f0f2f5;
-    height: 100%;
-    width: 100%;
     display: block;
 }
 
-.wrapper {
+/* .wrapper {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-}
+} */
 
 .clickable {
     cursor: pointer;
     width: 100%;
-
 }
 
 .clickable:hover {
@@ -318,21 +315,20 @@ body {
 /*=========================================================================*/
 .banner nav {
     position: fixed;
-    z-index: 1;
+    z-index: 50;
     display: flex;
     height: 100px;
     width: 100%;
     background: #074873;
     align-items: center;
     justify-content: space-between;
-
     flex-wrap: wrap;
 }
 
 .banner nav .logo {
     color: #fff;
 
-    font-weight: 600;
+  
 }
 
 .banner nav .logo {
@@ -346,19 +342,25 @@ body {
     margin: auto;
     margin-left: 5px;
     margin-right: 5px;
-    width: 50px;
-    height: 50px;
+    width:35px;
 }
 
 
 .banner nav .logo h1 {
-    font-size: 20px;
+    font-size: 22px;
     color: white;
     margin-left: 20px;
-    width: 350px;
+    width: 100%;
     margin-top: auto;
     margin-bottom: auto;
 }
+.banner nav .logo .headerLong{
+    display:block;
+}
+.banner nav .logo .headerShort{
+    display:none;
+}
+
 
 .banner nav ul {
     display: flex;
@@ -377,8 +379,7 @@ body {
 .banner nav ul li p {
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 100px;
-    margin-right: 100px;
+
     font-size: 18px;
     color: white;
 }
@@ -465,8 +466,10 @@ body {
 }
 
 .contents .events {
-    width: 25%;
+    width:20%;
     padding: 20px 0px;
+    margin:auto;
+    margin-top:10px;
 }
 
 .contents hr {
@@ -491,7 +494,7 @@ body {
     margin-bottom: 15px;
 
     padding: 30px 20px;
-    width: 80%;
+    width: 100%;
     border-radius: 10px;
 
 }
@@ -506,6 +509,7 @@ body {
 
 .contents .events .events_thread .info {
     font-size: 14px;
+    overflow-wrap: break-word;
 
 }
 
@@ -539,7 +543,9 @@ body {
     width: 50%;
     border-radius: 10px;
     padding: 20px 30px;
+    
     box-shadow: 1px 1px 3px 1px #8e8e8e;
+    overflow: hidden;
 }
 
 .announcement_thread .removePost {
@@ -565,14 +571,19 @@ body {
 }
 
 .announcement_thread span {
+    width:100%;
     font-size: 12px;
     padding: 10px 0px;
-
 
     margin-top: 10px;
     margin-bottom: 10px;
     color: #3b3b3b;
-    white-space: pre-line;
+
+    text-align: center;
+    overflow-wrap: break-word;
+   
+ 
+
 }
 
 .announcement_thread img {
@@ -581,7 +592,7 @@ body {
     margin: auto;
     margin-top: 10px;
     border-radius: 10px;
-    max-width: 500px;
+    max-height:fit-content;
     border: 1px solid #8e8e8e;
 
 }
@@ -637,6 +648,15 @@ body {
     border-radius: 20px;
 }
 
+.announcement_thread .adminActions{
+    display:flex;
+    width:100%;
+    justify-content: space-around;
+
+}
+.announcement_thread .adminActions .announcement_field button{
+    width:100%;
+}
 
 
 /*
@@ -708,14 +728,15 @@ body {
 .footerPage {
     background-color: #074873;
     color: white;
-    padding: 50px;
     width: 100%;
+    padding:20px;
+    border:1px solid red;
 
 }
 
 .footerPage hr {
-    width: 70%;
-    margin: auto;
+    width: 100%;
+
 }
 
 .footerPage .footerUpper {
@@ -747,7 +768,7 @@ body {
     text-align: center;
 }
 
-.copyright {
+/* .copyright {
     margin-left: 20%;
     overflow: hidden;
 }
@@ -765,7 +786,7 @@ body {
 .copyright a {
     color: aqua;
 }
-
+ */
 
 
 .content {
@@ -829,11 +850,16 @@ body {
 
     text-align: center;
     margin: auto;
-    margin-top: 150px;
-    margin-bottom: 20px;
+    margin-top: 100px;
+    margin-bottom: 40px;
 
+}
 
-
+.welcome h1{
+    font-size:60px;
+}
+.welcome h3{
+    font-size:26px;
 }
 
 .form_modal {
@@ -985,6 +1011,57 @@ body {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*=========================================================================*/
+/*ABOUT US CSS */
+/*=========================================================================*/
+
+.contents .aboutUs{
+    background-color:#074873;
+    padding:50px 10px;
+
+    width:100%;
+    display:flex;
+    color:white;
+   
+   
+}
+.contents .aboutUs .leftAboutUs{
+    margin-left:20px;
+ 
+
+}
+
+.contents .aboutUs .leftAboutUs span{
+    font-size:18px;
+}
+.contents .aboutUs .leftAboutUs hr{
+    width:80%;
+    opacity: 0.3;
+    margin-top:10px;
+}
+.contents .aboutUs hr{
+    opacity: 0.1;
+
+}
+.contents .aboutUs .rightAboutUs{
+    margin:auto;
+
+
+}
+
+.contents .aboutUs .rightAboutUs img{
+    max-width:500px;
+    width:100%;
+    margin:auto;
+}
+
+/*=========================================================================*/
+/*END OF ABOUT US CSS */
+/*=========================================================================*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+/*=========================================================================*/
 /*MOBILE RESPONSIVENESS CSS */
 /*=========================================================================*/
 
@@ -1077,6 +1154,10 @@ body {
         width: 100%;
         margin: auto;
     }
+    
+    .contents .announcement_content {
+        width: 100%;
+    }
 
     .announcement_thread {
         width: 100%;
@@ -1084,11 +1165,11 @@ body {
 
     .contents {
         display: block;
-        width: 500px;
-        margin-left: 0px;
-        margin-right: 0px;
+       
+        margin-left: none;
+        margin-right: none;
         margin: auto;
-        padding: 0px 0px;
+        padding: none;
     }
 
     .contents .events {
@@ -1109,7 +1190,7 @@ body {
 
     .contents .events .events_thread h2 {
         width: 100%;
-        margin-left: 0;
+        margin-left: 0px;
         margin: auto;
 
     }
@@ -1119,13 +1200,46 @@ body {
         align-content: center;
         margin: auto;
     }
+    .footerPage {
+        font-size: 12px;
+        width:100%;
+        margin-left:0px;
+        margin-right:0px;
+    }
 
+    .footerPage .footerUpper {
+        display: block;
+        justify-content: center;
+    }
+    /*
+    ABOUT US 
+    */
+    .contents .aboutUs{
+        background-color:#074873;
+        padding:50px 10px;
+        width:100%;
+        display:block;
+        justify-content: center;
+        margin:auto;
+      
 
-
-
+    }
+    .contents .aboutUs .leftAboutUs{
+        margin:auto;
+        width:100%;
+       
+    }
 }
 
-@media(max-width: 550px) {
+@media(max-width:915px){
+    .banner nav .logo h1{
+        width:400px;
+    }
+    .announcement_thread .adminActions{
+        display:block;
+    }
+}
+@media(max-width: 679px) {
 
     .line_1 {
         display: block;
@@ -1136,8 +1250,13 @@ body {
     }
 
     .banner nav .logo h1 {
-        font-size: 15px;
-        width: 300px;
+        width:100%;
+    }
+    .banner nav .logo .headerLong {
+        display:none;
+    }
+    .banner nav .logo .headerShort {
+        display:block;
     }
 
     /* 
@@ -1147,7 +1266,7 @@ body {
     } */
 
 
-    .copyright {
+    /* .copyright {
         margin-left: 200px;
     }
 
@@ -1156,7 +1275,7 @@ body {
         width: 50ch;
         font-size: 0.4em;
         text-align: center;
-    }
+    } */
 
     .banner .account p {
         border: 0;
@@ -1164,54 +1283,31 @@ body {
         font-size: 14px;
     }
 
-    .footerPage {
-        font-size: 12px;
-    }
-
-    .footerPage .footerUpper {
-        display: block;
-        align-items: center;
-        justify-content: center;
-    }
 
     .announcement_content {
         width: 100%;
 
     }
 
+@media(max-width: 363px){
+    .footerPage {
+        width:100%;
+        margin-left:0px;
+        margin-right:0px;
 
-
-}
-
-
-@media(max-width:510px) {
-
-    .banner nav {
-        z-index: 1;
     }
-
-    .banner nav .logo h1 {
-        font-size: 12px;
-        width: 150px;
+    .footerPage .footerUpper{
+        width:100%;
     }
-}
-
-@media(max-width:345px) {
-
-    .banner nav {
-        z-index: 1;
-    }
-
-    .banner nav .logo h1 {
-        font-size: 10px;
-        width: 120px;
-    }
-
-    .banner nav .logo img {
-        width: 40px;
-        height: 40px;
-        margin-left: -30px;
+    .footerPage .footerLower{
+        width:100%;
     }
 
 
 }
+
+}
+
+
+
+

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{%block content%}
+<br />
+<br />
+<br />
+<div class="contents">
+
+    <div class="aboutUs">
+        <div class="leftAboutUs">
+        <h1>ABOUT US</h1>
+        <hr>
+        <br>
+        <span><b>PSITS - University of Cebu-Main Campus Chapter</b> <br/>
+            the Official School Organization for College of Computer Studies <br/>
+            BSIT-BSCS-ACT Students</span>
+        </div>
+   
+        <div class="rightAboutUs">
+            <center>
+            <img src="{{url_for('static', filename='/images/aboutus.png')}}">
+            </center>
+        </div>
+    </div>
+
+</div>
+<br />
+<br />
+<br />
+{% endblock %}

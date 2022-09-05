@@ -526,7 +526,29 @@ def psits_orders_list():
                     order.status = status
                     updateOrder(order)
         return redirect(url_for('psits_orders_list'))
-
+        
+@app.route("/PSITS@AboutUs")
+def aboutus():
+    if "username" in session:
+        if isAdmin(session['username']):
+            return render_template("aboutUs.html",
+                                   title="About Us PSITS",
+                                   login="none",
+                                   logout="block",
+                                   account=session['username'],
+                                   admin="block",
+                                   account_data=getAccountByID(session['username']))
+        else:
+            return render_template("aboutUs.html",
+                                   title="About Us PSITS",
+                                   login="none", logout="block",
+                                   account=session['username'],
+                                   admin="none",
+                                   account_data=getAccountByID(session['username']))
+    return render_template("aboutUs.html",
+                           title="About Us PSITS",
+                           login="block",
+                           logout="none", admin="none")
 
 @app.route("/PSITS@Logout")
 def logout():
