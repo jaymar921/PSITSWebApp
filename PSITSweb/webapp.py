@@ -7,12 +7,12 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
     removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount,\
-    getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
+    getEvent, getOrderAccount, createOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
     getLatestAnnouncement, DELETEEvent
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise
-from Util import hashData, isAdmin
+from Util import hashData, isAdmin, contentVerifier
 from waitress import serve
 
 UPLOAD_FOLDER = 'SERVER_FILES/'
@@ -106,8 +106,8 @@ def login_page():
 def post_announcement():
     date_time = datetime.datetime.now()
 
-    title: str = request.form['title']
-    content: str = request.form['content']
+    title: str = contentVerifier(request.form['title'])
+    content: str = contentVerifier(request.form['content'])
 
     if "username" in session:
         if isAdmin(session['username']):
@@ -212,9 +212,9 @@ def EventHandlerPSITS():
         else:
             return redirect(url_for('cant_find_link'))
     else:
-        event_title = request.form["Title"]
+        event_title = contentVerifier(request.form["Title"])
         event_date = request.form["date_held"]
-        event_info = request.form["Information"]
+        event_info = contentVerifier(request.form["Information"])
         event = Event(
             None,
             event_title,
@@ -223,6 +223,7 @@ def EventHandlerPSITS():
             "-"
         )
         CREATEEvent(event)
+        databaseLog(f"Event [{event.title}] added")
         event = SEARCHEvent(event_title)[0]
         if 'event_image' in request.files:
             file = request.files['event_image']
@@ -263,8 +264,8 @@ def addMerch():
         else:
             return redirect(url_for('cant_find_link'))
     else:
-        merchName = request.form["Merch"]
-        info = request.form["Info"]
+        merchName = contentVerifier(request.form["Merch"])
+        info = contentVerifier(request.form["Info"])
         price = request.form["Price"]
         discount = request.form["Discount"]
         stock = request.form["Stock"]

@@ -1,4 +1,3 @@
-import functools
 import hashlib
 import warnings
 
@@ -25,7 +24,8 @@ def isAdmin(uid) -> bool:
         'DE LOS REYES': '19903483',
         'FLORENTINO': '18725242',
         'CUICO': '19888957',
-        'OPINA': '19884253'
+        'OPINA': '19884253',
+        'TIEMPO' : '19924414'
     }
     for key, value in admins.items():
         if str(value).__eq__(str(uid)):
@@ -43,3 +43,12 @@ def deprecated(message):
             return func(*args, **kwargs)
         return deprecated_func
     return deprecated_decorator
+
+
+# Appends \ on ` \ ' and "
+def contentVerifier(content: str) -> str:
+    text = content.replace("'", "\\'")
+    text = text.replace('"', "\\\"")
+    text = text.replace('`', "\\`")
+    text = text.replace('\\', "\\\\")
+    return text
