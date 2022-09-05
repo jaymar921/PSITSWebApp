@@ -8,7 +8,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
     getEvents, removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, getSearchEvents, \
     updateEvent, getEvent, getOrderAccount, createOrder, getOrder, updateOrder, getAllOrders, getOrderById, \
-    databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise
+    databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
+    getLatestAnnouncement
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise
 from Util import hashData, isAdmin
@@ -46,12 +47,12 @@ def webpage():
 @app.route("/PSITS")
 def landing_page():
     events: list = GETAllEvent()
-    announcements = getAnnouncements()
+    announcements: list = getAnnouncements()
 
     # Load the Photos if exist
     for announcement in announcements:
-        if checkImageExist(announcement.title + ".png"):
-            announcement.image_location = f"{announcement.title}.png"
+        if checkImageExist(str(announcement.uid)+announcement.title + ".png"):
+            announcement.image_location = f"{str(announcement.uid)+announcement.title}.png"
 
     # show the latest 10 announcement
     temp = announcements.copy()
@@ -109,6 +110,7 @@ def post_announcement():
     if "username" in session:
         if isAdmin(session['username']):
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), content)
+            ID = getLatestAnnouncement();
             databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
             if 'file' in request.files:
                 file = request.files['file']
@@ -116,7 +118,7 @@ def post_announcement():
                     if file.filename != '':
                         ext = file.filename.split(".")[1]
                         if ext in ALLOWED_EXTENSION:
-                            file.filename = title + "." + ext
+                            file.filename = str(ID) + title + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
                             databaseLog(f"Announcement [{title}] comes with an image")

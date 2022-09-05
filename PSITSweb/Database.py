@@ -203,6 +203,16 @@ def getAnnouncements() -> list:
     return sorted(contents, key=lambda x: x.uid, reverse=True)
 
 
+# Get latest ID
+# Hi boss Jayy HAHAHAHAHAHAHAHAHAHAHAHHA
+# ===================================================
+def getLatestAnnouncement() -> int:
+    query = "SELECT max(id) as latest from announcements"
+    data: dict = executeQueryReturn(query)
+    return data[0]['latest']
+# ==================================================
+
+
 def getAccount(uid: int, password: str) -> Account:
     """
         getAccount will get the data from `account` table in `psitswebapp` database
