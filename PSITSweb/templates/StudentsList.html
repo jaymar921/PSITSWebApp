@@ -18,7 +18,8 @@
           <div class="menu_item">
             <button type="reset" onclick="home()">PSITS</button>
             <button type="submit">Search</button>
-            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME">
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)">CSV</button>
           </div>
           </form>
         </div>

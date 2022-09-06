@@ -97,6 +97,7 @@ class Merchandise:
         self.price = price
         self.discount = discount
         self.stock = stock
+        self.image_file = ""
 
 
 class MerchOrder:

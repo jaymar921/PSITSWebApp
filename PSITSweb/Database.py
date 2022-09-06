@@ -245,10 +245,12 @@ def getAccount(uid: int, password: str) -> Account:
 
 
 def getAllAccounts(search: str):
-    query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%' or lastname like" \
-                 f" '%{search}%' "
-    if search is None:
-        query = "SELECT * FROM ACCOUNTS"
+    query: str = "SELECT * FROM ACCOUNTS"
+    if search is not None:
+        query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
+                     f" or lastname like '%{search}%' or course like '%{search}%' or year like '{search[-1:]}'"
+        if search.lower() == 'all':
+            query: str = "SELECT * FROM ACCOUNTS"
     data = executeQueryReturn(query)
     accounts: list = []
     for acc in data:
@@ -608,8 +610,9 @@ def UPDATEEvent(event: Event):
 # This function will insert a new Merchandise into the table
 # @requires a Merchandise object as argument
 def CREATEMerchandise(merch: Merchandise):
-    query: str = f"insert into `merchandise` values ('{merch.title}','{merch.info}'," \
-                 f"'{merch.price}',{merch.price},{merch.discount},{merch.stock})"
+    query: str = f"insert into `merchandise`(title,information,price,discount,stock) values " \
+                 f"('{merch.title}','{merch.info}'," \
+                 f"{merch.price},{merch.discount},{merch.stock})"
     executeQueryCommit(query)
 
 
