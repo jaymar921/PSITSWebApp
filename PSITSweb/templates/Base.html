@@ -75,16 +75,16 @@
         <ul>
             {% if account_data != null %}
     
-            <li><p>USER: {{account_data.lastname | upper }}</p></li>
+            <li><p><i class="fa-solid fa-circle-user"></i> {{account_data.lastname | upper }} | </p></li>
             {% endif %}
-           <li onclick="location.href='/PSITS'"><a>HOME</a></li>
+           <li><a href="{{url_for('landing_page')}}">HOME</a></li>
            <li><a href="{{url_for('about_us')}}">ABOUT US</a></li>
            <li><a href="{{url_for('psits_merchandise')}}">MERCH</a></li>
            <li><a href="{{url_for('psits_faculty_members')}}">FACULTY</a></li>
            <li><hr class="bannerLine"style="display:none;"></li>
 
-            <li style="display: {{login}}" onclick="location.href='/PSITS@Login'"><a>LOG IN</a></li>
-            <li style="display: {{logout}}" ><a data-toggle="modal" data-target="#logoutModal">LOG OUT</a></li>
+            <li style="display: {{login}}"><a onclick="location.href='/PSITS@Login'" style="cursor:pointer;">LOG IN</a></li>
+            <li style="display: {{logout}}" ><a data-toggle="modal" data-target="#logoutModal" style="cursor:pointer;">LOG OUT</a></li>
         </ul>
      </nav>
     </div>

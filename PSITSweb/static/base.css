@@ -317,7 +317,7 @@ body {
 /*=========================================================================*/
 .banner nav {
     position: fixed;
-    z-index: 50;
+    z-index: 100000;
     display: flex;
     height: 100px;
     width: 100%;
@@ -405,6 +405,8 @@ body {
 .banner nav ul li .account p {
     margin-top: auto;
     margin-bottom: auto;
+    margin-left:20px;
+    margin-right:20px;
 }
 
 .banner nav ul li a {
@@ -651,13 +653,16 @@ body {
 }
 
 .announcement_thread .adminActions{
-    display:flex;
+    display:block;
     width:100%;
     justify-content: space-around;
 
 }
+
 .announcement_thread .adminActions .announcement_field button{
     width:100%;
+    height:100px;
+    font-size:21px;
 }
 
 
@@ -1064,6 +1069,61 @@ body {
     margin-top:10px;
 }
 
+/* ABOUT US UC MISSION,VISION CSS*/
+.contents .aboutUsUC{
+    width:100%;
+    display:block;
+}
+.contents .aboutUsUC .aboutUsHeader {
+    display:block;
+    margin:auto;
+    width:100%;
+    text-align: center;
+
+}
+.contents .aboutUsUC .aboutUsHeader img {
+    width:200px;
+  
+}
+
+.contents .aboutUsUC .aboutUsHeader h1{
+    font-size:400%;
+}
+.contents .aboutUsUC .aboutUsContent{
+    display:flex;
+    width:100%;
+    margin-top:100px;
+
+    justify-content: space-around;
+}
+.contents .aboutUsUC .aboutUsContent .leftAboutUs{
+    margin: auto;
+    
+    width: 100%;
+    text-align: center;
+   
+}
+
+.contents .aboutUsUC .aboutUsContent .centerLine{
+    
+    border:1px solid black;
+}
+
+.contents .aboutUsUC .aboutUsContent .leftAboutUs li{
+    list-style: none;
+    text-align: justify;
+    margin: auto;
+    display:block;
+}
+
+.contents .aboutUsUC .aboutUsContent .rightAboutUs{
+    width:100%;
+    margin:auto;
+    text-align: center;
+    display:block;
+}
+
+/*------------------------------------------------*/
 .carousel{
     background-color: black;
 }
@@ -1246,6 +1306,12 @@ body {
         margin:auto;
         width:100%;
        
+    }
+    .contents .aboutUsUC .aboutUsContent{
+        display:block;
+    }
+    .contents .aboutUsUC .aboutUsContent .centerLine{
+        border:none;
     }
 }
 
