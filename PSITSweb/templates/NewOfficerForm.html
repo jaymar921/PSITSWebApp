@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<br/><br/><br/><br/>
+    <div class="content">
+        <div class="form_modal">
+            <form action="/PSITS@NewOfficer" method="post"  enctype="multipart/form-data">
+                <h1>Add PSITS Officer</h1>
+
+
+                <div class="form_field">
+                    <p style="color: red;">{{message}}</p>
+                </div>
+                <div class="form_field">
+                    <p>Make sure that the ID is registered, else go <a href="{{url_for('registerAccount')}}">here</a></p>
+                </div>
+
+                <div class="form_field">
+                    <label for="stud_id" >ID NUMBER:</label><input id="stud_id" name="uid" type="number" placeholder="ID No." pattern="[0-9]{7,}" required>
+                </div>
+                
+                <div class="form_field">
+                    <label for="pos" >POSITION:</label><input id="pos" name="position" type="text" placeholder="Postion [President, VP, ..]" pattern="[a-zA-Z-\(\) ]+" required>
+                </div>
+                <div class="form_field">
+                    <label for="bd" >BIRTHDAY:</label><input id="bd" name="birthday" type="date" placeholder="Birthday" required>
+                </div>
+                <div>
+                    <label for="officer_image">Include image:  <i>**Accept only PNG</i></label> <br />
+                    <input class="file_input" type="file" id="officer_image" name="officer_image" accept=".png" >
+                </div>
+                
+                <br>
+                <div style="position: relative; margin: auto; padding: auto; text-align: center;" class="form_field">
+                    <button type="reset" onclick="location.href='/PSITS@OfficerList'">Cancel</button>
+                    <button type="submit">Register</button>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+    <br/><br/><br/><br/><br/><br/><br/><br/>
+{% endblock %}

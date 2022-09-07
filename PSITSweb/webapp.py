@@ -9,9 +9,11 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, \
     getEvent, getOrderAccount, createOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
-    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise
+    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, SEARCHPSITSOfficer,\
+    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, UPDATEFacultyMember, \
+    SEARCHFacultyMember
 from EmailAPI import pushEmail
-from Models import Event, Account, Email, OrderAccount, Merchandise
+from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember
 from Util import hashData, isAdmin, contentVerifier
 from waitress import serve
 
@@ -216,6 +218,47 @@ def registerAccount():
             return redirect(url_for("login_page"))
 
 
+@app.route("/PSITS@NewOfficer", methods=['POST','GET'])
+def register_officer():
+    if session is not None:
+        if 'username' in session:
+                if not isAdmin(session['username']):
+                    return redirect(url_for('cant_find_link'))
+        if flask.request.method == 'GET':
+            account = session['username']
+            return render_template("NewOfficerForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account), message="")
+        else:
+            # POST, GET THE FIELDS FROM THE FORM
+            idno = request.form['uid']
+            position = request.form['position']
+            birthday = request.form['birthday']
+
+            account = getAccountByID(idno)
+            if account.uid is None:
+                return render_template("NewOfficerForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account), message="Account not found! Make sure that the ID is registered!")
+
+            officer = PSITSOfficer(account, position, birthday)
+            
+            # REGISTER PSITS OFFICER
+            CREATEPSITSOfficer(officer)
+            databaseLog(f"Added new officer [{officer.lastname}]")
+            if 'officer_image' in request.files:
+                file = request.files['officer_image']
+                if file is not None:
+                    if file.filename != '':
+                        ext = file.filename.split(".")[1]
+                        if ext in ALLOWED_EXTENSION:
+                            file.filename = "officer" + str(officer.uid) + "." + ext
+                            officer.image_src = "officer" + str(officer.uid) + "." + ext
+                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                            file.save(path)
+                            databaseLog(f"Officer [{officer.lastname}] comes with an image")
+            UPDATEPSITSOfficer(officer)
+            return redirect(url_for('landing_page'))
+            
+    return redirect(url_for('cant_find_link'))
+
+
 @app.route("/PSITS@NewEvent", methods=['GET', 'POST'])
 def EventHandlerPSITS():
     if flask.request.method == 'GET':
@@ -223,7 +266,7 @@ def EventHandlerPSITS():
             return redirect(url_for('cant_find_link'))
         account = session['username']
         if isAdmin(account):
-            return render_template("NewEventForm.html", login='none', logout='block', account=account)
+            return render_template("NewEventForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account))
         else:
             return redirect(url_for('cant_find_link'))
     else:
@@ -255,6 +298,139 @@ def EventHandlerPSITS():
         return redirect(url_for("landing_page"))
 
 
+
+@app.route("/PSITS@Faculty", methods=['GET','POST'])
+def psits_faculty_members():
+    if flask.request.method == 'GET':
+        if 'username' not in session:
+            return render_template("Faculty.html",
+                                   title="Faculty Members",
+                                   MEMBERS=GETAllFacultyMember(),
+                                   login="block",
+                                   logout="none",
+                                   admin="none",
+                                   events=GETAllEvent())
+        else:
+            if isAdmin(session['username']):
+                return render_template("Faculty.html",
+                                   title="Faculty Members ADMIN",
+                                   MEMBERS=GETAllFacultyMember(),
+                                   login="none",
+                                   logout="block",
+                                   account=session['username'],
+                                   admin="block",
+                                   events=GETAllEvent(),
+                                   account_data=getAccountByID(session['username']))
+            else:
+                return render_template("Faculty.html",
+                                   title="Faculty Members",
+                                   MEMBERS=GETAllFacultyMember(),
+                                   login="none",
+                                   logout="block",
+                                   account=session['username'],
+                                   admin="none",
+                                   events=GETAllEvent(),
+                                   account_data=getAccountByID(session['username']))
+    else:
+        # POST
+        if 'username' not in session:
+            return redirect(url_for('cant_find_link'))
+        if isAdmin(session['username']):
+            member = FacultyMember(
+                None,
+                request.form['name'],
+                request.form['position'],
+                request.form['description'],
+                request.form['job']
+            )
+            CREATEFacultyMember(member)
+            databaseLog(f"Added new faculty member [{member.name}]")
+            member: FacultyMember = SEARCHFacultyMember(member.name)[0]
+            if 'photo' in request.files:
+                file = request.files['photo']
+                if file is not None:
+                    if file.filename != '':
+                        ext = file.filename.split(".")[1]
+                        if ext in ALLOWED_EXTENSION:
+                            file.filename = "faculty" + str(member.uid) + "." + ext
+                            member.image_src = "faculty" + str(member.uid) + "." + ext
+                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                            file.save(path)
+                            databaseLog(f"Faculty member [{member.name}] comes with an image")
+            UPDATEFacultyMember(member)
+            return redirect(url_for('psits_faculty_members'))
+
+
+
+@app.route("/PSITS@OfficerList", methods=['POST','GET'])
+def psits_officer_list():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    if isAdmin(session['username']):
+        if flask.request.method == 'GET':
+            # Get the search
+            search: str = flask.request.values.get('search')
+            if search is None:
+                search = 'ALL'
+            return render_template("PSITSOfficerList.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='OFFICERS LIST',
+                                accounts=GETAllPSITSOfficer(), search=search)
+        else: # POST
+            search: str = flask.request.values.get('search')
+            OFFICER_ACCOUNT = SEARCHPSITSOfficer(request.form['idnum'])[0]
+            if OFFICER_ACCOUNT is not None:
+                OFFICER_ACCOUNT.position = request.form['position']
+                OFFICER_ACCOUNT.birthday = request.form['birthday']
+                UPDATEPSITSOfficer(OFFICER_ACCOUNT)
+                databaseLog(f"Updated Officer data [{OFFICER_ACCOUNT.lastname}]")
+            return render_template("PSITSOfficerList.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='OFFICERS LIST',
+                                accounts=GETAllPSITSOfficer(), search=search)
+
+    return redirect(url_for('cant_find_link'))
+
+
+@app.route("/PSITS@MerchandiseList", methods=['POST','GET'])
+def psits_merchandise_list():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    if isAdmin(session['username']):
+        if flask.request.method == 'GET':
+            # Get the search
+            search: str = flask.request.values.get('search')
+            if search is None:
+                search = 'ALL'
+            return render_template("MerchandiseList.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='OFFICERS LIST',
+                                Merchandise=SEARCHMerchandise(search), search=search)
+        else: # POST
+            search: str = flask.request.values.get('search')
+            # OFFICER_ACCOUNT = SEARCHPSITSOfficer(request.form['idnum'])[0]
+            # if OFFICER_ACCOUNT is not None:
+            #     OFFICER_ACCOUNT.position = request.form['position']
+            #     OFFICER_ACCOUNT.birthday = request.form['birthday']
+            #     UPDATEPSITSOfficer(OFFICER_ACCOUNT)
+            #     databaseLog(f"Updated Officer data [{OFFICER_ACCOUNT.lastname}]")
+            MERCHANDISE: Merchandise = SEARCHMerchandise(request.form['idnum'])[0]
+            if MERCHANDISE is not None:
+                MERCHANDISE.title = request.form['title']
+                MERCHANDISE.info = request.form['info']
+                MERCHANDISE.price = request.form['price']
+                MERCHANDISE.discount = request.form['discount']
+                MERCHANDISE.stock = request.form['stock']
+                UPDATEMerchandise(MERCHANDISE)
+                databaseLog(f"Updated Merchandise data [{MERCHANDISE.title}]")
+            return render_template("MerchandiseList.html",
+                                logout='block', login='none', account_data=getAccountByID(session['username']),
+                                admin='block', title='OFFICERS LIST',
+                                Merchandise=SEARCHMerchandise(search), search=search)
+
+    return redirect(url_for('cant_find_link'))
+
+
 @app.route("/event_removal/<uid>")
 def removeEventPage(uid):
     if "username" in session:
@@ -274,8 +450,7 @@ def addMerch():
             return redirect(url_for('cant_find_link'))
         account = session['username']
         if isAdmin(account):
-            print("is admin")
-            return render_template("MerchForm.html", login='none', logout='block', account=account)
+            return render_template("MerchForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account))
         else:
             return redirect(url_for('cant_find_link'))
     else:
@@ -319,7 +494,16 @@ def psits_merchandise():
     for merch in MERCH:
         if checkImageExist("merch" + str(merch.uid) + ".png"):
             merch.image_file = f"merch{str(merch.uid)}.png"
-    return render_template("Merchandise.html", all_merch=MERCH, events=events)
+
+    
+
+    if 'username' in session:
+        account = session['username']
+        if isAdmin(account):
+            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="block")
+        else:
+            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="none")
+    return render_template("Merchandise.html", all_merch=MERCH, events=events, login='block', logout='none', admin="none")
 
 
 @app.route("/PSITS@RemoveMerch/<uid>")
@@ -330,7 +514,7 @@ def psits_remove_merchandise(uid):
     if isAdmin(account):
         DELETEMerchandise(uid)
         databaseLog(f"Merch ID [{uid}] was removed by Account ID [{account}]")
-        return redirect(url_for("psits_merchandise"))
+        return redirect(url_for("psits_merchandise_list"))
     else:
         return redirect(url_for('cant_find_link'))
     None
@@ -589,6 +773,7 @@ def psits_orders_list():
 
 @app.route("/PSITS@AboutUs")
 def about_us():
+    officers = GETAllPSITSOfficer()
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("aboutUs.html",
@@ -597,18 +782,21 @@ def about_us():
                                    logout="block",
                                    account=session['username'],
                                    admin="block",
-                                   account_data=getAccountByID(session['username']))
+                                   account_data=getAccountByID(session['username']),
+                                   officers=officers)
         else:
             return render_template("aboutUs.html",
                                    title="About Us PSITS",
                                    login="none", logout="block",
                                    account=session['username'],
                                    admin="none",
-                                   account_data=getAccountByID(session['username']))
+                                   account_data=getAccountByID(session['username']),
+                                   officers=officers)
     return render_template("aboutUs.html",
-                           title="About Us PSITS",
-                           login="block",
-                           logout="none", admin="none")
+                            title="About Us PSITS",
+                            login="block",
+                            logout="none", admin="none",
+                            officers=officers)
 
 
 @app.route("/PSITS@Logout")

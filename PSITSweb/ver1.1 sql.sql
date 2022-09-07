@@ -52,3 +52,20 @@ create table logging(
     date datetime not null,
     message varchar(150) not null
 ) engine = innodb;
+
+create table faculty_personnel(
+    uid int not null auto_increment primary key,
+    name varchar(100) not null,
+    position varchar(100) not null,
+    description varchar(2999) not null,
+    job varchar(50) not null,
+    image_src varchar(100) not null
+) engine = innodb;
+
+create table psits_officers(
+    uid int not null,
+    FOREIGN KEY (uid) REFERENCES accounts(idno) on delete cascade on update cascade,
+    position varchar(50) not null,
+    birthday date not null,
+    image_src varchar(50) not null
+) engine = innodb;
