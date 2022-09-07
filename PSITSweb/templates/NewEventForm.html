@@ -1,29 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <! -- This is for the background -->
-    <div class="ann_bg_1"></div>
-    <div class="ann_bg_2"></div>
-    <! -- This is for the background -->
-
+<br/><br/><br/><br/>
     <div class="content">
-        <div class="form_general">
+        <div class="form_modal">
             <form action="/PSITS@NewEvent" method="post"  enctype="multipart/form-data">
                 <h1>New Event</h1>
-                <div>
+                <div class="form_field">
                     <label for="Title">Title:</label> <input id="Title" name="Title" type="text" placeholder="Event Title" required>
                 </div>
-                <div>
+                <div class="form_field">
                     <label for="Date">Date Held:</label> <input id="Date" name="date_held" type="date" required>
                 </div>
-                <div>
+                <div class="form_field">
                     <label for="Info">Information:</label> <input id="Info" name="Information" type="text" placeholder="Event Information" required>
                 </div>
-                 <div>
+                 <div class="form_field">
                     <label for="file_input">Include image:  <i>**Accept only PNG</i></label> <br />
                     <input class="file_input" type="file" name="event_image" accept=".png" >
                 </div>
                 <br>
-                <div style="position: relative; margin: auto; padding: auto; text-align: center;">
+                <div style="position: relative; margin: auto; padding: auto; text-align: center;" class="form_field">
                     <button type="reset" onclick="location.href='/PSITS'">Cancel</button>
                     <button type="submit">Create</button>
                 </div>
@@ -31,5 +27,5 @@
             </form>
         </div>
     </div>
-
+    <br/><br/><br/><br/><br/><br/><br/><br/>
 {% endblock %}
