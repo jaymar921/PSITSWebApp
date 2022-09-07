@@ -13,25 +13,7 @@
         <br>
         <br>
 
-        <div class="announcement_thread" style="display:{{admin}};">
-
-            <h1>MERCHANDISE</h1>
-            <hr>
-            <br />
-            <div class="adminActions">
-            <div class="announcement_field">
-                <button onclick="location.href='/'" class="normalButton"><i class="fa-solid fa-user"></i> ANNOUNCEMENTS</button>
-            </div>
-            <br>
-            <div class="announcement_field">
-                <button onclick="location.href='/PSITS@AddMerch'" class="normalButton"><i class="fa-solid fa-shirt"></i> ADD MERCH</button>
-            </div>
-            <br>
-            <div class="announcement_field">
-                <button onclick="location.href='/PSITS@Merchandise'" class="normalButton"><i class="fa-solid fa-shirt"></i> MERCH</button>
-            </div>
-        </div>
-        </div>
+        
 
         <div class="announcement_title">
             <br /><br />
@@ -52,9 +34,11 @@
                 src="{{ url_for('download_file', filename=merch.image_file) }}">
             {% endif %}
             <p>Price: Php{{merch.price}} </p>
-            <p>Discount (As of today): {{merch.discount}}% </p>
+            {% if merch.discount > 0 %}
+            <p>Promo: {{merch.discount}}% discount! limited only</p>
+            {% endif %}
             <p>Stock: {{merch.stock}} PCS </p>
-            <a style="display:{{admin}}" onclick="removeMerchandise({{merch.uid}})" class="removePost" >Remove</a>
+            <button>ORDER NOW</button>
             <br />
             <br />
             <br />

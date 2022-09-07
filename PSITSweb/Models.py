@@ -110,3 +110,31 @@ class MerchOrder:
         self.quantity = quantity
         self.additional_info = add_info
         self.reference = reference
+
+
+class PSITSOfficer(Account):
+    def __init__(self, account: Account, position, birthday):
+        super().__init__(
+            account.uid, 
+            account.rfid, 
+            account.firstname, 
+            account.lastname, 
+            account.course, 
+            account.year, 
+            account.email
+            )
+        self.position = position
+        self.birthday = birthday
+        self.image_src = ""
+
+    def __str__(self):
+        return "OFFICER: "+self.lastname + ", " + self.firstname + f" [{self.uid}]"
+
+class FacultyMember:
+    def __init__(self, uid, name, position, description, job):
+        self.uid = uid
+        self.name = name
+        self.position = position
+        self.description = description
+        self.job = job
+        self.image_src = ''

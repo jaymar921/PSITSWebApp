@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div>
+    <div class="information_container">
+
+      <div class="information_content">
+        <h1>Officers List</h1>
+      </div>
+
+        <div class="information_menu">
+          <form action="" method="get">
+          <div class="menu_item">
+            <button type="reset" onclick="home()">PSITS</button>
+            <button type="submit">Search</button>
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="button" onclick="location.href='/PSITS@AddMerch'">ADD MERCH</button>
+          </div>
+          </form>
+        </div>
+        <br>
+        <div class="information_content">
+          <table>
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>MERCH</th>
+                <th>INFO</th>
+                <th>PRICE</th>
+                <th>DISCOUNT</th>
+                <th>STOCK</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for merch in Merchandise %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{merch.uid}}idnum" type="text" value="{{merch.uid}}" hidden>
+                  <td><input name="uid" id="{{merch.uid}}uid" type="text" value="{{merch.uid}}" disabled></td>
+                  <td><input name="title" id="{{merch.uid}}title" type="text" value="{{merch.title}}" disabled></td>
+                  <td><textarea name="info" id="{{merch.uid}}info" type="text" disabled>{{merch.info}}</textarea></td>
+                  <td><input name="price" id="{{merch.uid}}price" type="number" step="2" value="{{merch.price}}" disabled></td>
+                  <td><input name="discount" id="{{merch.uid}}discount" type="number" value="{{merch.discount}}" disabled></td>
+                  <td><input name="stock" id="{{merch.uid}}stock" type="number" value="{{merch.stock}}" disabled></td>
+                  <td><a id="{{merch.uid}}edit" onclick="editMerchInfo('{{merch.uid}}')">✎</a><button id="{{merch.uid}}button" type="submit" hidden>💾</button>  <a onclick="removeMerchandise('{{merch.uid}}')">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <hr>
+      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+
+    </div>
+
+  </div>
+
+
+{% endblock %}

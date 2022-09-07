@@ -164,3 +164,24 @@ if(confirm("Are you sure you want to delete this merchandise?") === true){
         location.href="/PSITS@RemoveMerch/"+uid;
     }
 }
+
+function editOfficerInfo(uid){
+    if(document.getElementById(uid+'idno').disabled === true){
+        document.getElementById(uid+'position').disabled = false;
+        document.getElementById(uid+'birthday').disabled = false;
+        document.getElementById(uid+'edit').hidden = true;
+        document.getElementById(uid+'button').hidden = false;
+    }
+}
+
+function editMerchInfo(uid){
+    if(document.getElementById(uid+'uid').disabled === true){
+        document.getElementById(uid+'title').disabled = false;
+        document.getElementById(uid+'info').disabled = false;
+        document.getElementById(uid+'price').disabled = false;
+        document.getElementById(uid+'discount').disabled = false;
+        document.getElementById(uid+'stock').disabled = false;
+        document.getElementById(uid+'edit').hidden = true;
+        document.getElementById(uid+'button').hidden = false;
+    }
+}

@@ -109,6 +109,14 @@
 <div class="alumniShoutOuts">
     <center>
     <h1>STUDENTS ALUMNI SHOUTOUTS!</h1>
+    {% for officer in officers %}
+      {% if officer.image_file != '' %}
+        <img width="200px" height="auto" class="announcement_image" id="{{officer.uid}}" loading="lazy"
+            src="{{ url_for('download_file', filename=officer.image_src) }}">
+      {% endif %}
+      <h2>{{officer.firstname}} {{officer.lastname}}</h2>
+      <p>{{officer.position}}</p>
+    {% endfor %}
     </center>
 </div>
 <br />

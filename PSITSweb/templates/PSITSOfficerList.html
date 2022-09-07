@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <! -- This is for the background -->
+  <div class="ann_bg_1"></div>
+  <div class="ann_bg_2"></div>
+  <! -- This is for the background -->
+
+  <div>
+    <div class="information_container">
+
+      <div class="information_content">
+        <h1>Officers List</h1>
+      </div>
+
+        <div class="information_menu">
+          <form action="" method="get">
+          <div class="menu_item">
+            <button type="reset" onclick="home()">PSITS</button>
+            <button type="submit">Search</button>
+            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="button" onclick="location.href='/PSITS@NewOfficer'">ADD OFFICER</button>
+          </div>
+          </form>
+        </div>
+        <br>
+        <div class="information_content">
+          <table>
+            <thead>
+              <tr>
+                <th>ID NUM</th>
+                <th>LASTNAME</th>
+                <th>FIRSTNAME</th>
+                <th>COURSE</th>
+                <th>YEAR</th>
+                <th>EMAIL</th>
+                <th>POSITION</th>
+                <th>BIRTHDAY</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for account in accounts %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{account.uid}}idnum" type="text" value="{{account.uid}}" hidden>
+                  <td><input name="idno" id="{{account.uid}}idno" type="text" value="{{account.uid}}" disabled></td>
+                  <td><input name="lastname" id="{{account.uid}}lastname" type="text" value="{{account.lastname}}" disabled></td>
+                  <td><input name="firstname" id="{{account.uid}}firstname" type="text" value="{{account.firstname}}" disabled></td>
+                  <td><input name="course" id="{{account.uid}}course" type="text" value="{{account.course}}" disabled></td>
+                  <td><input name="year" id="{{account.uid}}year" type="text" value="{{account.year}}" disabled></td>
+                  <td><input name="email" id="{{account.uid}}email" type="text" value="{{account.email}}" disabled></td>
+                  <td><input name="position" id="{{account.uid}}position" type="text" value="{{account.position}}" disabled></td>
+                  <td><input name="birthday" id="{{account.uid}}birthday" type="date" value="{{account.birthday}}" disabled></td>
+                  <td><a id="{{account.uid}}edit" onclick="editOfficerInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteStudent('{{account.uid}}')">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <hr>
+      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+
+    </div>
+
+  </div>
+
+
+{% endblock %}

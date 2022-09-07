@@ -1,7 +1,7 @@
 import datetime
 
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder
+from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember
 import TestApplication
 from Util import deprecated
 
@@ -9,7 +9,6 @@ DATABASE_NAME = "psitswebapp"
 USERNAME = "root"
 PASSWORD = ""
 HOST = "127.0.0.1"
-
 
 """
     PSITS version 1.0
@@ -122,6 +121,42 @@ def databaseInit() -> True:
                                     date datetime not null,
                                     message varchar(150) not null
                                 ) engine = innodb;
+
+                                create table faculty_personnel(
+                                    uid int not null auto_increment primary key,
+                                    name varchar(100) not null,
+                                    position varchar(100) not null,
+                                    description varchar(2999) not null,
+                                    job varchar(50) not null,
+                                    image_src varchar(100) not null
+                                ) engine = innodb;
+
+                                create table psits_officers(
+                                    uid int not null,
+                                    FOREIGN KEY (uid) REFERENCES accounts(idno) on delete cascade on update cascade,
+                                    position varchar(50) not null,
+                                    birthday date not null,
+                                    image_src varchar(50) not null
+                                ) engine = innodb;
+                            """)
+            cursor.execute("""
+                            create table faculty_personnel(
+                                    uid int not null auto_increment primary key,
+                                    name varchar(100) not null,
+                                    position varchar(100) not null,
+                                    description varchar(2999) not null,
+                                    job varchar(50) not null,
+                                    image_src varchar(100) not null
+                                ) engine = innodb;
+                            """)
+            cursor.execute("""
+                                create table psits_officers(
+                                    uid int not null,
+                                    FOREIGN KEY (uid) REFERENCES accounts(idno) on delete cascade on update cascade,
+                                    position varchar(50) not null,
+                                    birthday date not null,
+                                    image_src varchar(50) not null
+                                ) engine = innodb;
                             """)
             print("\n")
             TestApplication.TestDatabase()
@@ -134,7 +169,6 @@ def databaseInit() -> True:
         print("There was an issue connecting to database, the app will not start")
         print(f"Database.py configuration:\n\tHOST = '{HOST}'\n\tUSER = '{USERNAME}'\n\tPASS "
               f"= '{PASSWORD}'\n\tDB   = '{DATABASE_NAME}'")
-
         return False
     return True
 
@@ -629,7 +663,7 @@ def SEARCHMerchandise(search: str) -> list:
     query: str = "select * from `merchandise`"
     if search is not None:
         if search != '' and search.lower() != 'all':
-            query = f"select * from `merchandise` where title like '%{search}%' or information like '%{search}%'"
+            query = f"select * from `merchandise` where uid like '%{search}%' or title like '%{search}%' or information like '%{search}%'"
     data: dict = executeQueryReturn(query)
     merchandise = []
     for merch in data:
@@ -650,7 +684,7 @@ def SEARCHMerchandise(search: str) -> list:
 # @returns nothing
 def UPDATEMerchandise(merch: Merchandise):
     query: str = f"update `merchandise` set title='{merch.title}',information='{merch.info}'," \
-                 f"price={merch.price},discount={merch.discount},stock={merch.discount} where uid={merch.uid}"
+                 f"price={merch.price},discount={merch.discount},stock={merch.stock} where uid={merch.uid}"
     executeQueryCommit(query)
 
 
@@ -718,3 +752,92 @@ def UPDATEMerchOrder(merch: MerchOrder):
 # @returns nothing
 def DELETEMerchOrder(uid):
     executeQueryCommit(f"delete from `orders` where uid = {uid}")
+
+
+# This function will create a new PSITS officer
+# required PSITSOfficer as argument
+def CREATEPSITSOfficer(account: PSITSOfficer):
+    query: str = f"INSERT INTO `psits_officers` values ({account.uid}, '{account.position}', "\
+                 f"'{account.birthday}', '{account.image_src}')"
+    executeQueryCommit(query)
+
+
+# This function will retrieve all PSITSOfficers from the psitswebapp database
+# @returns a list of PSITSOfficer
+def GETAllPSITSOfficer() -> list:
+    return SEARCHPSITSOfficer("ALL")
+
+
+# This function will search for PSITSOfficers
+# @returns a list of PSITSOfficer
+def SEARCHPSITSOfficer(search: str) -> list:
+    accounts: list = getAllAccounts(search)
+    officers: list = []
+
+    for account in accounts:
+        officer_data = executeQueryReturn(f"select * from `psits_officers` where uid={account.uid}")
+        if officer_data is not None:
+            for officer_d in officer_data:
+                officer = PSITSOfficer(
+                    getAccountByID(officer_d['uid']),
+                    officer_d['position'],
+                    officer_d['birthday']
+                )
+                officer.image_src = officer_d['image_src']
+                officers.append(officer)
+    return officers
+
+
+# This function will update PSITSOfficer given
+# an updated PSITSOfficer argument, make sure that the UID has not been changed
+def UPDATEPSITSOfficer(account: PSITSOfficer):
+    query: str = f"UPDATE `psits_officers` SET position='{account.position}', birthday='{account.birthday}',"\
+                 f"image_src='{account.image_src}' where uid={account.uid}"
+    executeQueryCommit(query)
+
+
+# This function will remove a psits officer, given a UID
+def DELETEPSITSOfficer(uid):
+    executeQueryCommit(f"DELETE FROM `psits_officers` where uid={uid}")
+
+
+
+# This function will add new Faculty Member
+def CREATEFacultyMember(member: FacultyMember):
+    query = f"INSERT INTO `faculty_personnel` (name,position,description,job,image_src) values ('{member.name}','{member.position}','{member.description}','{member.job}','{member.image_src}')"
+    executeQueryCommit(query)
+
+
+# This function will get all faculty member
+# return a list of faculty personnel
+def GETAllFacultyMember()-> list:
+    return SEARCHFacultyMember("all")
+
+
+# This function will get a faculty member given a string to search
+# returns a list of faculty personnel
+def SEARCHFacultyMember(search: str):
+    query: str = "select * from `faculty_personnel`"
+    if search is not None:
+        if search != '' and search.lower() != 'all':
+            query = f"select * from `faculty_personnel` where name like '%{search}%' or position like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    member: list = []
+    
+    for m_d in data:
+        faculty_member = FacultyMember(
+                m_d['uid'],
+                m_d['name'],
+                m_d['position'],
+                m_d['description'],
+                m_d['job']
+            )
+        faculty_member.image_src = m_d['image_src']
+        member.append(faculty_member )
+    return member
+
+
+# This function will update the Faculty Member
+def UPDATEFacultyMember(m: FacultyMember):
+    query = f"UPDATE `faculty_personnel` set name='{m.name}', position='{m.position}', description='{m.description}', job='{m.job}', image_src='{m.image_src}' where uid={m.uid}"
+    executeQueryCommit(query)
