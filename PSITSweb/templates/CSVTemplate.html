@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV RESULT</title>
+</head>
+<body>
+
+    {% for student in students %}
+        <p>"{{ student.firstname }} {{ student.lastname }}",</p>
+    {% endfor %}
+
+</body>
+</html>

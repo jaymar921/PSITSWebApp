@@ -7,13 +7,13 @@
 
     <div class="content">
         <div class="form_general">
-            <form action="/PSITS@Merch" method="post"  enctype="multipart/form-data">
+            <form action="/PSITS@AddMerch" method="post"  enctype="multipart/form-data">
                 <h1>Create Merch</h1>
                 <div>
                     <label for="Merch">Merch:</label> <input id="Merch" name="Merch" type="text" placeholder="Event Title" required>
                 </div>
                 <div>
-                    <label for="Info">Information:</label> <input id="Info" name="Info" type="text" required>
+                    <label for="Info">Information:</label> <textarea id="Info" name="Info" type="text" required></textarea>
                 </div>
                 <div>
                     <label for="Price">Price:</label> <input id="Price" name="Price" type="number" required>
@@ -24,9 +24,13 @@
                 <div>
                     <label for="Stock">Stock:</label> <input id="Stock" name="Stock" type="number" required>
                 </div>
+                <div>
+                    <label for="merch_image">Include image:  <i>**Accept only PNG</i></label> <br />
+                    <input class="file_input" type="file" id="merch_image" name="merch_image" accept=".png" >
+                </div>
                 <br>
                 <div style="position: relative; margin: auto; padding: auto; text-align: center;">
-                    <button type="reset" onclick="location.href='/PSITS'">Cancel</button>
+                    <button type="reset" onclick="location.href='/PSITS@Merchandise'">Cancel</button>
                     <button type="submit">Create</button>
                 </div>
                 <br>

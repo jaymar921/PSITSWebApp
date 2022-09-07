@@ -154,3 +154,13 @@ function showEvents(){
 function showOrders(){
     location.href="/PSITS@Orders"
 }
+
+function loadCSVTemplate(search){
+    location.href="/PSITS@CSVdata/students/"+search
+}
+
+function removeMerchandise(uid){
+if(confirm("Are you sure you want to delete this merchandise?") === true){
+        location.href="/PSITS@RemoveMerch/"+uid;
+    }
+}

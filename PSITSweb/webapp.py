@@ -6,10 +6,10 @@ import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncement, removeAnnouncement, \
-    removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount,\
+    removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, \
     getEvent, getOrderAccount, createOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
-    getLatestAnnouncement, DELETEEvent
+    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise
 from Util import hashData, isAdmin, contentVerifier
@@ -143,6 +143,21 @@ def remove_announcement(uid):
     return redirect(url_for("landing_page"))
 
 
+@app.route("/PSITS@CSVdata/<fn>/<search>")
+def showCSVData(fn, search):
+    if "username" in session:
+        if isAdmin(session['username']):
+            if fn is not None:
+                if fn == "students":
+                    students = getAllAccounts(search)
+                    return render_template("CSVTemplate.html", students=students)
+
+        else:
+            return render_template("404Page.html", logout="none", login="none",
+                                   message="Don't try to break the page :<")
+    return redirect(url_for("landing_page"))
+
+
 @app.route("/PSITSLogin", methods=['POST'])
 def login():
     account_id: str = request.form['id_number']
@@ -252,7 +267,7 @@ def removeEventPage(uid):
     return redirect(url_for("landing_page"))
 
 
-@app.route("/PSITS@Merch", methods=['POST', 'GET'])
+@app.route("/PSITS@AddMerch", methods=['POST', 'GET'])
 def addMerch():
     if flask.request.method == 'GET':
         if 'username' not in session:
@@ -278,8 +293,47 @@ def addMerch():
             discount,
             stock
         )
-    CREATEMerchandise(merch)
-    return redirect(url_for("landing_page"))
+        CREATEMerchandise(merch)
+        databaseLog(f"Merch [{merch.title}] added")
+        merch = SEARCHMerchandise(merch.info)[0]
+        if merch is not None:
+            if 'merch_image' in request.files:
+                file = request.files['merch_image']
+                if file is not None:
+                    if file.filename != '':
+                        ext = file.filename.split(".")[1]
+                        if ext in ALLOWED_EXTENSION:
+                            file.filename = "merch" + str(merch.uid) + "." + ext
+                            merch.image_file = "merch" + str(merch.uid) + "." + ext
+                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                            file.save(path)
+                            databaseLog(f"Merch [{merch.title}] comes with an image")
+    return redirect(url_for("psits_merchandise"))
+
+
+@app.route("/PSITS@Merchandise")
+def psits_merchandise():
+    MERCH = GETAllMerchandise()
+    events: list = GETAllEvent()
+    # check if merch has photo
+    for merch in MERCH:
+        if checkImageExist("merch" + str(merch.uid) + ".png"):
+            merch.image_file = f"merch{str(merch.uid)}.png"
+    return render_template("Merchandise.html", all_merch=MERCH, events=events)
+
+
+@app.route("/PSITS@RemoveMerch/<uid>")
+def psits_remove_merchandise(uid):
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    account = session['username']
+    if isAdmin(account):
+        DELETEMerchandise(uid)
+        databaseLog(f"Merch ID [{uid}] was removed by Account ID [{account}]")
+        return redirect(url_for("psits_merchandise"))
+    else:
+        return redirect(url_for('cant_find_link'))
+    None
 
 
 @app.route("/PSITS@Students", methods=['POST', 'GET'])
@@ -293,9 +347,12 @@ def psits_students_list():
     if request.method == 'GET':
         # Get the search
         search: str = flask.request.values.get('search')
+        if search is None:
+            search = 'ALL'
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
+                               admin='block', title='PSITS STUDENTS LIST',
+                               accounts=getAllAccounts(search), search=search)
     else:
         search: str = flask.request.values.get('search')
         updated_account = Account(
@@ -311,7 +368,8 @@ def psits_students_list():
         databaseLog(f"Updated account ID [{updated_account.uid}]")
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST', accounts=getAllAccounts(search))
+                               admin='block', title='PSITS STUDENTS LIST',
+                               accounts=getAllAccounts(search), search=search)
 
 
 @app.route("/PSITS@StudentRemove/<uid>")
