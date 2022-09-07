@@ -38,7 +38,9 @@ body {
     margin: auto;
 }
 
-
+.noBG{
+    background-color: white;
+}
 
 /* .content {
     flex-grow: 1;
@@ -1043,6 +1045,7 @@ body {
 }
 .contents .aboutUs .rightAboutUs{
     margin:auto;
+    text-align:center;
 
 
 }
@@ -1052,7 +1055,23 @@ body {
     width:100%;
     margin:auto;
 }
+.contents .aboutUs .rightAboutUs span{
+    font-size:14px;
+}
+.contents .aboutUs .rightAboutUs hr{
+    width:100%;
+    opacity: 0.3;
+    margin-top:10px;
+}
 
+.carousel{
+    background-color: black;
+}
+.carousel .carousel-inner .item img{
+    width:100%;
+    height:400px;
+    object-fit: contain;
+}
 /*=========================================================================*/
 /*END OF ABOUT US CSS */
 /*=========================================================================*/
