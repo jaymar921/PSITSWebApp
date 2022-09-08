@@ -13,12 +13,21 @@ PSITS web application allows PSITS officers to manage announcements, selling tic
 The project is open for collaboration for students from UC Main and other campus to share their ideas and experience team building environment with the project developers. The web app was built on Flask microweb framework since it is light-weight and fast to deploy, the web application is also not so complex which is why flask is the best option.
 
 <p align="center">
-    <kbd><img width="400px" height="auto" style="border-radius: 180px;" src="https://github.com/jaymar921/PSITSWebApp/raw/master/PSITSweb/static/images/PSITSwebapp.png"></kbd>
+<kbd>Legacy V1.0</kbd> </p>
+
+<p align="center">
+<kbd><img width="400px" height="auto" style="border-radius: 180px;" src="https://github.com/jaymar921/PSITSWebApp/raw/master/PSITSweb/static/images/PSITSwebapp.png"></kbd> </p>
+
+<p align="center">
+<kbd>Update 1.1</kbd> </p>
+<p align="center">
+<kbd><img width="400px" height="auto" style="border-radius: 180px;" src="https://github.com/jaymar921/PSITSWebApp/blob/master/PSITSweb/static/images/PSITSwebapp1.1.png"></kbd> </p>
 
 ### Tools used for project development
 - PyCharm Python programming IDE
 - MySQL for Database
 - Magic Bell Email API
+- Bootstrap for Front-End
 
 The web app is hosted at UC-Banilad's server, you can access it [here](http://203.177.71.218:5000/PSITS)
 
