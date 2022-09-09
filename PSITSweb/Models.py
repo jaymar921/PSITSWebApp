@@ -1,6 +1,7 @@
 from warnings import warn
 
 from Util import deprecated
+from enum import Enum
 
 
 class Announcement:
@@ -101,7 +102,7 @@ class Merchandise:
 
 
 class MerchOrder:
-    def __init__(self, uid, acc_id, order_date, merch_id, status, quantity, add_info, reference):
+    def __init__(self, uid, acc_id, order_date, merch_id, status: Enum, quantity, add_info, reference):
         self.uid = uid
         self.account_id = acc_id
         self.order_date = order_date
@@ -110,6 +111,9 @@ class MerchOrder:
         self.quantity = quantity
         self.additional_info = add_info
         self.reference = reference
+    
+    def getStatus(self) -> Enum:
+        return self.status
 
 
 class PSITSOfficer(Account):
@@ -138,3 +142,10 @@ class FacultyMember:
         self.description = description
         self.job = job
         self.image_src = ''
+
+
+class ORDER_STATUS(Enum):
+    NONE = 'NONE'
+    ORDERED = 'ORDERED'
+    PAID = 'PAID'
+    CLAIMED = 'CLAIMED'
