@@ -126,6 +126,7 @@ def post_announcement():
                             file.filename = str(ID) + title + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Announcement [{title}] comes with an image")
         else:
             return render_template("404Page.html", logout="none", login="none",
@@ -253,6 +254,7 @@ def register_officer():
                             officer.image_src = "officer" + str(officer.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Officer [{officer.lastname}] comes with an image")
             UPDATEPSITSOfficer(officer)
             return redirect(url_for('landing_page'))
@@ -294,6 +296,7 @@ def EventHandlerPSITS():
                         event.image_file = "event" + str(event.uid) + "." + ext
                         path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                         file.save(path)
+                        file.close()
                         databaseLog(f"Event [{event.title}] comes with an image")
         UPDATEEvent(event)
         return redirect(url_for("landing_page"))
@@ -357,6 +360,7 @@ def psits_faculty_members():
                             member.image_src = "faculty" + str(member.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Faculty member [{member.name}] comes with an image")
             UPDATEFacultyMember(member)
             return redirect(url_for('psits_faculty_members'))
@@ -535,6 +539,7 @@ def addMerch():
                             merch.image_file = "merch" + str(merch.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Merch [{merch.title}] comes with an image")
     return redirect(url_for("psits_merchandise"))
 
