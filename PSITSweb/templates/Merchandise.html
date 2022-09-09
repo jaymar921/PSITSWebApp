@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
+ 
+<br />
 
-
-
+<button class="backButton"><a onclick="home()">Back</a></button>
 
 <div class="merch_contents">
         <br>
         <br>
         <div class="announcement_title">
             <br /><br />
-            <h1>MERCHANDISE!</h1>
+            <h1>PSITS MERCHANDISE</h1>
             <br /><br />
         </div>
 
         <br />
+        <button class="backButton"><i class="fa-solid fa-cart-shopping"></i> My Orders</button>
         <div class="merch_container">
+        
         <div class="merch">
         {% for merch in all_merch %}
         <div class="product">
@@ -29,15 +32,15 @@
             <h2 class="title">{{merch.title}}</h2>
             <br>
             <hr>
-            <!-- <span class="info">{{merch.info}}</span> -->
+            
             <p class="price">₱{{merch.price}} </p>
             {% if merch.discount > 0 %}
-            <p class="promo">Promo: {{merch.discount}}% discount! limited only</p>
+
             {% endif %}
             <p class="stock">Stock: {{merch.stock}} PCS </p>
             <br />
    
-            <button class="normalButton">ORDER NOW</button>
+            <button class="normalButton"><a href="{{url_for('psits_merchandise_product', uid=merch.uid)}}">ORDER NOW</a></button>
        
         </div>
         <!-- {% if loop.index%3 == 0 %}
