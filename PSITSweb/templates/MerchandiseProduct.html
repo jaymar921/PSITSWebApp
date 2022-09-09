@@ -1,0 +1,59 @@
+{% extends 'base.html'%}
+{% block content %}
+<br />
+<button class="backButton"><a href="{{url_for('psits_merchandise')}}">Back</a></button>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="merch_product_individual">
+    <div class="leftContent">
+        <img loading="lazy" class="fade-in-left" src="{{ url_for('download_file', filename=product.image_file) }}">
+    </div>
+    <hr>
+    <div class="rightContent fade-in-right">
+        <h3 class="PSITS_title">PSITS</h3>
+        <h1 class="merch_title">{{product.title}}<br></h1>
+        <br />
+        <br />
+        <p class="merch_description">Description:</p>
+        <span class="merch_info">{{product.info}}</span>
+        <p class="merch_price">₱ {{product.price}}<br></p>
+        <p><i class="fa-solid fa-tag"></i> Discount: {{product.discount}}%<br></p> <br />
+        <p>STOCK: {{product.stock}}</p> <br />
+        <form action="" class="additional_info">
+            <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
+            <select name="quantity" id="quantity">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select><br />
+            <br />
+            <label for="additional_info">Additional Info</label><br />
+            <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
+            <br >
+            <br>
+            <input type="submit" class="normalButton" value="Order">
+
+            <button class="normalButton"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+        </form>
+
+    </div>
+
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+{% endblock %}

@@ -430,7 +430,14 @@ def psits_merchandise_list():
 
     return redirect(url_for('cant_find_link'))
 
-
+@app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
+def psits_merchandise_product(uid:int):
+    if flask.request.method == 'GET':
+        product = SEARCHMerchandise(uid)[0]
+        if checkImageExist("merch" + str(product.uid) + ".png"):
+            product.image_file = f"merch{str(product.uid)}.png"
+        return render_template('MerchandiseProduct.html', product =  product)
+        
 @app.route("/event_removal/<uid>")
 def removeEventPage(uid):
     if "username" in session:

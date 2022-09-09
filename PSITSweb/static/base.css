@@ -1,8 +1,25 @@
  @import url('https://fonts.googleapis.com/css?family=Montserrat:500'); 
 /* @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap'); */
-
-
-
+/* FADE IN ANIMATION */
+@keyframes fadeInLeft {
+    0% { opacity: 0; 
+        margin-left:-200px;}
+    100% { opacity: 1;
+        margin-left:0px; }
+  }
+@keyframes fadeInRight {
+    0% { opacity: 0; 
+        margin-right:-200px;}
+    100% { opacity: 1;
+        margin-right:0px; }
+  }
+/*-----------------------------------*/
+.fade-in-left { 
+    animation: fadeInLeft 2s; 
+}
+.fade-in-right { 
+    animation: fadeInRight 2s; 
+}
 * {
     margin: 0;
     padding: 0;
@@ -51,12 +68,16 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    right:0;
+    bottom:0;
     z-index: 1050;
     display: none;
     width: 100%;
     height: 100%;
+    overflow-y: hidden;
     overflow: hidden;
     outline: 0
+   
 }
 
 .modal-dialog {
@@ -318,7 +339,7 @@ body {
 /*=========================================================================*/
 .banner nav {
     position: fixed;
-    z-index: 100000;
+    z-index: 10;
     display: flex;
     height: 100px;
     width: 100%;
@@ -823,6 +844,10 @@ body {
     transition: 0.5s ease;
     background-color: #006299;
 }
+.backButton a{
+    color: white;
+    text-decoration: none;
+}
 
 .normalButton {
     transition: 0.5s ease;
@@ -833,8 +858,11 @@ body {
     background-color: #004064;
     border: none;
     outline: none;
-
-
+    text-decoration:none;
+}
+.normalButton a{
+    color: white;
+    text-decoration: none;
 }
 
 .normalButton:hover {
@@ -1153,20 +1181,20 @@ body {
     margin: 10px 10px;
 }
 
+
 .merch_container .merch{
     position:relative;
     width:100%;
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 20px;
+    margin:auto;
     margin-top:10px;
     margin-bottom:10px;
-
-
-
 }
+
 .merch_container .merch .product{
-    
+    width:100%;
     background-color:white;
     padding:10px 10px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
@@ -1201,6 +1229,64 @@ body {
     margin:auto;
     width:100%;
 }
+/* MERCHANDISE PRODUCT INDIVIDUAL CSS*/
+
+.merch_product_individual{
+    display:flex;
+    width:100%;
+    margin:auto;
+    margin-left:10px;
+    margin-right:10px;
+    justify-content: space-around;
+}
+.merch_product_individual hr{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.merch_product_individual .leftContent {
+    width:100%;
+}
+.merch_product_individual .leftContent img{
+    width:100%;
+    height:400px;   
+    object-fit:contain;
+
+}
+.merch_product_individual .rightContent{
+    width:100%;
+    justify-content: left;
+    margin-left:20px;
+}
+
+.merch_product_individual .rightContent .PSITS_title{
+    font-weight:bold;
+    color:#006299;
+}
+.merch_product_individual .rightContent .merch_title{
+    font-size:350%;
+    font-weight: bold;
+    width:100%;
+
+}
+
+.merch_product_individual .rightContent .merch_description{
+    opacity:0.7;
+}
+.merch_product_individual .rightContent .merch_info{
+    opacity:0.7;
+}
+.merch_product_individual .rightContent .merch_price{
+    margin-top:25px;
+    margin-bottom:25px;
+    font-weight:bolder;
+    font-size:200%;
+}
+.merch_product_individual .rightContent textarea{
+    resize:none;
+    width:70%;
+    height:100px;
+}
+
 /*=========================================================================*/
 /*END OF MERCHANDISE CSS*/
 /*==========================================================================*/
@@ -1381,6 +1467,13 @@ body {
     }
     .contents .aboutUsUC .aboutUsContent .centerLine{
         border:none;
+    }
+    /*MERCHANDISE*/
+    .merch_product_individual{
+        display:block;
+        width:100%;
+        align-items: center;
+   
     }
 }
 
