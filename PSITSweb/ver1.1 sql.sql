@@ -47,6 +47,13 @@ create table orders(
     reference varchar(100)
 ) engine = innodb;
 
+/*
+    STATUS -----
+    - NONE or UNRESERVED
+    - ORDER
+    - PAID
+    - CLAIMED
+*/
 create table logging(
     uid int not null auto_increment primary key,
     date datetime not null,
