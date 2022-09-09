@@ -48,6 +48,14 @@ Contributors
 <p align="left">
     <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/26346911?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dennis Durano</b>&nbsp;&nbsp;(Adviser)
 </p>
+
+
+
+</p>
+<p align="left">
+    <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/91781090?s=100&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Pia Abellana</b>&nbsp;&nbsp;(QA Tester)
+</p>
+
 <p align="left">
     <kbd><img width="32" height="32"  src="https://avatars.githubusercontent.com/u/89179755?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Rey Vincent de los Reyes</b>&nbsp;&nbsp;(Front-End developer)
 </p>
