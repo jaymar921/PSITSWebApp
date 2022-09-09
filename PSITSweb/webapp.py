@@ -433,11 +433,13 @@ def psits_merchandise_list():
 
 @app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
 def psits_merchandise_product(uid:int):
+    if 'username' not in session:
+        return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
         product = SEARCHMerchandise(uid)[0]
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-        return render_template('MerchandiseProduct.html', product =  product)
+        return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none', account_data=getAccountByID(session['username']))
 
 
 # HAROLD TASK
