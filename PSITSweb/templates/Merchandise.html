@@ -5,16 +5,9 @@
 
 
 
-<div class="contents">
-
-
-
-    <div class="announcement_content">
+<div class="merch_contents">
         <br>
         <br>
-
-        
-
         <div class="announcement_title">
             <br /><br />
             <h1>MERCHANDISE!</h1>
@@ -22,51 +15,44 @@
         </div>
 
         <br />
-
+        <div class="merch_container">
+        <div class="merch">
         {% for merch in all_merch %}
-        <div class="announcement_thread">
-            <h2>{{merch.title}}</h2>
-            <br>
-            <hr>
-            <span>{{merch.info}}</span>
+        <div class="product">
+
             {% if merch.image_file != '' %}
-            <img class="announcement_image" id="{{merch.uid}}" onclick="zoomPicture({{merch.uid}})" loading="lazy"
+
+
+            <img class="merch_product" id="{{merch.uid}}" onclick="zoomPicture({{merch.uid}})" loading="lazy"
                 src="{{ url_for('download_file', filename=merch.image_file) }}">
             {% endif %}
-            <p>Price: Php{{merch.price}} </p>
+            <h2 class="title">{{merch.title}}</h2>
+            <br>
+            <hr>
+            <!-- <span class="info">{{merch.info}}</span> -->
+            <p class="price">₱{{merch.price}} </p>
             {% if merch.discount > 0 %}
-            <p>Promo: {{merch.discount}}% discount! limited only</p>
+            <p class="promo">Promo: {{merch.discount}}% discount! limited only</p>
             {% endif %}
-            <p>Stock: {{merch.stock}} PCS </p>
-            <button>ORDER NOW</button>
+            <p class="stock">Stock: {{merch.stock}} PCS </p>
             <br />
-            <br />
-            <br />
+   
+            <button class="normalButton">ORDER NOW</button>
+       
         </div>
+        <!-- {% if loop.index%3 == 0 %}
+        <hr>
+        
+        {% endif %} -->
         {% endfor %}
         <br><br><br>
     </div>
-    <hr>
-    <div class="events">
-        <h1>Upcoming Events</h1>
-
-
-            <button class="normalButton" style="display: {{admin}};" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
-
-            <br />
-        {% for event in events %}
-            <div class="events_thread">
-                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
-                <hr>
-                <br />
-                <span class="info">{{ event.information }}</span>
-            </div>
-        {% endfor %}
-        <br>
     </div>
-
-
-
-
 </div>
+
+
+
+
+
+
 {% endblock %}

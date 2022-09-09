@@ -16,6 +16,7 @@
 body {
     background-color: #f0f2f5;
     display: block;
+    min-height:100vh;
 }
 
 /* .wrapper {
@@ -548,7 +549,7 @@ body {
     border-radius: 10px;
     padding: 20px 30px;
     
-    box-shadow: 1px 1px 3px 1px #8e8e8e;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     overflow: hidden;
 }
 
@@ -876,7 +877,7 @@ body {
     margin: auto;
     width: 350px;
     margin-bottom: 200px;
-    box-shadow: 1px 1px 3px 1px #8e8e8e;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .form_modal .formHeader {
@@ -1135,6 +1136,74 @@ body {
 /*=========================================================================*/
 /*END OF ABOUT US CSS */
 /*=========================================================================*/
+/*MERCHANDISE CSS*/
+/*==========================================================================*/
+
+.merch_contents{
+    display:block;
+    width:100%;
+    align-items: center;
+    justify-content: space-around;
+}
+.merch_container{
+    display:flex;
+    justify-content: center;
+    align-content:center;
+    width:100%;
+    margin: 10px 10px;
+}
+
+.merch_container .merch{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin-top:10px;
+    margin-bottom:10px;
+
+
+
+}
+.merch_container .merch .product{
+    
+    background-color:white;
+    padding:10px 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.merch_container .merch .product .merch_product{
+    width:100%;
+    height:200px;   
+    object-fit:contain;
+}
+.merch_container .merch .product .title{
+    font-weight: bold;
+    width:100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.merch_container .merch .product .info{
+
+}
+.merch_container .merch .product .price{
+    font-weight:normal;
+    color:red;
+    font-size:150%;
+}
+.merch_container .merch .product .promo{
+
+}
+.merch_container .merch .product .stock{
+
+}
+.merch_container .merch .product button{
+    margin:auto;
+    width:100%;
+}
+/*=========================================================================*/
+/*END OF MERCHANDISE CSS*/
+/*==========================================================================*/
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
