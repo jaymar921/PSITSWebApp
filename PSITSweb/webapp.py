@@ -11,9 +11,10 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
     getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, SEARCHPSITSOfficer,\
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, UPDATEFacultyMember, \
-    SEARCHFacultyMember
+    SEARCHFacultyMember, SEARCHMerchOrder
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember
+from Util import deprecated
 from Util import hashData, isAdmin, contentVerifier
 from waitress import serve
 
@@ -437,6 +438,49 @@ def psits_merchandise_product(uid:int):
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
         return render_template('MerchandiseProduct.html', product =  product)
+
+
+# HAROLD TASK
+@app.route("/PSITS@Order", methods=['POST'])
+def psits_order_product():
+    """
+        Task, receive order from the MerchandiseProduct(form)
+
+        Create the object MerchOrder from Models.py
+        - before initializing the object, you must know if the 
+          user is logged in, then get the id from session['username']
+
+          also get the merchandise ID, you can submit the merch id from
+          the form
+
+        - Usually when the user is ordering a product, his data is null or empty
+
+        MerchOrder(
+            None --->  uid
+            account_id ---> session
+            order_date ---> must be the date of ordering the product
+            merchandise_id ---> from form
+            status ---> ORDER_STATUS.ORDERED (Enum)
+            quantity ---> grab from form
+            additional_info ---> from from
+            reference ---> '' (empty string)
+        )
+
+        Store the data to the database, use
+        CREATEMerchOrder(order: MerchOrder) module from Database.py
+
+        - Block the user from ordering again once they have an ongoing
+          order, unless if it's status is claimed
+
+        - When user has ordered or paid status, they must not order but
+          can use the 'My Orders' webpage so they will know their orders
+
+        - Create a simple webpage for 'My Orders'
+
+        - Use the SEARCHMerchOrder(search: str) from the Database.py
+    """
+    pass
+
         
 @app.route("/event_removal/<uid>")
 def removeEventPage(uid):
@@ -627,6 +671,7 @@ def psits_remove_event(uid):
     return redirect(url_for("psits_events_list"))
 
 
+@deprecated("Order form is deprecated")
 @app.route("/PSITS@OrderForm/<event_uid>")
 def psits_order_form_uid(event_uid):
     if 'username' not in session:
@@ -724,6 +769,7 @@ def order_handler():
     return redirect(url_for('landing_page'))
 
 
+@deprecated("orders is deprecated")
 @app.route("/PSITS@Orders", methods=['GET', 'POST'])
 def psits_orders_list():
     if "username" not in session:

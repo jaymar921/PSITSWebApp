@@ -115,6 +115,9 @@ class MerchOrder:
     def getStatus(self) -> Enum:
         return self.status
 
+    def __str__(self):
+        return f"Order {self.uid} - {self.account_id}"
+
 
 class PSITSOfficer(Account):
     def __init__(self, account: Account, position, birthday):
