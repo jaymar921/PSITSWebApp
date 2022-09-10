@@ -1,5 +1,6 @@
 import hashlib
 import warnings
+import re, random
 
 
 def hashData(data: str) -> str:
@@ -53,3 +54,28 @@ def contentVerifier(content: str) -> str:
     text = text.replace('`', "\\`")
     print(text)
     return text
+
+"""
+    I made my custom Reference code generator and parser
+
+    Pattern -> @REFP{PRICE}-{RANDOM NUMBERS}{SINGLE CHAR}
+    - created by Jayharron Mar Abejar
+"""
+
+def getRandomChar():
+    a = ['A','B','C','D','E']
+    return a[random.randint(0,4)]
+
+def PriceParseRef(price: str):
+    return f"@REFP{price}-{random.randint(100000000,999999999)}{getRandomChar()}"
+
+
+def GetPriceRef(string: str) -> float:
+    if (re.search('@REFP(\d*\.?\d)+\-[0-9]+', string)):
+        return float(re.findall('((\d*\.?\d+)+\-)', string)[0][1])
+    return -1.0
+
+def GetReference(string: str):
+    if (re.search('@REFP(\d*\.?\d)+\-[0-9]+', string)):
+        return re.findall('([0-9]+\w)$', string)[0]
+    return "INVALID"
