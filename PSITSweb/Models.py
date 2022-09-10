@@ -1,4 +1,5 @@
 from warnings import warn
+from Util import GetPriceRef
 
 from Util import deprecated
 from enum import Enum
@@ -145,6 +146,20 @@ class FacultyMember:
         self.description = description
         self.job = job
         self.image_src = ''
+
+
+class AccountOrders():
+    def __init__(self, account: Account, merch: Merchandise, order: MerchOrder):
+        self.account = account
+        self.merch = merch
+        self.order = order
+        self.reference = ''
+
+    def getStatus(self) -> Enum:
+        return self.order.status
+
+    def getTotal(self):
+        return GetPriceRef(self.order.reference)
 
 
 class ORDER_STATUS(Enum):

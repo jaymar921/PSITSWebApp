@@ -7,24 +7,31 @@
 <body>
     <table border="">
         <thead>
-            <tr>Order ID</tr>
-            <tr>Account ID</tr>
-            <tr>Order Date</tr>
-            <tr>Merch ID</tr>
+            <tr>Product</tr>
+            <tr>Date</tr>
+            <tr>Item</tr>
+            <tr>Quantity</tr>
             <tr>Status</tr>
+            <tr>Total</tr>
             <tr>Additional Info</tr>
             <tr>Reference</tr>
         </thead>
         <tbody>
             {% for order in orders %}
             <tr>
-                <td>{{order.uid}}</td>
-                <td>{{order.account_id}}</td>
-                <td>{{order.order_date}}</td>
-                <td>{{order.merch_id}}</td>
-                <td>{{order.status}}</td>
-                <td>{{order.quantity}}</td>
-                <td>{{order.additional_info}}</td>
+                <td>
+                {% if order.merch.image_file != '' %}
+
+                <img class="merch_product" id="{{order.merch.uid}}" loading="lazy"
+                    src="{{ url_for('download_file', filename=order.merch.image_file) }}">
+                {% endif %}
+                </td>
+                <td>{{order.order.order_date}}</td>
+                <td>{{order.merch.title}}</td>
+                <td>{{order.order.quantity}}</td>
+                <td>{{order.getStatus()}}</td>
+                <td>{{'%0.2f'| format(order.getTotal()|float)}}</td>
+                <td>{{order.order.additional_info}}</td>
                 <td>{{order.reference}}</td>
             </tr>
             {% endfor %}

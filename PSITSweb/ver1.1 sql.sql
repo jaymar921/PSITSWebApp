@@ -71,7 +71,7 @@ create table faculty_personnel(
 
 create table psits_officers(
     uid int not null,
-    FOREIGN KEY (uid) REFERENCES accounts(idno) on delete cascade on update cascade,
+    FOREIGN KEY (uid) REFERENCES accounts(idno) on delete no action on update no action,
     position varchar(50) not null,
     birthday date not null,
     image_src varchar(50) not null

@@ -16,10 +16,11 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
-    MerchOrder
+    MerchOrder, AccountOrders
 from Util import deprecated
-from Util import hashData, isAdmin, contentVerifier
+from Util import hashData, isAdmin, contentVerifier, PriceParseRef, GetPriceRef, GetReference
 from waitress import serve
+import messages
 
 UPLOAD_FOLDER = 'SERVER_FILES/'
 ALLOWED_EXTENSION = {'png'}
@@ -400,12 +401,32 @@ def psits_officer_list():
 
 
 # route for my order list
-@app.route("/PSITS@MyOrderList", methods=['POST', 'GET'])
+@app.route("/PSITS@MyOrderList", methods=['GET'])
 def psits_my_orders_list():
     if 'username' in session:
         if flask.request.method == 'GET':
+            # Get all ORDERS
             myOrders = SEARCHMerchOrder(session['username'])
-            return render_template('MyOrders.html', orders = myOrders)
+            ALL_ORDERS: list = []
+            for order in myOrders:
+                ref = GetReference(order.reference)
+                merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+                account_order = AccountOrders(
+                        getAccountByID(session['username']),
+                        merchandise,
+                        order
+                    )
+                account_order.reference = ref
+
+                if checkImageExist("merch" + str(account_order.merch.uid) + ".png"):
+                    account_order.merch.image_file = f"merch{str(account_order.merch.uid)}.png"
+            
+                ALL_ORDERS.append(
+                    account_order
+                )
+
+            
+            return render_template('MyOrders.html', orders = ALL_ORDERS)
     return redirect(url_for("login_page"))
 
 
@@ -418,7 +439,7 @@ def psits_merchandise_list():
             # Get the search
             search: str = flask.request.values.get('search')
             if search is None:
-                search = 'ALL'
+                search = 'all'
             return render_template("MerchandiseList.html",
                                 logout='block', login='none', account_data=getAccountByID(session['username']),
                                 admin='block', title='OFFICERS LIST',
@@ -458,10 +479,9 @@ def psits_merchandise_product(uid: int):
         if SEARCHMerchOrder(session['username']):
             orders = SEARCHMerchOrder(session['username'])
             for order in orders:
-                if order.account_id == session['username'] and order.getStatus() == ORDER_STATUS.ORDERED.value and str(order.merchandise_id) == str(uid):
-                    print("Order na cya")
+                if order.account_id == session['username'] and (order.getStatus() == ORDER_STATUS.ORDERED.value or order.getStatus() == ORDER_STATUS.PAID.value) and str(order.merchandise_id) == str(uid):
                     stat = "ORDERED"
-                    break
+                    continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
         return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none',
@@ -515,7 +535,16 @@ def psits_order_product():
             status = ORDER_STATUS.ORDERED.value
             quantity = request.form['quantity']
             additional_info = request.form['additional_info']
-            print(status)
+
+            # Get the price and the discount
+            merch: Merchandise = SEARCHMerchandise(merch_uid)[0]
+            PRICE: int = int(merch.price)
+            DISCOUNT: float = float(merch.discount)
+
+            DISCOUNTED_PRICE: float = PRICE - (PRICE* (DISCOUNT/100))
+
+            # Generate a reference Code
+            REF_CODE: str = PriceParseRef(DISCOUNTED_PRICE)
 
             order = MerchOrder(
                 None,
@@ -525,9 +554,19 @@ def psits_order_product():
                 status,
                 quantity,
                 additional_info,
-                ""
+                REF_CODE
             )
             CREATEMerchOrder(order)
+
+            # create the AccountOrders, get the active order status
+            accountOrder = AccountOrders(
+                getAccountByID(session['username']),
+                merch,
+                SEARCHMerchOrder(order.reference)[0]
+            )
+
+            # Send email to user
+            pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder)))
 
     else:
         return redirect(url_for('login_page'))
@@ -734,6 +773,7 @@ def psits_order_form_uid(event_uid):
     return redirect(url_for('psits_order_form'))
 
 
+@deprecated("psits order form is deprecated")
 @app.route("/PSITSOrderForm")
 def psits_order_form():
     if 'username' not in session:

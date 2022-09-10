@@ -8,7 +8,7 @@ from Util import deprecated
 DATABASE_NAME = "psitswebapp"
 USERNAME = "root"
 PASSWORD = ""
-HOST = "192.168.1.168"
+HOST = "127.0.0.1"
 
 """
     PSITS version 1.0
@@ -662,7 +662,7 @@ def GETAllMerchandise() -> list:
 def SEARCHMerchandise(search: str) -> list:
     query: str = "select * from `merchandise`"
     if search is not None:
-        if search != '' and search.lower() != 'all':
+        if search != '' and search != 'all':
             query = f"select * from `merchandise` where uid like '%{search}%' or title like '%{search}%'"
     data: dict = executeQueryReturn(query)
     merchandise = []
