@@ -34,3 +34,13 @@ def product_ordered(accountOrder: AccountOrders):
         Your reference code is -> {GetReference(accountOrder.order.reference)}. Show this to the PSITS Officers upon paying 
         Thank you :D
     """
+
+
+def product_paid(accountOrder: AccountOrders):
+    total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
+    return f"""
+        Hello {accountOrder.account.firstname}!\n\n 
+        You already have paid the {accountOrder.order.quantity} - {accountOrder.merch.title} [TOTAL: P{total}]. Your reference code is -> {GetReference(accountOrder.order.reference)}. 
+        Please wait for the announcement for the claiming schedule at the PSITS page. Do not lose your reference
+        code thank you :D"
+    """
