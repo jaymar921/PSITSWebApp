@@ -4,7 +4,7 @@
  
 <br />
 
-<button class="backButton"><a onclick="home()">Back</a></button>
+<button class="backButton" onclick="home()">Back</button>
 
 <div class="merch_contents">
         <br>
@@ -40,7 +40,7 @@
             <p class="stock">Stock: {{merch.stock}} PCS </p>
             <br />
    
-            <button class="normalButton"><a href="{{url_for('psits_merchandise_product', uid=merch.uid)}}">ORDER NOW</a></button>
+            <a href="{{url_for('psits_merchandise_product', uid=merch.uid)}}"><button class="normalButton">ORDER NOW</button></a>
        
         </div>
         <!-- {% if loop.index%3 == 0 %}

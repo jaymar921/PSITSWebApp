@@ -1,117 +1,146 @@
 {% extends 'base.html' %}
 {% block content %}
 <br />
-<button class="backButton"><a onclick="home()">Back</a></button>
+<button class="backButton" onclick="home()">Back</button>
 <br />
-
-
-<div class="contents">
-
-
-
-    <div class="announcement_content">
-        <br>
-        <br>
-
-        
-
-        <div class="announcement_title">
-            <br /><br />
-            <h1>Faculty Members!</h1>
-            <br /><br />
-        </div>
-
-        <div class="announcement_thread" style="display:{{admin}};">
-            <form action="/PSITS@Faculty" method="post" enctype="multipart/form-data">
-                <div class="announcement_field">
-                    <input type="text" name="name" placeholder="Member name [Dennis Durano]" required>
-                </div>
-                <br>
-                <div class="announcement_field">
-                    <input type="text" name="position" placeholder="position [Comprog teacher...]" required>
-                </div>
-
-                <div class="announcement_field_content">
-                    <textarea name="description" cols="5" rows="5" required placeholder="Description..."></textarea>
-                </div>
-                <div class="announcement_field">
-                    <input type="text" name="job" placeholder="Job [full time / part time]" required>
-                </div>
-                <br>
-                <div class="announcement_field">
-                    <label for="file_input">Include image:  <i>**Accept only PNG</i></label> <br />
-                    <input class="file_input" type="file" name="photo" accept=".png" >
-                </div>
-       
-                <hr>
-                <div class="announcement_field">
-                    <button name="submit" type="submit" class="normalButton">Add Member</button>
-                </div>
-            </form>
-        </div>
-
-        <br />
-        {% for member in MEMBERS %}
-        <div class="announcement_thread">
-            <h2>{{member.name}}</h2>
-            <br>
-            <hr>
-            <span>{{member.description}}</span>
-            {% if member.image_src != '' %}
-            <img class="announcement_image" id="{{member.uid}}" onclick="zoomPicture({{member.uid}})" loading="lazy"
-                src="{{ url_for('download_file', filename=member.image_src) }}">
-            {% endif %}
-            <p>Postion: {{member.position}} </p>
-            <p>Job: {{member.job}} </p>
-            <br />
-            <br />
-            <br />
-        </div>
-        {% endfor %}
-        {% for merch in all_merch %}
-        <div class="announcement_thread">
-            <h2>{{merch.title}}</h2>
-            <br>
-            <hr>
-            <span>{{merch.info}}</span>
-            {% if merch.image_file != '' %}
-            <img class="announcement_image" id="{{merch.uid}}" onclick="zoomPicture({{merch.uid}})" loading="lazy"
-                src="{{ url_for('download_file', filename=merch.image_file) }}">
-            {% endif %}
-            <p>Price: Php{{merch.price}} </p>
-            {% if merch.discount > 0 %}
-            <p>Promo: {{merch.discount}}% discount! limited only</p>
-            {% endif %}
-            <p>Stock: {{merch.stock}} PCS </p>
-            <button>ORDER NOW</button>
-            <br />
-            <br />
-            <br />
-        </div>
-        {% endfor %}
-        <br><br><br>
+<div class="merch_contents">
+    <br>
+    <br>
+    <div class="announcement_title">
+        <br /><br />
+        <h1>Faculty Members</h1>
+        <br /><br />
     </div>
-    <hr>
-    <div class="events">
-        <h1>Upcoming Events</h1>
-
-
-            <button class="normalButton" style="display: {{admin}};" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
-
-            <br />
-        {% for event in events %}
-            <div class="events_thread">
-                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
-                <hr>
-                <br />
-                <span class="info">{{ event.information }}</span>
+    <div class="announcement_thread" style="display:{{admin}};">
+        <form action="/PSITS@Faculty" method="post" enctype="multipart/form-data">
+            <div class="announcement_field">
+                <input type="text" name="name" placeholder="Member name [Dennis Durano]" required>
             </div>
-        {% endfor %}
-        <br>
+            <br>
+            <div class="announcement_field">
+                <input type="text" name="position" placeholder="position [Comprog teacher...]" required>
+            </div>
+
+            <div class="announcement_field_content">
+                <textarea name="description" cols="5" rows="5" required placeholder="Description..."></textarea>
+            </div>
+            <div class="announcement_field">
+                <label for="job">Position:</label>
+                <select name="job" required id="job">
+                    <option value="FULL TIME">FULL TIME</option>
+                    <option value="PART TIME">PART TIME</option>
+                </select>
+
+            </div>
+            <br>
+            <div class="announcement_field">
+                <label for="file_input">Include image: <i>**Accept only PNG</i></label> <br />
+                <input class="file_input" type="file" name="photo" accept=".png">
+            </div>
+
+            <hr>
+            <div class="announcement_field">
+                <button name="submit" type="submit" class="normalButton">Add Member</button>
+            </div>
+        </form>
     </div>
 
 
+    <br />
+    <br />
+    <center><h1>FULL-TIME FACULTY MEMBERS</h1></center>
+    <br />
+    <br />
+    
+    <div class="faculty_container">
 
+        <div class="faculty">
+            {% for member in MEMBERS %}
+            {% if member.job =='FULL TIME' %}
+            <div class="faculty_member">
+                <aside class="profile-card">
+                    <div class="mask-shadow" ></div>
+                    <header>
 
-</div>
-{% endblock %}
+                        <!-- here’s the avatar -->
+                        <a>
+                            {% if member.image_src != '' %}
+                            <img id="{{member.uid}}" loading="lazy"
+                                src="{{ url_for('download_file', filename=member.image_src) }}">
+                            {% else %}
+                            <img id="{{member.uid}}" loading="lazy"
+                                src="{{ url_for('static', filename='images/faculties/user.png') }}">
+                            {% endif %}
+                        </a>
+                        <br />
+                        <!-- the username -->
+                        <h1>{{member.name}}</h1>
+
+                        <!-- and role or location -->
+                        <h2>{{member.position}} </h2>
+
+                    </header>
+
+                    <!-- bit of a bio; who are you? -->
+                    <div class="profile-bio">
+                        <p>{{member.job}}</p>
+                        <p>{{member.description}}</p>
+                    </div>
+                </aside>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <br />
+    <br />
+    <hr>
+    <br />
+    <br />
+    <center><h1>PART-TIME FACULTY MEMBERS</h1></center>
+    <br />
+    <br />
+    
+    <div class="faculty_container">
+
+        <div class="faculty">
+            {% for member in MEMBERS %}
+            {% if member.job =='PART TIME' %}
+            <div class="faculty_member">
+                <aside class="profile-card">
+                    <div class="mask-shadow" ></div>
+                    <header>
+
+                        <!-- here’s the avatar -->
+                        <a>
+                            {% if member.image_src != '' %}
+                            <img id="{{member.uid}}" loading="lazy"
+                                src="{{ url_for('download_file', filename=member.image_src) }}">
+                            {% else %}
+                            <img id="{{member.uid}}" loading="lazy"
+                                src="{{ url_for('static', filename='images/faculties/user.png') }}">
+                            {% endif %}
+                        </a>
+                        <br />
+                        <!-- the username -->
+                        <h1>{{member.name}}</h1>
+
+                        <!-- and role or location -->
+                        <h2>{{member.position}} </h2>
+
+                    </header>
+
+                    <!-- bit of a bio; who are you? -->
+                    <div class="profile-bio">
+                        <p>{{member.job}}</p>
+                        <span>{{member.description}}</span>
+                    </div>
+                </aside>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <br/>
+    <br/>
+    {% endblock %}

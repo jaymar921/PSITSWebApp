@@ -52,7 +52,7 @@ def webpage():
 def landing_page():
     events: list = GETAllEvent()
     announcements: list = getAnnouncements()
-
+   
     # Load the Photos if exist
     for announcement in announcements:
         if checkImageExist(str(announcement.uid)+announcement.title + ".png"):

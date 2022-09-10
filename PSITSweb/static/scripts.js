@@ -155,6 +155,10 @@ function showOrders(){
     location.href="/PSITS@Orders"
 }
 
+function merchandise(){
+    location.href="/PSITS@Merchandise"
+}
+
 function loadCSVTemplate(search){
     location.href="/PSITS@CSVdata/students/"+search
 }

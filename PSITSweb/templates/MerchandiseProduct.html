@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 {% block content %}
 <br />
-<button class="backButton"><a href="{{url_for('psits_merchandise')}}">Back</a></button>
+<button class="backButton" onclick="merchandise()">Back</button>
 <br />
 <br />
 <br />
@@ -43,9 +43,10 @@
             <br >
             <br>
             <input type="submit" class="normalButton" value="Order">
-
-            <button class="normalButton"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+      
+            
         </form>
+        
 
     </div>
 

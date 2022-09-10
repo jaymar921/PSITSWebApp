@@ -6,7 +6,7 @@
 {% endblock %}
 {%block content%}
 <br />
-<button class="backButton"><a onclick="home()">Back</a></button>
+<button class="backButton" onclick="home()">Back</button>
 <br />
 <br />
 <!-- ---------------------------------------------------------------------------- -->
@@ -55,7 +55,7 @@
 <div class="contents">
 
   <div class="aboutUs">
-    <div class="leftAboutUs">
+    <div class="leftAboutUs fade-in-left">
       <h1>ABOUT US</h1>
       <hr>
       <br>
@@ -64,7 +64,7 @@
         BSIT-BSCS-ACT Students</span>
     </div>
 
-    <div class="rightAboutUs">
+    <div class="rightAboutUs fade-in-right">
       <center>
         <img src="{{url_for('static', filename='/images/aboutus.png')}}">
       </center>
@@ -82,7 +82,7 @@
       <h1>UNIVERSITY OF CEBU</h1>
     </div>
     <div class="aboutUsContent">
-      <div class="leftAboutUs">
+      <div class="leftAboutUs fade-in-left">
         <h1>MISSION</h1>
         <br>
         <span>
@@ -94,7 +94,7 @@
         </span>
       </div>
       <div class="centerLine"><hr></div>
-      <div class="rightAboutUs">
+      <div class="rightAboutUs fade-in-right">
         <h1>VISION</h1>
         <br>
         <span>Democratize quality education. <br>
