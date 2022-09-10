@@ -9,11 +9,15 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, \
     getEvent, getOrderAccount, createOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
-    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, SEARCHPSITSOfficer,\
-    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, UPDATEFacultyMember, \
-    SEARCHFacultyMember
+    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, \
+    SEARCHPSITSOfficer, \
+    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
+    UPDATEFacultyMember, \
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder
 from EmailAPI import pushEmail
-from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember
+from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
+    MerchOrder
+from Util import deprecated
 from Util import hashData, isAdmin, contentVerifier
 from waitress import serve
 
@@ -125,6 +129,7 @@ def post_announcement():
                             file.filename = str(ID) + title + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Announcement [{title}] comes with an image")
         else:
             return render_template("404Page.html", logout="none", login="none",
@@ -252,6 +257,7 @@ def register_officer():
                             officer.image_src = "officer" + str(officer.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Officer [{officer.lastname}] comes with an image")
             UPDATEPSITSOfficer(officer)
             return redirect(url_for('landing_page'))
@@ -293,6 +299,7 @@ def EventHandlerPSITS():
                         event.image_file = "event" + str(event.uid) + "." + ext
                         path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                         file.save(path)
+                        file.close()
                         databaseLog(f"Event [{event.title}] comes with an image")
         UPDATEEvent(event)
         return redirect(url_for("landing_page"))
@@ -356,10 +363,10 @@ def psits_faculty_members():
                             member.image_src = "faculty" + str(member.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Faculty member [{member.name}] comes with an image")
             UPDATEFacultyMember(member)
             return redirect(url_for('psits_faculty_members'))
-
 
 
 @app.route("/PSITS@OfficerList", methods=['POST','GET'])
@@ -390,6 +397,16 @@ def psits_officer_list():
                                 accounts=GETAllPSITSOfficer(), search=search)
 
     return redirect(url_for('cant_find_link'))
+
+
+# route for my order list
+@app.route("/PSITS@MyOrderList", methods=['POST', 'GET'])
+def psits_my_orders_list():
+    if 'username' in session:
+        if flask.request.method == 'GET':
+            myOrders = SEARCHMerchOrder(session['username'])
+            return render_template('MyOrders.html', orders = myOrders)
+    return redirect(url_for("login_page"))
 
 
 @app.route("/PSITS@MerchandiseList", methods=['POST','GET'])
@@ -430,13 +447,92 @@ def psits_merchandise_list():
 
     return redirect(url_for('cant_find_link'))
 
+
 @app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
-def psits_merchandise_product(uid:int):
+def psits_merchandise_product(uid: int):
+    if 'username' not in session:
+        return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
-        product = SEARCHMerchandise(uid)[0]
+        product = SEARCHMerchandise(str(uid))[0]
+        stat = "NONE"
+        if SEARCHMerchOrder(session['username']):
+            orders = SEARCHMerchOrder(session['username'])
+            for order in orders:
+                if order.account_id == session['username'] and order.getStatus() == ORDER_STATUS.ORDERED.value and str(order.merchandise_id) == str(uid):
+                    print("Order na cya")
+                    stat = "ORDERED"
+                    break
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-        return render_template('MerchandiseProduct.html', product =  product)
+        return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none',
+                               account_data=getAccountByID(session['username']), status=stat)
+
+
+# HAROLD TASK
+@app.route("/PSITS@Order", methods=['POST'])
+def psits_order_product():
+    """
+        Task, receive order from the MerchandiseProduct(form)
+
+        Create the object MerchOrder from Models.py
+        - before initializing the object, you must know if the 
+          user is logged in, then get the id from session['username']
+
+          also get the merchandise ID, you can submit the merch id from
+          the form
+
+        - Usually when the user is ordering a product, his data is null or empty
+
+        MerchOrder(
+            None --->  uid
+            account_id ---> session
+            order_date ---> must be the date of ordering the product
+            merchandise_id ---> from form
+            status ---> ORDER_STATUS.ORDERED (Enum)
+            quantity ---> grab from form
+            additional_info ---> from from
+            reference ---> '' (empty string)
+        )
+
+        Store the data to the database, use
+        CREATEMerchOrder(order: MerchOrder) module from Database.py
+
+        - Block the user from ordering again once they have an ongoing
+          order, unless if it's status is claimed
+
+        - When user has ordered or paid status, they must not order but
+          can use the 'My Orders' webpage so they will know their orders
+
+        - Create a simple webpage for 'My Orders'
+
+        - Use the SEARCHMerchOrder(search: str) from the Database.py
+    """
+    if "username" in session:
+        if flask.request.method == "POST":
+            merch_uid = request.form['merch_id']
+            account_id = session['username']
+            order_date = datetime.datetime.now()
+            status = ORDER_STATUS.ORDERED.value
+            quantity = request.form['quantity']
+            additional_info = request.form['additional_info']
+            print(status)
+
+            order = MerchOrder(
+                None,
+                account_id,
+                order_date,
+                merch_uid,
+                status,
+                quantity,
+                additional_info,
+                ""
+            )
+            CREATEMerchOrder(order)
+
+    else:
+        return redirect(url_for('login_page'))
+    return redirect(url_for("landing_page"))
+
         
 @app.route("/event_removal/<uid>")
 def removeEventPage(uid):
@@ -489,6 +585,7 @@ def addMerch():
                             merch.image_file = "merch" + str(merch.uid) + "." + ext
                             path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                             file.save(path)
+                            file.close()
                             databaseLog(f"Merch [{merch.title}] comes with an image")
     return redirect(url_for("psits_merchandise"))
 
@@ -627,6 +724,7 @@ def psits_remove_event(uid):
     return redirect(url_for("psits_events_list"))
 
 
+@deprecated("Order form is deprecated")
 @app.route("/PSITS@OrderForm/<event_uid>")
 def psits_order_form_uid(event_uid):
     if 'username' not in session:
@@ -724,6 +822,7 @@ def order_handler():
     return redirect(url_for('landing_page'))
 
 
+@deprecated("orders is deprecated")
 @app.route("/PSITS@Orders", methods=['GET', 'POST'])
 def psits_orders_list():
     if "username" not in session:
