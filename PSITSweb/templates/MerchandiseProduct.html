@@ -1,12 +1,7 @@
 {% extends 'base.html'%}
 {% block content %}
-<<<<<<< HEAD
 <br />
 <button class="backButton" onclick="merchandise()">Back</button>
-=======
-<br xmlns="http://www.w3.org/1999/html"/>
-<button class="backButton"><a href="{{url_for('psits_merchandise')}}">Back</a></button>
->>>>>>> 426444182c3cb8404def844653acaefc2d0c08c4
 <br />
 <br />
 <br />
@@ -53,13 +48,8 @@
             <label>You already ordered this item</label>
             {% else %}
             <input type="submit" class="normalButton" value="Order">
-<<<<<<< HEAD
-      
-            
-=======
             <button class="normalButton"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
             {% endif %}
->>>>>>> 426444182c3cb8404def844653acaefc2d0c08c4
         </form>
         
 

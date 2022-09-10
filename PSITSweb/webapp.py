@@ -28,6 +28,7 @@ ALLOWED_EXTENSION = {'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
+REDIRECT_CLIENT: dict = {}
 
 """
       ____  ____ ___ _____ ____  
@@ -947,6 +948,8 @@ def about_us():
 
 @app.route("/PSITS@Logout")
 def logout():
+    if 'username' not in session:
+        return redirect(url_for("landing_page"))
     databaseLog(f"Account ID [{session['username']}] has logged out")
     session.clear()
     return redirect(url_for("landing_page"))
