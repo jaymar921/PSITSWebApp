@@ -1,6 +1,6 @@
 {% extends 'base.html'%}
 {% block content %}
-<br />
+<br xmlns="http://www.w3.org/1999/html"/>
 <button class="backButton"><a href="{{url_for('psits_merchandise')}}">Back</a></button>
 <br />
 <br />
@@ -23,7 +23,8 @@
         <p class="merch_price">₱ {{product.price}}<br></p>
         <p><i class="fa-solid fa-tag"></i> Discount: {{product.discount}}%<br></p> <br />
         <p>STOCK: {{product.stock}}</p> <br />
-        <form action="" class="additional_info">
+        <form action="/PSITS@Order" class="additional_info" method="post">
+             <input type="hidden" id="merch_id" name="merch_id" value="{{product.uid}}">
             <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
             <select name="quantity" id="quantity">
                 <option value="1">1</option>
@@ -42,9 +43,13 @@
             <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
             <br >
             <br>
+            {% if (status == "ORDERED") %}
+            <input type="submit" class="normalButton" value="Order" hidden>
+            <label>You already ordered this item</label>
+            {% else %}
             <input type="submit" class="normalButton" value="Order">
-
             <button class="normalButton"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+            {% endif %}
         </form>
 
     </div>

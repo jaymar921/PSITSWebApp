@@ -9,11 +9,14 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     removeEvent, registerAccountDB, getAllAccounts, updateAccount, removeAccount, \
     getEvent, getOrderAccount, createOrder, updateOrder, getAllOrders, getOrderById, \
     databaseInit, databaseLog, CREATEEvent, SEARCHEvent, UPDATEEvent, GETAllEvent, CREATEMerchandise, \
-    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, SEARCHPSITSOfficer,\
-    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, UPDATEFacultyMember, \
-    SEARCHFacultyMember, SEARCHMerchOrder
+    getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, \
+    SEARCHPSITSOfficer, \
+    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
+    UPDATEFacultyMember, \
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder
 from EmailAPI import pushEmail
-from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember
+from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
+    MerchOrder
 from Util import deprecated
 from Util import hashData, isAdmin, contentVerifier
 from waitress import serve
@@ -366,7 +369,6 @@ def psits_faculty_members():
             return redirect(url_for('psits_faculty_members'))
 
 
-
 @app.route("/PSITS@OfficerList", methods=['POST','GET'])
 def psits_officer_list():
     if 'username' not in session:
@@ -395,6 +397,16 @@ def psits_officer_list():
                                 accounts=GETAllPSITSOfficer(), search=search)
 
     return redirect(url_for('cant_find_link'))
+
+
+# route for my order list
+@app.route("/PSITS@MyOrderList", methods=['POST', 'GET'])
+def psits_my_orders_list():
+    if 'username' in session:
+        if flask.request.method == 'GET':
+            myOrders = SEARCHMerchOrder(session['username'])
+            return render_template('MyOrders.html', orders = myOrders)
+    return redirect(url_for("login_page"))
 
 
 @app.route("/PSITS@MerchandiseList", methods=['POST','GET'])
@@ -435,15 +447,25 @@ def psits_merchandise_list():
 
     return redirect(url_for('cant_find_link'))
 
+
 @app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
-def psits_merchandise_product(uid:int):
+def psits_merchandise_product(uid: int):
     if 'username' not in session:
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
-        product = SEARCHMerchandise(uid)[0]
+        product = SEARCHMerchandise(str(uid))[0]
+        stat = "NONE"
+        if SEARCHMerchOrder(session['username']):
+            orders = SEARCHMerchOrder(session['username'])
+            for order in orders:
+                if order.account_id == session['username'] and order.getStatus() == ORDER_STATUS.ORDERED.value and str(order.merchandise_id) == str(uid):
+                    print("Order na cya")
+                    stat = "ORDERED"
+                    break
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-        return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none', account_data=getAccountByID(session['username']))
+        return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none',
+                               account_data=getAccountByID(session['username']), status=stat)
 
 
 # HAROLD TASK
@@ -485,7 +507,31 @@ def psits_order_product():
 
         - Use the SEARCHMerchOrder(search: str) from the Database.py
     """
-    pass
+    if "username" in session:
+        if flask.request.method == "POST":
+            merch_uid = request.form['merch_id']
+            account_id = session['username']
+            order_date = datetime.datetime.now()
+            status = ORDER_STATUS.ORDERED.value
+            quantity = request.form['quantity']
+            additional_info = request.form['additional_info']
+            print(status)
+
+            order = MerchOrder(
+                None,
+                account_id,
+                order_date,
+                merch_uid,
+                status,
+                quantity,
+                additional_info,
+                ""
+            )
+            CREATEMerchOrder(order)
+
+    else:
+        return redirect(url_for('login_page'))
+    return redirect(url_for("landing_page"))
 
         
 @app.route("/event_removal/<uid>")

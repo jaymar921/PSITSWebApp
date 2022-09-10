@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table border="">
+        <thead>
+            <tr>Order ID</tr>
+            <tr>Account ID</tr>
+            <tr>Order Date</tr>
+            <tr>Merch ID</tr>
+            <tr>Status</tr>
+            <tr>Additional Info</tr>
+            <tr>Reference</tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{order.uid}}</td>
+                <td>{{order.account_id}}</td>
+                <td>{{order.order_date}}</td>
+                <td>{{order.merch_id}}</td>
+                <td>{{order.status}}</td>
+                <td>{{order.quantity}}</td>
+                <td>{{order.additional_info}}</td>
+                <td>{{order.reference}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
