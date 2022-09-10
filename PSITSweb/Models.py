@@ -119,6 +119,14 @@ class MerchOrder:
     def __str__(self):
         return f"Order {self.uid} - {self.account_id}"
 
+    def setStatus(self, status: str):
+        if status == 'ORDERED':
+            self.status = ORDER_STATUS.ORDERED.value
+        elif status == 'PAID':
+            self.status = ORDER_STATUS.PAID.value
+        elif status == 'CLAIMED':
+            self.status = ORDER_STATUS.CLAIMED.value
+
 
 class PSITSOfficer(Account):
     def __init__(self, account: Account, position, birthday):

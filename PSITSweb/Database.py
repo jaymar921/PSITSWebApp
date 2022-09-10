@@ -718,7 +718,7 @@ def SEARCHMerchOrder(search: str) -> list:
     query: str = "select * from `orders`"
     if search is not None:
         if search != '' and search != 'all':
-            query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%'"
+            query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
     data: dict = executeQueryReturn(query)
     orders = []
     for order in data:

@@ -13,7 +13,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     SEARCHPSITSOfficer, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember, \
-    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders
@@ -55,8 +55,6 @@ def webpage():
 
 @app.route("/PSITS")
 def landing_page():
-    if has_redirection():
-        return redirect(url_for(get_redirection()))
     events: list = GETAllEvent()
     announcements: list = getAnnouncements()
    
@@ -176,12 +174,20 @@ def login():
     if account.uid is not None:
         session['username'] = account.uid
         databaseLog(f"Account ID [{session['username']}] has logged in")
+        if has_redirection():
+            REDIRECTION = get_redirection()
+            print(REDIRECTION)
+            if 'psits_merchandise_product' in REDIRECTION:
+                return redirect(url_for(REDIRECTION,uid=get_redirection_extra()))
+            elif REDIRECTION != '':
+                return redirect(url_for(REDIRECTION))
         return redirect(url_for("landing_page"))
 
     account = getAccountByID(int(account_id))
     message = "Account not found!"
     if account.uid is not None:
         message = "Invalid password"
+
     return render_template("Login.html",
                            title="Login PSITS",
                            ANNOUNCEMENTS=getAnnouncements(),
@@ -312,6 +318,7 @@ def EventHandlerPSITS():
 @app.route("/PSITS@Faculty", methods=['GET','POST'])
 def psits_faculty_members():
     if flask.request.method == 'GET':
+        save_redirection('psits_faculty_members')
         if 'username' not in session:
             return render_template("Faculty.html",
                                    title="Faculty Members",
@@ -471,10 +478,76 @@ def psits_merchandise_list():
     return redirect(url_for('cant_find_link'))
 
 
-@app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
-def psits_merchandise_product(uid: int):
+@app.route("/PSITS@MerchandiseOrdersList", methods=['POST','GET'])
+def psits_merchandise_orders_list():
     if 'username' not in session:
-        save_redirection('psits_merchandise')
+        return redirect(url_for('cant_find_link'))
+    if isAdmin(session['username']):
+        if flask.request.method == 'POST':
+            ORDER_ID = request.form['order_ref']
+            
+            # GET THE MATCHING ORDER
+            ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
+            
+            # SET THE ORDER STATUS
+            ORDER.setStatus(request.form['status'])
+            # Update database
+            UPDATEMerchOrder(ORDER)
+            # Email the USER if paid
+            if ORDER.getStatus() == ORDER_STATUS.PAID.value:
+                merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+                merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+                account: Account = getAccountByID(merch_order.account_id)
+                account_order: AccountOrders = AccountOrders(account,merch,merch_order)
+
+                pushEmail(Email("PSITS Payment receipt "+GetReference(account_order.order.reference), account_order.account.email, messages.product_paid(account_order)))
+            
+
+        search: str = flask.request.values.get('search')
+        if search is None:
+            search = 'all'
+        
+        if search == 'ALL':
+            search = search.lower()
+
+        merch_orders = SEARCHMerchOrder(search)
+
+        ORDERS: list = []
+
+        ORDERS_TALLY: float = 0
+        TOTAL_TALLY: float = 0
+        PAID_TALLY: float = 0
+
+        for order in merch_orders:
+            merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+            account: Account = getAccountByID(order.account_id)
+            account_order: AccountOrders = AccountOrders(account,merch,order)
+            account_order.reference = GetReference(account_order.order.reference)
+            ORDERS.append(account_order)
+
+            if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
+                ORDERS_TALLY += (account_order.getTotal() * account_order.order.quantity)
+            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value:
+                PAID_TALLY += (account_order.getTotal() * account_order.order.quantity)
+            TOTAL_TALLY += (account_order.getTotal() * account_order.order.quantity)
+
+        return render_template('MerchOrdersList.html',
+                                logout='block', 
+                                login='none', 
+                                account_data=getAccountByID(session['username']),
+                                admin='block', 
+                                title='PSITS ORDERS',
+                                reserve=ORDERS_TALLY,
+                                total=TOTAL_TALLY,
+                                paid=PAID_TALLY,
+                                ORDERS=ORDERS, search=search)
+    return redirect(url_for('cant_find_link'))
+
+
+@app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
+def psits_merchandise_product(uid):
+    if 'username' not in session:
+        save_redirection('psits_merchandise_product',uid)
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
         product = SEARCHMerchandise(str(uid))[0]
@@ -482,7 +555,7 @@ def psits_merchandise_product(uid: int):
         if SEARCHMerchOrder(session['username']):
             orders = SEARCHMerchOrder(session['username'])
             for order in orders:
-                if order.account_id == session['username'] and (order.getStatus() == ORDER_STATUS.ORDERED.value or order.getStatus() == ORDER_STATUS.PAID.value) and str(order.merchandise_id) == str(uid):
+                if order.account_id == session['username'] and (order.getStatus() == ORDER_STATUS.ORDERED.value or order.getStatus() == ORDER_STATUS.PAID.value) and str(order.merchandise_id) == str(product.uid):
                     stat = "ORDERED"
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
@@ -634,6 +707,7 @@ def addMerch():
 
 @app.route("/PSITS@Merchandise")
 def psits_merchandise():
+    save_redirection('psits_merchandise')
     MERCH = GETAllMerchandise()
     events: list = GETAllEvent()
     # check if merch has photo
@@ -922,6 +996,7 @@ def psits_orders_list():
 
 @app.route("/PSITS@AboutUs")
 def about_us():
+    save_redirection('about_us')
     officers = GETAllPSITSOfficer()
     if "username" in session:
         if isAdmin(session['username']):
@@ -989,14 +1064,22 @@ def has_redirection() -> bool:
     return False
 
 
-def save_redirection(url: str):
+def save_redirection(url: str, *args):
     session['redirect'] = url
+    for ar in args:
+        session['redirect_extra'] = ar
 
 
 def get_redirection() -> str:
     url = session['redirect']
     session['redirect'] = ''
     return str(url)
+
+
+def get_redirection_extra():
+    if 'redirect_extra' in session:
+        return session['redirect_extra']
+    return ''
 
 
 if __name__ == '__main__':

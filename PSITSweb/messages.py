@@ -24,11 +24,11 @@ def registration_message(firstname: str, hasRFID: bool) -> str:
 
 def product_ordered(accountOrder: AccountOrders):
     total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
-
+    price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
     return f"""
         Hello {accountOrder.account.firstname},
 
-        You have ordered {accountOrder.order.quantity}x {accountOrder.merch.title.lower()} which totals to
+        You have ordered {accountOrder.order.quantity} - {accountOrder.merch.title.lower()}(P{price} each) which totals to
         P{total}, ADDITIONAL INFO: {accountOrder.order.additional_info}, if you have time, you can visit the PSITS Office at 5th floor UC Main bldg. located near room 539 for the payment.
 
         Your reference code is -> {GetReference(accountOrder.order.reference)}. Show this to the PSITS Officers upon paying 

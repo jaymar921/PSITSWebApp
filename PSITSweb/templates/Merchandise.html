@@ -16,7 +16,7 @@
         </div>
 
         <br />
-        <button class="backButton"><i class="fa-solid fa-cart-shopping"></i> <a href="{{url_for('psits_my_orders_list')}}">My Orders</a></button>
+        <button class="backButton" onclick="location.href='/PSITS@MyOrderList'"><i class="fa-solid fa-cart-shopping"></i> <a href="{{url_for('psits_my_orders_list')}}">My Orders</a></button>
         <div class="merch_container">
         
         <div class="merch">
@@ -40,7 +40,7 @@
             <p class="stock">Stock: {{merch.stock}} PCS </p>
             <br />
    
-            <a href="{{url_for('psits_merchandise_product', uid=merch.uid)}}"><button class="normalButton">ORDER NOW</button></a>
+            <a href="{{url_for('psits_merchandise_product', uid=merch.title)}}"><button class="normalButton">ORDER NOW</button></a>
        
         </div>
         <!-- {% if loop.index%3 == 0 %}

@@ -189,3 +189,11 @@ function editMerchInfo(uid){
         document.getElementById(uid+'button').hidden = false;
     }
 }
+
+function editOrderStatus(uid){
+    if(document.getElementById(uid+'idnum').hidden === true){
+        document.getElementById(uid+'status').disabled = false;
+        document.getElementById(uid+'edit').hidden = true;
+        document.getElementById(uid+'button').hidden = false;
+    }
+}
