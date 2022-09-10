@@ -984,7 +984,7 @@ def download_file(filename):
 
 def has_redirection() -> bool:
     if 'redirect' in session:
-        if session['redirect'] is not '':
+        if session['redirect'] != '':
             return True
     return False
 
