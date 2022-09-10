@@ -28,7 +28,6 @@ ALLOWED_EXTENSION = {'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
-REDIRECT_CLIENT: dict = {}
 
 """
       ____  ____ ___ _____ ____  
@@ -56,6 +55,8 @@ def webpage():
 
 @app.route("/PSITS")
 def landing_page():
+    if has_redirection():
+        return redirect(url_for(get_redirection()))
     events: list = GETAllEvent()
     announcements: list = getAnnouncements()
    
@@ -473,6 +474,7 @@ def psits_merchandise_list():
 @app.route("/PSITS@MerchandiseProduct/<uid>", methods=['POST','GET'])
 def psits_merchandise_product(uid: int):
     if 'username' not in session:
+        save_redirection('psits_merchandise')
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
         product = SEARCHMerchandise(str(uid))[0]
@@ -978,6 +980,23 @@ def checkImageExist(name: str):
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+
+def has_redirection() -> bool:
+    if 'redirect' in session:
+        if session['redirect'] is not '':
+            return True
+    return False
+
+
+def save_redirection(url: str):
+    session['redirect'] = url
+
+
+def get_redirection() -> str:
+    url = session['redirect']
+    session['redirect'] = ''
+    return str(url)
 
 
 if __name__ == '__main__':
