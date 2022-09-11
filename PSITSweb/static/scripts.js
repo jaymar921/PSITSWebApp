@@ -197,3 +197,13 @@ function editOrderStatus(uid){
         document.getElementById(uid+'button').hidden = false;
     }
 }
+
+function deleteOrder(uid){
+    if(confirm("Are you sure you want to delete this order? id=> "+uid) === true){
+        location.href="/PSITS@RemoveOrder/"+uid;
+    }
+}
+
+function disable(doc){
+    doc.hidden = true;
+}

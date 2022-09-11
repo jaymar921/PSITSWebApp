@@ -126,6 +126,8 @@ class MerchOrder:
             self.status = ORDER_STATUS.PAID.value
         elif status == 'CLAIMED':
             self.status = ORDER_STATUS.CLAIMED.value
+        elif status == 'CANCELLED':
+            self.status = ORDER_STATUS.CANCELLED.value
 
 
 class PSITSOfficer(Account):
@@ -175,3 +177,4 @@ class ORDER_STATUS(Enum):
     ORDERED = 'ORDERED'
     PAID = 'PAID'
     CLAIMED = 'CLAIMED'
+    CANCELLED = 'CANCELLED'

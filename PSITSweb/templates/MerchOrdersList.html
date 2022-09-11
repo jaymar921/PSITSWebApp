@@ -55,23 +55,30 @@
                     <select name="status" id="{{order.order.uid}}status" disabled>
                         <option value="ORDERED" selected>ORDERED</option>
                         <option value="PAID">PAID</option>
+                        <option value="CANCELLED">CANCEL</option>
                       </select>
                   </td>
                   {% elif order.getStatus() == 'PAID' %}
                   <td>
                     <select name="status" id="{{order.order.uid}}status" disabled>
-                        <option value="PAID" selected>PAID</option>
-                        <option value="CLAIMED">CLAIMED</option>
-                      </select>
+                      <option value="PAID" selected>PAID</option>
+                      <option value="CLAIMED">CLAIMED</option>
+                    </select>
+                  </td>
+                  {% elif order.getStatus() == 'CANCELLED' %}
+                  <td>
+                    <select name="status" disabled>
+                      <option value="CANCELLED" selected>CANCELLED</option>
+                    </select>
                   </td>
                   {% else %}
                   <td>
-                    <select name="status" id="{{order.order.uid}}status" disabled>
-                        <option value="CLAIMED" selected>CLAIMED</option>
-                      </select>
+                    <select name="status" disabled>
+                      <option value="CLAIMED" selected>CLAIMED</option>
+                    </select>
                   </td>
                   {% endif %}
-                  <td><a id="{{order.order.uid}}edit" onclick="editOrderStatus({{order.order.uid}})">✎</a><button id="{{order.order.uid}}button" type="submit" hidden>💾</button></td>
+                  <td><a id="{{order.order.uid}}edit" onclick="editOrderStatus({{order.order.uid}})">✎</a><button id="{{order.order.uid}}button" type="submit" hidden>💾</button> <a onclick="deleteOrder('{{order.order.uid}}')">❌</a></td>
                 </tr>
               </form>
               {% endfor %}
@@ -85,9 +92,7 @@
       <br>
       <br>
       <br>
-      <p style="text-align: center; color: white;">To avoid human error in transaction data, the delete action was removed. (Delete data from MySQL server manually)</p>
-      <hr>
-      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+      <p style="text-align: center; color: white;">Only the top 100 in the list are displayed</p>
 
     </div>
 
