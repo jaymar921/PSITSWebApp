@@ -79,3 +79,69 @@ def GetReference(string: str):
     if (re.search('@REFP(\d*\.?\d)+\-[0-9]+', string)):
         return re.findall('([0-9]+\w)$', string)[0]
     return "INVALID"
+
+
+# Rank officers
+def rankOfficers(officers: list) -> list:
+    new_officers: list = []
+
+    for officer in officers:
+        if 'president' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'vp - internal' in officer.position.lower():
+            new_officers.append(officer) 
+    
+    for officer in officers:
+        if 'vp - external' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'secretary' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'treasurer' in officer.position.lower() and 'assistant' not in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'assistant treasurer' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'auditor' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'pio' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'pro' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'first' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'second' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'third' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'fourth' in officer.position.lower():
+            new_officers.append(officer)
+    
+    for officer in officers:
+        if 'chief volunteer' in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'volunteer' in officer.position.lower() and not 'chief' in officer.position.lower():
+            new_officers.append(officer)
+    return new_officers
