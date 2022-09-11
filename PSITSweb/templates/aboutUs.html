@@ -182,7 +182,7 @@
 <br />
 
 <hr>
-<div class="officer_contents">
+<!-- <div class="officer_contents">
   <br />
   <center><h1><b>PSITS</b> OFFICERS</h1>
     <h3>A.Y. 2022-2023</h3></center>
@@ -205,7 +205,26 @@
   </div>
 </div>
 </div>
-</div>
+</div> -->
+<div class="merch_container">
+  <center><h1><b>PSITS</b> OFFICERS</h1>
+  <div class="merch">
+    {% for officer in officers %}
+  <div class="product">
+
+      {% if officer.image_file != '' %}
+      <center><img style="width:200px;" class="merch_product" id="{{officer.uid}}" onclick="zoomPicture({{officer.uid}})" loading="lazy"
+          src="{{ url_for('download_file', filename=officer.image_src) }}"></center>
+      {% endif %}
+      <center>
+      <h2 class="title" style="font-size:150%;">{{officer.firstname}} {{officer.lastname}}</h2>
+      <p>{{officer.position}}</p></center>
+      <br />
+ 
+  </div>
+  {% endfor %}
+  </div>
+  </div>
 <br />
 <hr>
 <br />

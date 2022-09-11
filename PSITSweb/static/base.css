@@ -1433,14 +1433,11 @@ body {
 .officer_contents{
     display:block;
     width:100%;
-    align-items: center;
     justify-content: space-around;
 }
 
 .officers_container{
     display:flex;
-    justify-content: center;
-    align-content:center;
     width:100%;
     margin: 10px 10px;
 }
@@ -1450,7 +1447,6 @@ body {
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 20px;
-    margin:auto;
     margin-top:10px;
     margin-bottom:10px;
 }
@@ -1458,7 +1454,6 @@ body {
     width:300px;
     background-color:white;
     padding:10px 10px;
-    margin:auto;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
 }
 .officers_container .officers_div .officers img{
