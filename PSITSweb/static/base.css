@@ -112,6 +112,9 @@ body {
 .hide{
    
 }
+.warning{
+    display:none;
+}
 /* .content {
     flex-grow: 1;
 } */
@@ -478,10 +481,10 @@ body {
 
 
 .banner nav .logo h1 {
-    font-size: 22px;
+    font-size: 18px;
     color: white;
     margin-left: 20px;
-    width: 100%;
+    width: 360px;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -610,8 +613,8 @@ body {
 }
 
 .contents .events h1 {
-    background-color: #318BA2;
-    color: white;
+    font-size:200%;
+    color: #004064;
     padding: 10px 20px;
     border-radius: 50px;
     text-align: center;
@@ -621,7 +624,9 @@ body {
 }
 
 .contents .events .events_thread {
-    border: 1px solid #8e8e8e;
+   
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    background-color: white;
     margin: auto;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -655,7 +660,7 @@ body {
 }
 
 .announcement_title {
-
+    color:#004064;
     text-align: center;
 
 }
@@ -984,6 +989,91 @@ body {
 /*=========================================================================*/
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*=========================================================================*/
+/*TABLE CSS (for ADMINS) */
+/*=========================================================================*/
+.tableTitle{
+    text-align: center;
+    color:#004064;
+    font-size:150%;
+}
+.searchTable{
+    width:100%;
+    margin:auto;
+    justify-content: center;
+    
+}
+.searchTable input[type='text']{
+    width:40%;
+    padding:5px 0px;
+    margin:auto;
+}
+.searchTable form{
+    margin:auto;
+    width:100%;
+    
+}
+.table{
+    width:100%;
+    margin:auto;
+    padding:10px 10px;
+
+
+
+}
+.table table{
+    table-layout: auto;
+    width:100%;
+    border-collapse: collapse;
+}
+
+
+.table table thead tr{
+    width:100%;
+}
+.table table thead th{
+    font-size:90%;
+   text-align: center;
+   justify-content: center;
+   margin: auto;
+   height:100px;
+
+}
+
+.table table tbody tr{
+    
+    background-color: white;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  
+}
+
+.table table tbody td{
+    font-size:100%;
+    height:50px;
+    padding:0px 5px;
+}
+.table table tbody td input{
+    border-radius:50px;
+    width:100%;
+
+}
+.table table tbody td input:disabled{
+    outline:none;
+    border:none;
+    padding:10px 10px;
+    background-color: #eeeeee;
+
+}
+.table table tbody td input:enabled{
+    outline:1px;
+    padding:10px 10px;
+    background-color: #eeeeee;
+    border:1px solid grey;
+
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*=========================================================================*/
 /*LOGIN PAGE and REGISTER PAGE CSS */
@@ -1185,7 +1275,8 @@ body {
 
 }
 .contents .aboutUs .rightAboutUs{
-    margin:auto;
+
+    margin-top:10px;
     text-align:center;
 
 
@@ -1223,18 +1314,17 @@ body {
 }
 
 .contents .aboutUsUC .aboutUsHeader h1{
-    font-size:400%;
+    font-size:300%;
 }
 .contents .aboutUsUC .aboutUsContent{
     display:flex;
     width:100%;
-    margin-top:100px;
-
-    justify-content: space-around;
+    margin-top:10px;
+    padding:20px 20px;
+    justify-content: center;
 }
 .contents .aboutUsUC .aboutUsContent .leftAboutUs{
     margin: auto;
-    
     width: 100%;
     text-align: center;
    
@@ -1254,8 +1344,9 @@ body {
 
 .contents .aboutUsUC .aboutUsContent .rightAboutUs{
     width:100%;
-    margin:auto;
-    text-align: center;
+    margin-top:20px;
+    margin-left:20px;
+    align-content: flex-start;
     display:block;
 }
 
@@ -1267,6 +1358,112 @@ body {
     width:100%;
     height:400px;
     object-fit: contain;
+}
+
+.developers .title{
+    text-align: center;
+    background-color: #074873;
+    color:white;
+    padding:10px 10px;
+}
+.developers .developer_content .developer_title{
+    font-size:150%;
+    text-align:center;
+}
+.developers .developer_content{
+    display:block;
+    width:100%;
+}
+.developers .developer_content hr{
+    opacity:0.7;
+}
+.developers .developer_content .developer_message{
+    display:block;
+    width:50%;
+    margin:auto;
+}
+.developers .developer_content .developer_members{
+    display:flex;
+    width:100%;
+    margin:auto;
+    justify-content: center;
+}
+.developers .developer_content .developer_members .left{
+    margin:auto;
+    width:80%;
+    display:flex;
+}
+.developers .developer_content .developer_members .left .image_left{
+    width:50%;
+}
+.developers .developer_content .developer_members .left .image_left img{
+    width:25%;  
+    float:right;
+    margin-right:50px;
+   
+    
+}
+.developers .developer_content .developer_members .left .developer_info{
+    display:block;
+    text-align: left;
+    
+    width:50%;
+}
+.developers .developer_content .developer_members .left .developer_info h1{
+    font-size:200%;
+}
+.developers .developer_content .developer_members .left .developer_info h3{
+    font-size:150%;
+}
+.developers .developer_content .developer_members .left .developer_info h4{
+    font-size:150%;
+}
+.developers .developer_content .developer_members .left .developer_info hr{
+    width:80%;
+}
+
+.developers .developer_content .developer_message span{
+    white-space: pre-line;
+    text-align: left;
+    text-justify: auto;
+    font-size:150%;
+}
+
+/*PSITS OFFICERS*/
+.officer_contents{
+    display:block;
+    width:100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.officers_container{
+    display:flex;
+    justify-content: center;
+    align-content:center;
+    width:100%;
+    margin: 10px 10px;
+}
+.officers_container .officers_div{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin:auto;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.officers_container .officers_div .officers{
+    width:300px;
+    background-color:white;
+    padding:10px 10px;
+    margin:auto;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.officers_container .officers_div .officers img{
+    margin:auto;
+    width:100%;
 }
 /*=========================================================================*/
 /*END OF ABOUT US CSS */
@@ -1301,7 +1498,8 @@ body {
 }
 
 .merch_container .merch .product{
-    width:100%;
+    width:300px;
+    margin:auto;
     background-color:white;
     padding:10px 10px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
@@ -1789,6 +1987,28 @@ word-wrap: break-word;
     .contents .aboutUsUC .aboutUsContent .centerLine{
         border:none;
     }
+    .developers .developer_content .developer_members .left .image_left img{
+        width:90%;  
+  
+       
+        
+    }
+    .developers .developer_content .developer_members .left .developer_info h1{
+        font-size:150%;
+    }
+    .developers .developer_content .developer_members .left .developer_info h3{
+        font-size:120%;
+    }
+    .developers .developer_content .developer_members .left .developer_info h4{
+        font-size:120%;
+    }
+    .developers .developer_content .developer_message{
+        width:80%;
+    }
+    .developers .developer_content .developer_message span{
+
+        font-size:120%;
+    }
     /*MERCHANDISE*/
     .merch_product_individual{
         display:block;
@@ -1798,6 +2018,9 @@ word-wrap: break-word;
     }
     .hide{
         display:none;
+    }
+    .warning{
+        display:block;
     }
     
 }

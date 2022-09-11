@@ -1,11 +1,104 @@
 {% extends 'base.html' %}
 {% block content %}
-  <! -- This is for the background -->
-  <div class="ann_bg_1"></div>
-  <div class="ann_bg_2"></div>
-  <! -- This is for the background -->
+<br />
+<br />
+<br />
+<button class="normalButton" onclick="home()">Back</button>
 
-  <div>
+   
+   <br />
+
+      <div class="tableTitle">
+        <h1>Orders List</h1>
+      </div>
+
+      <div class="warning">
+        <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
+
+      </div>
+         
+       <br />
+            <form action="" method="get">
+              <div class="searchTable">
+                <center>
+            <input id="search_student" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
+            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
+            </center>
+          </div>
+          </form>
+          <div class="tableTitle">
+          <h1 style="color: green;"> Orders: ₱{{reserve}}  |  Total: ₱{{paid}}/{{total}}  </h1>
+        </div>
+          
+        <br>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>ORDER ID</th>
+                <th>EVENT</th>
+                <th>STUDENT</th>
+                <th>STATUS</th>
+                <th>ITEM</th>
+                <th>QUANTITY</th>
+                <th>AMOUNT</th>
+                <th>REFERENCE</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for order in orders %}
+              <form method="post" action="">
+                <tr>
+                  <input name="order_id" id="{{order.order_account.uid}}idnum" type="text" value="{{order.order_account.uid}}" hidden>
+                  <td><input name="uid" id="{{order.order_account.uid}}uid" type="text" value="{{order.order_account.uid}}" disabled></td>
+                  <td><input name="event" id="{{order.order_account.uid}}event" type="text" value="{{order.event.title}}" disabled></td>
+                  <td><input name="student" id="{{order.order_account.uid}}student" type="text" value="{{order.account.lastname}}, {{order.account.firstname}}" disabled></td>
+                  <td>
+                    <select name="status" id="{{order.order_account.uid}}status" onchange="on_paid_order(this.value, {{order.order_account.uid}})" disabled>
+                      {% if order.order_account.status == 'ORDERED' %}
+                        <option value="ORDERED" selected>ORDERED</option>
+                        <option value="PAID">PAID</option>
+                      {% elif order.order_account.status == 'RESERVED' %}
+                        <option value="RESERVED" selected>RESERVED</option>
+                      {% elif order.order_account.status == 'PAID' %}
+                        <option value="PAID" selected>PAID</option>
+                        <option value="CLAIMED">CLAIMED</option>
+                      {% elif order.order_account.status == 'CLAIMED' %}
+                        <option value="CLAIMED" selected>CLAIMED</option>
+                      {% endif %}
+                    </select>
+                  </td>
+                  <td><input name="item" id="{{order.order_account.uid}}item" type="text" value="{{order.event.item}}" disabled></td>
+                  <td><input name="quantity" id="{{order.order_account.uid}}quantity" type="text" value="{{order.order_account.quantity}}" disabled></td>
+                  <td><input name="amount" id="{{order.order_account.uid}}amount" type="text" value="{{order.total}}" disabled></td>
+                  <td><input name="reference" id="{{order.order_account.uid}}reference" type="text" value="{{order.order_account.reference}}" disabled></td>
+                  <td><a id="{{order.order_account.uid}}edit" onclick="update_order({{order.order_account.uid}})">✎</a><button id="{{order.order_account.uid}}button" type="submit" hidden>💾</button></td>
+                </tr>
+              </form>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+        <p style="text-align: center; color: orange;">To avoid human error in transaction data, the delete action was removed. (Delete data from MySQL server manually)</p>
+      <br>
+      <br>
+      <br>
+      <br>
+ 
+  
+
+  
+
+ 
+  <br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br />
+
+
+  <!-- <div>
     <div class="information_container">
 
       <div class="information_content">
@@ -89,5 +182,5 @@
 
     </div>
 
-  </div>
+  </div> -->
 {% endblock %}

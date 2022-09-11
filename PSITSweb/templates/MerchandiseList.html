@@ -1,16 +1,91 @@
 {% extends 'base.html' %}
 {% block content %}
+<br />
+<br />
+<br />
+<button class="normalButton" onclick="home()">Back</button>
 
-  <! -- This is for the background -->
-  <div class="ann_bg_1"></div>
-  <div class="ann_bg_2"></div>
-  <! -- This is for the background -->
+   
+   <br />
 
-  <div>
+      <div class="tableTitle">
+        <h1>Merchandise List</h1>
+      </div>
+
+      <div class="warning">
+        <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
+
+      </div>
+         
+       <br />
+            <form action="" method="get">
+              <div class="searchTable">
+                <center>
+            <input id="search_student" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
+            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
+            <button type="button" onclick="location.href='/PSITS@AddMerch'" class="normalButton hide"><div class="flexer" style="display:flex;"><i class="fa-solid fa-plus"></i><p>ADD MERCH</p></div></button>
+            </center>
+          </div>
+          </form>
+       
+         
+     
+        <br>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>MERCH</th>
+                <th class="hide">INFO</th>
+                <th>PRICE</th>
+                <th>DISCOUNT</th>
+                <th class="hide">STOCK</th>
+                <th class="hide">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for merch in Merchandise %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{merch.uid}}idnum" type="text" value="{{merch.uid}}" hidden>
+                  <td><input name="uid" id="{{merch.uid}}uid" type="text" value="{{merch.uid}}" disabled></td>
+                  <td><input name="title" id="{{merch.uid}}title" type="text" value="{{merch.title}}" disabled></td>
+                  <td class="hide"><textarea name="info" id="{{merch.uid}}info" type="text" disabled style="resize:none;">{{merch.info}}</textarea></td>
+                  <td><input name="price" id="{{merch.uid}}price" type="number" step="2" value="{{merch.price}}" disabled></td>
+                  <td><input name="discount" id="{{merch.uid}}discount" type="number" value="{{merch.discount}}" disabled></td>
+                  <td class="hide"><input name="stock" id="{{merch.uid}}stock" type="number" value="{{merch.stock}}" disabled></td>
+                  <td class="hide"><a id="{{merch.uid}}edit" onclick="editMerchInfo('{{merch.uid}}')">✎</a><button id="{{merch.uid}}button" type="submit" hidden>💾</button>  <a onclick="removeMerchandise('{{merch.uid}}')">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+ 
+  
+
+  
+
+ 
+  <br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br />
+
+
+  <!-- <div>
     <div class="information_container">
 
       <div class="information_content">
-        <h1>Officers List</h1>
+        <h1></h1>
       </div>
 
         <div class="information_menu">
@@ -68,7 +143,7 @@
 
     </div>
 
-  </div>
+  </div> -->
 
 
 {% endblock %}

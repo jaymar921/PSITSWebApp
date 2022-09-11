@@ -1,35 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
-    <! -- This is for the background -->
-    <div class="ann_bg_1"></div>
-    <div class="ann_bg_2"></div>
-    <! -- This is for the background -->
 
     <div class="content">
-        <div class="form_general">
+        <div class="form_modal">
             <form action="/PSITS@AddMerch" method="post"  enctype="multipart/form-data">
                 <h1>Create Merch</h1>
-                <div>
-                    <label for="Merch">Merch:</label> <input id="Merch" name="Merch" type="text" placeholder="Event Title" required>
+                <div class="form_field">
+                    <label for="Merch">Merch:</label> <input id="Merch" name="Merch" type="text" placeholder="Merch name" required>
                 </div>
-                <div>
-                    <label for="Info">Information:</label> <textarea id="Info" name="Info" type="text" required></textarea>
+                <div class="form_field" >
+                    <label for="Info">Information:</label> <textarea id="Info" name="Info" type="text" required style="resize:none;"></textarea>
                 </div>
-                <div>
+                <div class="form_field"  >
                     <label for="Price">Price:</label> <input id="Price" name="Price" type="number" required>
                 </div>
-                <div>
+                <div class="form_field">
                     <label for="Discount">Discount:</label> <input id="Discount" name="Discount" type="number" required>
                 </div>
-                <div>
+                <div class="form_field">
                     <label for="Stock">Stock:</label> <input id="Stock" name="Stock" type="number" required>
                 </div>
-                <div>
+                <div class="form_field">
                     <label for="merch_image">Include image:  <i>**Accept only PNG</i></label> <br />
                     <input class="file_input" type="file" id="merch_image" name="merch_image" accept=".png" >
                 </div>
                 <br>
-                <div style="position: relative; margin: auto; padding: auto; text-align: center;">
+                <div class="form_field">
                     <button type="reset" onclick="location.href='/PSITS@Merchandise'">Cancel</button>
                     <button type="submit">Create</button>
                 </div>

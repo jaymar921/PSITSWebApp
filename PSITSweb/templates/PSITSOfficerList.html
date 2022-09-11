@@ -1,16 +1,95 @@
 {% extends 'base.html' %}
 {% block content %}
+<br />
+<br />
+<br />
+<button class="normalButton" onclick="home()">Back</button>
 
-  <! -- This is for the background -->
-  <div class="ann_bg_1"></div>
-  <div class="ann_bg_2"></div>
-  <! -- This is for the background -->
+   
+   <br />
 
-  <div>
+      <div class="tableTitle">
+        <h1>Officers List</h1>
+      </div>
+
+      <div class="warning">
+        <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
+
+      </div>
+         
+       <br />
+            <form action="" method="get">
+              <div class="searchTable">
+                <center>
+            <input id="search_student" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
+            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
+            <button type="button" onclick="location.href='/PSITS@NewOfficer'" class="normalButton hide"><div class="flexer" style="display:flex;"><i class="fa-solid fa-plus"></i> <p class="hide">ADD OFFICER</p></div></button>
+            </center>
+          </div>
+          </form>
+       
+         
+     
+        <br>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID NUM</th>
+                <th>LASTNAME</th>
+                <th>FIRSTNAME</th>
+                <th>COURSE</th>
+                <th>YEAR</th>
+                <th class="hide">EMAIL</th>
+                <th>POSITION</th>
+                <th class="hide">BIRTHDAY</th>
+                <th class="hide">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for account in accounts %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{account.uid}}idnum" type="text" value="{{account.uid}}" hidden>
+                  <td><input name="idno" id="{{account.uid}}idno" type="text" value="{{account.uid}}" disabled></td>
+                  <td><input name="lastname" id="{{account.uid}}lastname" type="text" value="{{account.lastname}}" disabled></td>
+                  <td><input name="firstname" id="{{account.uid}}firstname" type="text" value="{{account.firstname}}" disabled></td>
+                  <td><input name="course" id="{{account.uid}}course" type="text" value="{{account.course}}" disabled></td>
+                  <td><input name="year" id="{{account.uid}}year" type="text" value="{{account.year}}" disabled></td>
+                  <td class="hide"><input name="email" id="{{account.uid}}email" type="text" value="{{account.email}}" disabled></td>
+                  <td><input name="position" id="{{account.uid}}position" type="text" value="{{account.position}}" disabled></td>
+                  <td class="hide"><input name="birthday" id="{{account.uid}}birthday" type="date" value="{{account.birthday}}" disabled></td>
+                  <td class="hide"><a id="{{account.uid}}edit" onclick="editOfficerInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteOfficer('{{account.uid}}')">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+ 
+  
+
+  
+
+ 
+  <br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br />
+
+  <!-- <div>
     <div class="information_container">
 
       <div class="information_content">
-        <h1>Officers List</h1>
+        <h1></h1>
       </div>
 
         <div class="information_menu">
@@ -72,7 +151,7 @@
 
     </div>
 
-  </div>
+  </div> -->
 
 
 {% endblock %}

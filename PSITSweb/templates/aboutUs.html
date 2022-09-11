@@ -86,15 +86,17 @@
         <h1>MISSION</h1>
         <br>
         <span>
-         
-            <p>The University offers affordable and quality education <br>
-              responsive to the demands of local and international communities.</p>
-         
-         
+
+          <p>The University offers affordable and quality education <br>
+            responsive to the demands of local and international communities.</p>
+
+
         </span>
       </div>
-      <div class="centerLine"><hr></div>
-      <div class="rightAboutUs fade-in-right">
+      <div class="centerLine">
+        <hr>
+      </div>
+      <div class="leftAboutUs fade-in-right">
         <h1>VISION</h1>
         <br>
         <span>Democratize quality education. <br>
@@ -119,41 +121,42 @@
       <h1>COLLEGE OF COMPUTER STUDIES</h1>
     </div>
     <div class="aboutUsContent">
-      <div class="leftAboutUs">
+      <div class="rightAboutUs">
         <h1>MISSION</h1>
         <br>
         <span>
-         
-            <p>We envision being the hub of quality, <br>
-              globally-competitive and socially-responsive<br>
-               information technology education</p>
-         
-         
+
+          <p>We envision being the hub of quality, <br>
+            globally-competitive and socially-responsive<br>
+            information technology education</p>
+
+
         </span>
       </div>
-      <div class="centerLine"><hr></div>
+
       <div class="rightAboutUs">
         <h1>VISION</h1>
         <br>
         <span><b>We commit to continuously:</b><br><br>
-        Offer relevant programs<br> that mold well-rounded computing <br>professionals;<br><br>
-        Engage in accreditation and<br>quality standards; and<br><br>
-        Facilitate in building an IT-enabled nation.
+          Offer relevant programs<br> that mold well-rounded computing <br>professionals;<br><br>
+          Engage in accreditation and<br>quality standards; and<br><br>
+          Facilitate in building an IT-enabled nation.
         </span>
       </div>
-      <div class="centerLine"><hr></div>
+
       <div class="rightAboutUs">
         <h1>GOALS</h1>
         <br>
         <span>
           <b>We aim to cultivate a teaching-learning environment that:</b><br><br>
-          Promotes scholarly endeavors for the promotion of moral,<br> social, cultural, and environmental interests;<br><br>
+          Promotes scholarly endeavors for the promotion of moral,<br> social, cultural, and environmental
+          interests;<br><br>
           Meets the demands of the industry in terms of technical,<br> personal and interpersonal skills;<br><br>
           Conducts intellectual, technological and significant<br> researches in computing; and<br><br>
           Optimizes the use of appropriate and <br>advanced resources and services.<br>
         </span>
       </div>
-      <div class="centerLine"><hr></div>
+
       <div class="rightAboutUs">
         <h1>CORE VALUES</h1>
         <br>
@@ -179,22 +182,144 @@
 <br />
 
 <hr>
-<div class="developers">
-  <h1>Developers' Message</h1>
+<div class="officer_contents">
+  <br />
+  <center><h1><b>PSITS</b> OFFICERS</h1>
+    <h3>A.Y. 2022-2023</h3></center>
+  <br />
+<div class="officers_container">
+
+<div class="officers_div">
+  <div class="officers">
+  
+  
+      {% for officer in officers %}
+      {% if officer.image_file != '' %}
+      <img width="200px" height="auto" class="announcement_image" id="{{officer.uid}}" loading="lazy"
+        src="{{ url_for('download_file', filename=officer.image_src) }}">
+      {% endif %}
+      <h2>{{officer.firstname}} {{officer.lastname}}</h2>
+      <center><p>{{officer.position}}</p></center>
+      {% endfor %}
+  
+  </div>
 </div>
-<!-- <div class="alumniShoutOuts">
-  <center>
-    <h1>STUDENTS ALUMNI SHOUTOUTS!</h1>
-    {% for officer in officers %}
-    {% if officer.image_file != '' %}
-    <img width="200px" height="auto" class="announcement_image" id="{{officer.uid}}" loading="lazy"
-      src="{{ url_for('download_file', filename=officer.image_src) }}">
-    {% endif %}
-    <h2>{{officer.firstname}} {{officer.lastname}}</h2>
-    <p>{{officer.position}}</p>
-    {% endfor %}
-  </center>
-</div> -->
+</div>
+</div>
+<br />
+<hr>
+<br />
+<div class="developers">
+  <div class="title">
+    <h1>DEVELOPERS' MESSAGE</h1>
+  </div>
+  <div class="developer_content">
+    <div class="developer_message">
+      <span>
+        First of all, we would like to thank the dean, Mr. Neil Basabe, for giving us the opportunity to develop this website for the PSITS organization and the students we serve.
+
+        We would like to thank our PSITS Adviser , Mr. Dennis Durano, and our fellow A.Y. 2022-2023 officers for bringing support in deploying the website.
+
+        We are pleased to welcome you all to the Philippine Society of Information Technology Students (PSITS) website.
+
+        Sincerely,
+        <b>Developers</b>
+      </span>
+    </div>
+    <hr>
+    <div class="developer_title">
+      <h1>DEVELOPERS</h1>
+    </div>
+    <br />
+    <br />
+
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/durano.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>DENNIS <b>DURANO</b></h1>
+          <hr>
+          <h3>Adviser </h3>
+          <h4><b>UC-CCS</b>, Full-time Instructor</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/jay.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>JAYHARRON MAR <b>ABEJAR</b></h1>
+          <hr>
+          <h3>Lead Backend Developer</h3>
+          <h4><b>PSITS</b>, VP-External</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/nat.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>NATHANIEL <b>TIEMPO</b></h1>
+          <hr>
+          <h3>Lead Frontend Developer, Graphics Designer</h3>
+          <h4><b>LAKANDIWA</b>, Senior Staff Layout-Artist</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/harold.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>HAROLD <b>CUICO</b></h1>
+          <hr>
+          <h3>Backend Developer</h3>
+          <h4><b>PSITS</b>, VP-Internal</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/ferrer.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>MARIELLA MAE <b>FERRER</b></h1>
+          <hr>
+          <h3>UX/UI Designer</h3>
+          <h4><b>PSITS</b>, Board of Director</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="developer_members">
+      <div class="left">
+        <div class="image_left">
+          <img src="{{url_for('static', filename='images/devs/pia.png')}}">
+        </div>
+        <div class="developer_info">
+          <h1>PIA <b>ABELLANA</b></h1>
+          <hr>
+          <h3>QA Tester</h3>
+          <h4><b>PSITS</b>, 2ND YEAR REPRESENTATIVE</h4>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+</div>
+
 <br />
 <br />
 <br />

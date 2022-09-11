@@ -1,16 +1,114 @@
 {% extends 'base.html' %}
 {% block content %}
+<br />
+<br />
+<br />
+<button class="normalButton" onclick="home()">Back</button>
 
-  <! -- This is for the background -->
-  <div class="ann_bg_1"></div>
-  <div class="ann_bg_2"></div>
-  <! -- This is for the background -->
+   
+   <br />
 
-  <div>
+      <div class="tableTitle">
+        <h1>Events List</h1>
+      </div>
+
+      <div class="warning">
+        <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
+
+      </div>
+         
+       <br />
+            <form action="" method="get">
+              <div class="searchTable">
+                <center>
+            <input id="search_student" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
+            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
+            </center>
+          </div>
+          </form>
+       
+         
+     
+        <br>
+        <div class="table">
+          <table>
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>TITLE</th>
+                <th>DATE HELD</th>
+                <th>INFO</th>
+                <th>REQUIRE PAYMENT</th>
+                <th>ITEM TO SELL</th>
+                <th>PRICE</th>
+                <th>OPEN FOR PAYMENT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for event in events %}
+              <tr>
+
+                <form method="post" action="">
+                  <input name="idnum" id="{{event.uid}}idnum" type="text" value="{{event.uid}}" hidden>
+                  <td><input name="uid" id="{{event.uid}}uid" type="text" value="{{event.uid}}" disabled></td>
+                  <td><input name="title" id="{{event.uid}}title" type="text" value="{{event.title}}" disabled></td>
+                  <td><input name="date_held" id="{{event.uid}}date_held" type="date" value="{{event.date_held}}" disabled></td>
+                  <td><input name="info" id="{{event.uid}}info" type="text" value="{{event.info}}" disabled></td>
+                  <td>
+                    <select name="required_payment" id="{{event.uid}}required_payment" onchange="required_payment_check(this, {{event.uid}})" disabled>
+                      {% if event.required_payment == 'YES' %}
+                        <option value="YES" selected>YES</option>
+                        <option value="NO">NO</option>
+                      {% else %}
+                        <option value="YES">YES</option>
+                        <option value="NO" selected>NO</option>
+                      {% endif %}
+                    </select>
+                  </td>
+                  <td><input name="item" id="{{event.uid}}item" type="text" value="{{event.item}}" disabled></td>
+                  <td><input name="amount" id="{{event.uid}}amount" type="number" step="2.5" value="{{event.amount}}" disabled></td>
+                  <td>
+                    <select name="open" id="{{event.uid}}open_for_payment" onchange="open_payment_notification({{event.uid}})" disabled>
+                      {% if event.open_for_payment == 'YES' %}
+                        <option value="YES" selected>YES</option>
+                        <option value="NO">NO</option>
+                      {% else %}
+                        <option value="YES">YES</option>
+                        <option value="NO" selected>NO</option>
+                      {% endif %}
+                    </select>
+                  </td>
+                  <td><a id="{{event.uid}}edit" onclick="edit_eventInfo('{{event.uid}}')">✎</a><button id="{{event.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteEvent({{event.uid}})">❌</a></td>
+                </form>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+ 
+  
+
+  
+
+ 
+  <br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br />
+
+
+  <!-- <div>
     <div class="information_container">
 
       <div class="information_content">
-        <h1>Events List</h1>
+        <h1></h1>
       </div>
 
         <div class="information_menu">
@@ -88,11 +186,11 @@
       <br>
       <br>
       <hr>
-      <p style="text-align: center; color: white;">PSITS &copy; 2022 - Developed by <a style="color: aqua;" href="">Abejar and Company</a></p>
+      
 
     </div>
 
-  </div>
+  </div> -->
 
 
 {% endblock %}
