@@ -13,7 +13,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     SEARCHPSITSOfficer, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember, \
-    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders
@@ -494,14 +494,17 @@ def psits_merchandise_orders_list():
             ORDER.setStatus(request.form['status'])
             # Update database
             UPDATEMerchOrder(ORDER)
+
+            # Grab the necessary info of the USER
+            merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+            account: Account = getAccountByID(merch_order.account_id)
+            account_order: AccountOrders = AccountOrders(account,merch,merch_order)
             # Email the USER if paid
             if ORDER.getStatus() == ORDER_STATUS.PAID.value:
-                merch_order = SEARCHMerchOrder(ORDER_ID)[0]
-                merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-                account: Account = getAccountByID(merch_order.account_id)
-                account_order: AccountOrders = AccountOrders(account,merch,merch_order)
-
                 pushEmail(Email("PSITS Payment receipt "+GetReference(account_order.order.reference), account_order.account.email, messages.product_paid(account_order)))
+            elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+                pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
             
 
         search: str = flask.request.values.get('search')
@@ -528,9 +531,11 @@ def psits_merchandise_orders_list():
 
             if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
                 ORDERS_TALLY += (account_order.getTotal() * account_order.order.quantity)
-            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value:
+            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
                 PAID_TALLY += (account_order.getTotal() * account_order.order.quantity)
-            TOTAL_TALLY += (account_order.getTotal() * account_order.order.quantity)
+            
+            if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
+                TOTAL_TALLY += (account_order.getTotal() * account_order.order.quantity)
 
         return render_template('MerchOrdersList.html',
                                 logout='block', 
@@ -553,16 +558,23 @@ def psits_merchandise_product(uid):
     if flask.request.method == 'GET':
         product = SEARCHMerchandise(str(uid))[0]
         stat = "NONE"
+        cancel_days = 0
+        order_id = ''
         if SEARCHMerchOrder(session['username']):
             orders = SEARCHMerchOrder(session['username'])
             for order in orders:
                 if order.account_id == session['username'] and (order.getStatus() == ORDER_STATUS.ORDERED.value or order.getStatus() == ORDER_STATUS.PAID.value) and str(order.merchandise_id) == str(product.uid):
+                    d0 = datetime.date.today()
+                    d1 = order.order_date
+                    delta = d1 - d0
+                    cancel_days = int(delta.days+3)
                     stat = "ORDERED"
+                    order_id = order.uid
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
         return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none',
-                               account_data=getAccountByID(session['username']), status=stat)
+                               account_data=getAccountByID(session['username']), status=stat, cancel_days=cancel_days,order_id=order_id)
 
 
 # HAROLD TASK
@@ -849,6 +861,45 @@ def psits_order_form_uid(event_uid):
                                message="Only administrators can access this page!")
     session['order_message'] = event_uid
     return redirect(url_for('psits_order_form'))
+
+
+@app.route("/PSITS@RemoveOrder/<uid>")
+def psits_order_remove(uid):
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    if not isAdmin(session['username']):
+        return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
+    databaseLog(f"User [{session['username']}] has deleted order id[{uid}]")
+    DELETEMerchOrder(uid)
+    return redirect(url_for('psits_merchandise_orders_list'))
+
+
+@app.route("/PSITS@RequestCancel/<uid>")
+def psits_order_remove_request(uid):
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                               message="You must be logged on to access the page!")
+    ORDERS = SEARCHMerchOrder(uid)
+    if len(ORDERS) > 0:
+        ORDER_TO_CANCEL: MerchOrder = ORDERS[0]
+        if ORDER_TO_CANCEL.account_id == session['username']:
+            # Grab the necessary info of the USER
+            merch_order = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
+            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+            account: Account = getAccountByID(merch_order.account_id)
+            account_order: AccountOrders = AccountOrders(account,merch,merch_order)
+            # Email the USER if paid
+            pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
+
+            databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
+            DELETEMerchOrder(uid)
+        else:
+            return render_template("404Page.html", logout="none", login="none",
+                               message="You are not allowed to cancel someone else order!")
+
+    return redirect(url_for('psits_merchandise'))
 
 
 @deprecated("psits order form is deprecated")

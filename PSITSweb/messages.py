@@ -42,5 +42,13 @@ def product_paid(accountOrder: AccountOrders):
         Hello {accountOrder.account.firstname}!\n\n 
         You already have paid the {accountOrder.order.quantity} - {accountOrder.merch.title} [TOTAL: P{total}]. Your reference code is -> {GetReference(accountOrder.order.reference)}. 
         Please wait for the announcement for the claiming schedule at the PSITS page. Do not lose your reference
-        code thank you :D"
+        code thank you :D This email is auto generated, please do not reply"
+    """
+
+
+def product_cancel(accountOrder: AccountOrders):
+    return f"""
+        Hello {accountOrder.account.firstname}!\n\n 
+        We're sorry but we have cancelled your order [ref: {GetReference(accountOrder.order.reference)}] Item: {accountOrder.merch.title}. Either you have requested for a cancellation 
+        of order or we are out of stock. Sorry for the inconvenience. Please do not reply to this email, thank you.
     """

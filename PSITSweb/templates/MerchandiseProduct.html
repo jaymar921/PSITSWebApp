@@ -28,6 +28,12 @@
             
             {% if (status == "ORDERED") %}
             <label>You already ordered this item</label>
+                {% if cancel_days > 0 %}
+                    <p style="color: blue;">You have {{cancel_days}} day{{'s' if cancel_days > 1 else ''}} to cancel this order</p>
+                    <button class="normalButton" onclick="disable(this);location.href='/PSITS@RequestCancel/{{order_id}}'" type="reset">CANCEL</button>
+                {% else %}
+                    <p style="color: red;">You can no longer cancel this order</p>
+                {% endif %}
             {% else %}
             <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
             <select name="quantity" id="quantity">
@@ -36,19 +42,14 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
             </select><br />
             <br />
             <label for="additional_info">Additional Info</label><br />
             <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
             <br >
             <br>
-            <input type="submit" class="normalButton" value="Order">
-            <button class="normalButton"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+            <input type="submit" class="normalButton" value="Order" onclick="disable(this)">
+            <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
             {% endif %}
         </form>
         
