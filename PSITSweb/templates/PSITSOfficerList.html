@@ -54,7 +54,7 @@
                   <td><input name="email" id="{{account.uid}}email" type="text" value="{{account.email}}" disabled></td>
                   <td><input name="position" id="{{account.uid}}position" type="text" value="{{account.position}}" disabled></td>
                   <td><input name="birthday" id="{{account.uid}}birthday" type="date" value="{{account.birthday}}" disabled></td>
-                  <td><a id="{{account.uid}}edit" onclick="editOfficerInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteStudent('{{account.uid}}')">❌</a></td>
+                  <td><a id="{{account.uid}}edit" onclick="editOfficerInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteOfficer('{{account.uid}}')">❌</a></td>
                 </form>
               </tr>
               {% endfor %}

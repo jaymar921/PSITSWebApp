@@ -13,7 +13,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     SEARCHPSITSOfficer, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember, \
-    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder, DELETEPSITSOfficer
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders
@@ -218,6 +218,14 @@ def registerAccount():
             year,
             email
         )
+        CHECK: Account = getAccountByID(idno)
+        if CHECK.uid is not None:
+            return render_template("Login.html",
+                           title="Login PSITS",
+                           ANNOUNCEMENTS=getAnnouncements(),
+                           login="none",
+                           logout="none",
+                           message=f'Account {idno} was already registed!')
         registerAccountDB(account, password)
         content = f"""
            Dear {firstname},
@@ -269,7 +277,7 @@ def register_officer():
                             file.close()
                             databaseLog(f"Officer [{officer.lastname}] comes with an image")
             UPDATEPSITSOfficer(officer)
-            return redirect(url_for('landing_page'))
+            return redirect(url_for('psits_officer_list'))
             
     return redirect(url_for('cant_find_link'))
 
@@ -616,6 +624,7 @@ def psits_order_product():
 
         - Use the SEARCHMerchOrder(search: str) from the Database.py
     """
+    merch_uid = 0
     if "username" in session:
         if flask.request.method == "POST":
             merch_uid = request.form['merch_id']
@@ -659,7 +668,7 @@ def psits_order_product():
 
     else:
         return redirect(url_for('login_page'))
-    return redirect(url_for("landing_page"))
+    return redirect(url_for("psits_merchandise_product",uid=merch_uid))
 
         
 @app.route("/event_removal/<uid>")
@@ -750,7 +759,20 @@ def psits_remove_merchandise(uid):
         return redirect(url_for("psits_merchandise_list"))
     else:
         return redirect(url_for('cant_find_link'))
-    None
+    
+
+@app.route("/PSITS@RemoveOfficer/<uid>")
+def psits_remove_officer(uid):
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    account = session['username']
+    if isAdmin(account):
+        DELETEPSITSOfficer(uid)
+        databaseLog(f"Officer ID [{uid}] was removed by Account ID [{account}]")
+        return redirect(url_for("psits_officer_list"))
+    else:
+         return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
 
 
 @app.route("/PSITS@Students", methods=['POST', 'GET'])
@@ -884,20 +906,16 @@ def psits_order_remove_request(uid):
     ORDERS = SEARCHMerchOrder(uid)
     if len(ORDERS) > 0:
         ORDER_TO_CANCEL: MerchOrder = ORDERS[0]
-        if ORDER_TO_CANCEL.account_id == session['username']:
-            # Grab the necessary info of the USER
-            merch_order = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
-            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-            account: Account = getAccountByID(merch_order.account_id)
-            account_order: AccountOrders = AccountOrders(account,merch,merch_order)
-            # Email the USER if paid
-            pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
+        # Grab the necessary info of the USER
+        merch_order = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
+        merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+        account: Account = getAccountByID(merch_order.account_id)
+        account_order: AccountOrders = AccountOrders(account,merch,merch_order)
+        # Email the USER if paid
+        pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
-            databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
-            DELETEMerchOrder(uid)
-        else:
-            return render_template("404Page.html", logout="none", login="none",
-                               message="You are not allowed to cancel someone else order!")
+        databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
+        DELETEMerchOrder(uid)
 
     return redirect(url_for('psits_merchandise'))
 
