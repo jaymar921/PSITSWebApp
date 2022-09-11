@@ -13,7 +13,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     SEARCHPSITSOfficer, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember, \
-    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder
+    SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder, DELETEPSITSOfficer
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders
@@ -277,7 +277,7 @@ def register_officer():
                             file.close()
                             databaseLog(f"Officer [{officer.lastname}] comes with an image")
             UPDATEPSITSOfficer(officer)
-            return redirect(url_for('landing_page'))
+            return redirect(url_for('psits_officer_list'))
             
     return redirect(url_for('cant_find_link'))
 
@@ -759,7 +759,20 @@ def psits_remove_merchandise(uid):
         return redirect(url_for("psits_merchandise_list"))
     else:
         return redirect(url_for('cant_find_link'))
-    None
+    
+
+@app.route("/PSITS@RemoveOfficer/<uid>")
+def psits_remove_officer(uid):
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    account = session['username']
+    if isAdmin(account):
+        DELETEPSITSOfficer(uid)
+        databaseLog(f"Officer ID [{uid}] was removed by Account ID [{account}]")
+        return redirect(url_for("psits_officer_list"))
+    else:
+         return render_template("404Page.html", logout="none", login="none",
+                               message="Only administrators can access this page!")
 
 
 @app.route("/PSITS@Students", methods=['POST', 'GET'])

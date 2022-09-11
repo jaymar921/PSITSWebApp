@@ -207,3 +207,9 @@ function deleteOrder(uid){
 function disable(doc){
     doc.hidden = true;
 }
+
+function deleteOfficer(uid){
+    if(confirm("Are you sure you want to delete this officer? id=> "+uid) === true){
+        location.href="/PSITS@RemoveOfficer/"+uid;
+    }
+}
