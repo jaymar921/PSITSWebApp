@@ -17,7 +17,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders
-from Util import deprecated
+from Util import deprecated, rankOfficers
 from Util import hashData, isAdmin, contentVerifier, PriceParseRef, GetPriceRef, GetReference
 from waitress import serve
 import messages
@@ -1068,6 +1068,7 @@ def psits_orders_list():
 def about_us():
     save_redirection('about_us')
     officers = GETAllPSITSOfficer()
+    officers = rankOfficers(officers)
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("aboutUs.html",
