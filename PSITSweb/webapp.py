@@ -435,7 +435,8 @@ def psits_my_orders_list():
                 )
 
             
-            return render_template('MyOrders.html', orders = ALL_ORDERS)
+            return render_template('MyOrders.html', orders = ALL_ORDERS, title='My Orders', logout='block', 
+                    login='none', account_data=getAccountByID(session['username']))
     return redirect(url_for("login_page"))
 
 

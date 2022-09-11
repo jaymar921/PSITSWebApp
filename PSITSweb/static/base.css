@@ -80,7 +80,9 @@
 body {
     background-color: #f0f2f5;
     display: block;
-    min-height:100vh;
+    min-height: 100vh;
+    height: 100%;
+    
 }
 
 /* .wrapper {
@@ -107,6 +109,9 @@ body {
     background-color: white;
 }
 
+.hide{
+   
+}
 /* .content {
     flex-grow: 1;
 } */
@@ -856,13 +861,13 @@ body {
 }
 
 */
+
+
 .footerPage {
     background-color: #074873;
     color: white;
     width: 100%;
     padding:20px;
-    
-
 }
 
 .footerPage hr {
@@ -1391,6 +1396,65 @@ body {
     height:100px;
 }
 
+.orderTitle{
+    color:#004064;
+    font-size: 150%;
+}
+.orderTitle hr{
+    opacity: 0.3;
+}
+.myOrder{
+    width:100%;
+    margin:auto;
+    margin-left:10px;
+
+
+
+}
+.myOrder table{
+    width:100%;
+    padding:20px 20px;
+    border-collapse: collapse;
+}
+.myOrder table img {
+    width:100px;
+}
+
+.myOrder table thead tr{
+
+}
+.myOrder table thead th{
+    font-size:90%;
+   text-align: center;
+   justify-content: center;
+   margin: auto;
+   height:100px;
+}
+
+.myOrder table tbody tr{
+    background-color: white;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  
+}
+
+.myOrder table tbody td{
+    margin:auto;
+    justify-content: center;
+    text-align: center;
+    white-space: break-spaces;
+    font-size:90%;
+}
+.myOrder table tbody .order_img{
+    width:10%;
+}
+.myOrder table tbody tr .order_info{
+    max-width:100px;
+    white-space: pre-line;
+word-wrap: break-word;
+
+    
+}
+
 /*=========================================================================*/
 /*END OF MERCHANDISE CSS*/
 /*==========================================================================*/
@@ -1732,6 +1796,10 @@ body {
         align-items: center;
    
     }
+    .hide{
+        display:none;
+    }
+    
 }
 
 @media(max-width:915px){

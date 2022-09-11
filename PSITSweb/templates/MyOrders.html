@@ -1,41 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <table border="">
-        <thead>
-            <tr>Product</tr>
-            <tr>Date</tr>
-            <tr>Item</tr>
-            <tr>Quantity</tr>
-            <tr>Status</tr>
-            <tr>Total</tr>
-            <tr>Additional Info</tr>
-            <tr>Reference</tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>
-                {% if order.merch.image_file != '' %}
+{% extends 'base.html '%}
 
-                <img class="merch_product" id="{{order.merch.uid}}" loading="lazy"
+{% block content %}
+<br />
+<button class="backButton" onclick="merchandise()">Back</button>
+<br />
+
+<div class="orderTitle"><center><h1>MY ORDERS</h1></center> <br /> <hr></div>
+<br />
+<br />
+
+<br />
+<div class="myOrder">
+    <table>
+        <br />
+        <thead>
+            <tr>
+            <th></th>
+            <th>Item</th>
+            <th class="hide">Additional Info</th>
+            <th>Date</th>
+            <th class="hide">Quantity</th>
+            <th>Status</th>
+            <th class="hide">Total</th>
+           
+            <th>Reference</th>
+            </tr>
+            <tr></tr>
+        </thead>
+       
+        <tbody>
+       
+            {% for order in orders %}
+           
+            <tr>
+                <td class="order_img">
+                {% if order.merch.image_file != '' %}
+                <img id="{{order.merch.uid}}" loading="lazy"
                     src="{{ url_for('download_file', filename=order.merch.image_file) }}">
                 {% endif %}
                 </td>
-                <td>{{order.order.order_date}}</td>
                 <td>{{order.merch.title}}</td>
-                <td>{{order.order.quantity}}</td>
-                <td>{{order.getStatus()}}</td>
-                <td>{{'%0.2f'| format(order.getTotal()|float)}}</td>
-                <td>{{order.order.additional_info}}</td>
-                <td>{{order.reference}}</td>
+                <td class="order_info hide">{{order.order.additional_info}}</td>
+                <td>{{order.order.order_date}}</td>
+                
+                <td class="hide">{{order.order.quantity}}</td>
+                {% if order.getStatus() =='ORDERED'%}
+                <td style="color:red;" >{{order.getStatus()}}</td>
+                    {% elif order.getStatus() =='PAID'%}
+                    <td style="color:orange;" >{{order.getStatus()}}</td>
+                    {% else %}
+                    <td style="color:green;" >{{order.getStatus()}}</td>
+                    {% endif %}
+                </td>
+                <td class="hide">₱{{'%0.2f'| format(order.getTotal()|float)}}</td>
+                
+                <td> {{order.reference}}</td>
             </tr>
+        
             {% endfor %}
+           
         </tbody>
     </table>
-</body>
-</html>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+{% endblock %}
