@@ -102,7 +102,11 @@ def rankOfficers(officers: list) -> list:
             new_officers.append(officer)
 
     for officer in officers:
-        if 'treasurer' in officer.position.lower():
+        if 'treasurer' in officer.position.lower() and 'assistant' not in officer.position.lower():
+            new_officers.append(officer)
+
+    for officer in officers:
+        if 'assistant treasurer' in officer.position.lower():
             new_officers.append(officer)
 
     for officer in officers:
