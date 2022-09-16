@@ -28,6 +28,7 @@ ALLOWED_EXTENSION = {'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
+import app_route_1_2
 
 """
       ____  ____ ___ _____ ____  
@@ -159,6 +160,9 @@ def showCSVData(fn, search):
                 if fn == "students":
                     students = getAllAccounts(search)
                     return render_template("CSVTemplate.html", students=students)
+                elif fn == 'orders':
+                    orders = SEARCHMerchOrder(search)
+                    return render_template("CSVTemplate.html", orders=orders)
 
         else:
             return render_template("404Page.html", logout="none", login="none",
@@ -186,6 +190,9 @@ def login():
     account = getAccountByID(int(account_id))
     message = "Account not found!"
     if account.uid is not None:
+        if getAccount(int(account_id),hashData('@password_reset')).uid is not None:
+            session['username'] = account.uid
+            return redirect(url_for('reset_account_password',uid=account.uid))
         message = "Invalid password"
 
     return render_template("Login.html",
