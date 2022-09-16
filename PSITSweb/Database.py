@@ -686,6 +686,13 @@ def CREATEMerchOrder(order: MerchOrder):
                  f" values ({order.account_id},'{order.order_date}',{order.merchandise_id}," \
                  f"'{order.status}',{order.quantity},'{order.additional_info}','{order.reference}')"
     executeQueryCommit(query)
+    DEDUCTMerchStock(order.merchandise_id, order.quantity)
+
+
+def DEDUCTMerchStock(merch_id: int, deduction: int):
+    query: str = f"update `merchandise` set `stock` = (select `stock` from `merchandise` where `uid`={merch_id})-{deduction} " \
+                 f"where `uid` = {merch_id}"
+    executeQueryCommit(query)
 
 
 # This function will retrieve all the MerchOrder data from the database
