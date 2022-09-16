@@ -10,5 +10,9 @@
         <p>"{{ student.firstname }} {{ student.lastname }}",</p>
     {% endfor %}
 
+    {% for order in orders %}
+        <p>{{order.account_id}} - {{order.order_date}} - {{order.merchandise_id}} - {{order.status}} - {{order.quantity}} - '{{order.additional_info}}' - {{order.reference}},</p>
+    {% endfor %}
+
 </body>
 </html>

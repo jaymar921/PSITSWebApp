@@ -824,3 +824,8 @@ def SEARCHFacultyMember(search: str):
 def UPDATEFacultyMember(m: FacultyMember):
     query = f"UPDATE `faculty_personnel` set name='{m.name}', position='{m.position}', description='{m.description}', job='{m.job}', image_src='{m.image_src}' where uid={m.uid}"
     executeQueryCommit(query)
+
+
+# This function will change the password of a user
+def ResetPassword(uid, password):
+    executeQueryCommit(f"UPDATE `accounts` set password='{password}' where idno={uid}")

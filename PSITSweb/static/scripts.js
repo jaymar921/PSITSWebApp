@@ -159,8 +159,8 @@ function merchandise(){
     location.href="/PSITS@Merchandise"
 }
 
-function loadCSVTemplate(search){
-    location.href="/PSITS@CSVdata/students/"+search
+function loadCSVTemplate(option,search){
+    location.href="/PSITS@CSVdata/"+option+"/"+search
 }
 
 function removeMerchandise(uid){

@@ -24,7 +24,7 @@
                 <center>
             <input id="search_student" type="text" name="search" placeholder="SEARCH ID NUMBER | RFID | LASTNAME" value="{{search}}">
             <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
-            <button type="button" onclick="loadCSVTemplate(document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
+            <button type="button" onclick="loadCSVTemplate('students',document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
             </center>
           </div>
           </form>
@@ -60,7 +60,7 @@
                   <td><input name="course" id="{{account.uid}}course" type="text" value="{{account.course}}" disabled></td>
                   <td><input name="year" id="{{account.uid}}year" type="text" value="{{account.year}}" disabled></td>
                   <td class="hide"><input name="email" id="{{account.uid}}email" type="text" value="{{account.email}}" disabled></td>
-                  <td class="hide"><a id="{{account.uid}}edit" onclick="edit_studentInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button>  <a onclick="deleteStudent('{{account.uid}}')">❌</a></td>
+                  <td class="hide"><a id="{{account.uid}}edit" onclick="edit_studentInfo('{{account.uid}}')">✎</a><button id="{{account.uid}}button" type="submit" hidden>💾</button> <a href="{{url_for('reset_password',uid=account.uid)}}">⚙</a> <a onclick="deleteStudent('{{account.uid}}')">❌</a></td>
                 </form>
               </tr>
               {% endfor %}
