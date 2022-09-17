@@ -1,5 +1,4 @@
 from __main__ import app
-from urllib import request
 from flask import render_template, session, redirect, url_for, request
 import flask
 import Database
