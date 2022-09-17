@@ -740,7 +740,12 @@ def UPDATEMerchOrder(merch: MerchOrder):
 # This function will delete a MerchOrder from the orders table given
 # a uid argument
 # @returns nothing
-def DELETEMerchOrder(uid):
+def DELETEMerchOrder(uid, merch_id):
+    # add back to the stock the canceled orders
+    executeQueryCommit(f"update `merchandise` set stock = (select `stock` from merchandise where `uid` = {merch_id})+"
+                       f"(select `quantity` from `orders` where `uid` = {uid}) "
+                       f"where `uid` = {merch_id}")
+    # delete order
     executeQueryCommit(f"delete from `orders` where uid = {uid}")
 
 

@@ -213,3 +213,26 @@ function deleteOfficer(uid){
         location.href="/PSITS@RemoveOfficer/"+uid;
     }
 }
+
+function checkStockOverOrder(){
+    let stock = 0;
+    let order = 0;
+
+    stock = parseInt(document.getElementById("merch_stock").value);
+    order = parseInt(document.getElementById("quantity").value);
+
+    if(order>stock)
+    {
+        console.log(stock);
+        console.log(order);
+        document.getElementById("submitBTN").disabled = true;
+        document.getElementById("submitBTN").style.background='grey';
+        alert("You order is over the stock available. Please reduce your number of order");
+
+    }
+    else
+    {
+        document.getElementById("submitBTN").disabled = false;
+        document.getElementById("submitBTN").style.background='#004064';
+    }
+}

@@ -905,8 +905,8 @@ def psits_order_remove(uid):
     return redirect(url_for('psits_merchandise_orders_list'))
 
 
-@app.route("/PSITS@RequestCancel/<uid>")
-def psits_order_remove_request(uid):
+@app.route("/PSITS@RequestCancel/<uid>/<merch_id>")
+def psits_order_remove_request(uid, merch_id):
     if 'username' not in session:
         return render_template("404Page.html", logout="none", login="none",
                                message="You must be logged on to access the page!")
@@ -922,7 +922,7 @@ def psits_order_remove_request(uid):
         pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
         databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
-        DELETEMerchOrder(uid)
+        DELETEMerchOrder(uid, merch_id)
 
     return redirect(url_for('psits_merchandise'))
 
