@@ -686,8 +686,10 @@ def CREATEMerchOrder(order: MerchOrder):
                  f" values ({order.account_id},'{order.order_date}',{order.merchandise_id}," \
                  f"'{order.status}',{order.quantity},'{order.additional_info}','{order.reference}')"
     executeQueryCommit(query)
-    DEDUCTMerchStock(order.merchandise_id, order.quantity)
-
+    merch = SEARCHMerchandise(order.merchandise_id)[0]
+    merch.stock =  int(merch.stock) - int(order.quantity)
+    UPDATEMerchandise(merch)
+    # DEDUCTMerchStock(order.merchandise_id, order.quantity)
 
 def DEDUCTMerchStock(merch_id: int, deduction: int):
     query: str = f"update `merchandise` set `stock` = (select `stock` from `merchandise` where `uid`={merch_id})-{deduction} " \
@@ -740,11 +742,19 @@ def UPDATEMerchOrder(merch: MerchOrder):
 # This function will delete a MerchOrder from the orders table given
 # a uid argument
 # @returns nothing
-def DELETEMerchOrder(uid, merch_id):
+def DELETEMerchOrder(uid):
+    # Get the order
+    order: MerchOrder = SEARCHMerchOrder(uid)[0]
+
+    # This is working fine but not in the server - Noted by [JayMar]
     # add back to the stock the canceled orders
-    executeQueryCommit(f"update `merchandise` set stock = (select `stock` from merchandise where `uid` = {merch_id})+"
-                       f"(select `quantity` from `orders` where `uid` = {uid}) "
-                       f"where `uid` = {merch_id}")
+    # executeQueryCommit(f"update `merchandise` set stock = (select `stock` from merchandise where `uid` = {order.merchandise_id})+"
+    #                   f"(select `quantity` from `orders` where `uid` = {uid}) "
+    #                   f"where `uid` = {order.merchandise_id}")
+    merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+    merch.stock =  int(merch.stock) + int(order.quantity)
+    UPDATEMerchandise(merch)
+
     # delete order
     executeQueryCommit(f"delete from `orders` where uid = {uid}")
 

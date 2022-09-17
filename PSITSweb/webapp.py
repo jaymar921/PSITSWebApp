@@ -922,7 +922,7 @@ def psits_order_remove_request(uid, merch_id):
         pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
         databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
-        DELETEMerchOrder(uid, merch_id)
+        DELETEMerchOrder(uid)
 
     return redirect(url_for('psits_merchandise'))
 
