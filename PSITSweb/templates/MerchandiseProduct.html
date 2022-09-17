@@ -25,31 +25,35 @@
         <p>STOCK: {{product.stock}}</p> <br />
         <form action="/PSITS@Order" class="additional_info" method="post">
              <input type="hidden" id="merch_id" name="merch_id" value="{{product.uid}}">
-            
+             <input type="hidden" id="merch_stock" name="merch_stock" value="{{product.stock}}">
             {% if (status == "ORDERED") %}
             <label>You already ordered this item</label>
                 {% if cancel_days > 0 %}
                     <p style="color: blue;">You have {{cancel_days}} day{{'s' if cancel_days > 1 else ''}} to cancel this order</p>
-                    <button class="normalButton" onclick="disable(this);location.href='/PSITS@RequestCancel/{{order_id}}'" type="reset">CANCEL</button>
+                    <button class="normalButton" onclick="disable(this);location.href='/PSITS@RequestCancel/{{order_id}}/{{product.uid}}'" type="reset">CANCEL</button>
                 {% else %}
                     <p style="color: red;">You can no longer cancel this order</p>
                 {% endif %}
             {% else %}
-            <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
-            <select name="quantity" id="quantity">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select><br />
-            <br />
-            <label for="additional_info">Additional Info</label><br />
-            <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
-            <br >
-            <br>
-            <input type="submit" class="normalButton" value="Order" onclick="disable(this)">
-            <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+                {% if product.stock == 0 %}
+                    <p style="color: red;">Out Of Stock</p>
+                {% else %}
+                <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
+                <select name="quantity" id="quantity" onchange="checkStockOverOrder()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select><br />
+                <br />
+                <label for="additional_info">Additional Info</label><br />
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
+                <br >
+                <br>
+                <input type="submit" class="normalButton" value="Order" onclick="disable(this)" id="submitBTN">
+                <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+                {% endif %}
             {% endif %}
         </form>
         
