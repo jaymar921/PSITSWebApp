@@ -739,7 +739,7 @@ def SEARCHMerchOrder(search: str) -> list:
         if search != '' and search != 'all':
             account = getAccountsByRFID(search)
             if len(account) > 0:
-                query = f"select * from `orders` where account_id like '%{account[0].uid}%'"
+                query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
             else:
                 query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
     data: dict = executeQueryReturn(query)
