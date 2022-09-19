@@ -160,7 +160,9 @@ function merchandise(){
 }
 
 function loadCSVTemplate(option,search){
-    location.href="/PSITS@CSVdata/"+option+"/"+search
+    if(search === '')
+        search = 'all';
+    location.href="/PSITS@CSVdata/"+option+"/"+search;
 }
 
 function removeMerchandise(uid){

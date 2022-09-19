@@ -583,7 +583,7 @@ def psits_merchandise_product(uid):
                     d1 = order.order_date
                     delta = d1 - d0
                     cancel_days = int(delta.days+3)
-                    stat = "ORDERED"
+                    stat = order.getStatus()
                     order_id = order.uid
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
@@ -794,7 +794,7 @@ def psits_students_list():
         # Get the search
         search: str = flask.request.values.get('search')
         if search is None:
-            search = 'ALL'
+            search = ''
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
                                admin='block', title='PSITS STUDENTS LIST',

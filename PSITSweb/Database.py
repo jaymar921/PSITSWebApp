@@ -1,7 +1,7 @@
 import datetime
 
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember
+from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS
 import TestApplication
 from Util import deprecated
 
@@ -261,13 +261,40 @@ def getAccount(uid: int, password: str) -> Account:
     return Account(None, None, None, None, None, None, None)
 
 
-def getAllAccounts(search: str):
+def getAllAccounts(search: str) -> list:
     query: str = "SELECT * FROM ACCOUNTS"
     if search is not None:
         query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
                      f" or lastname like '%{search}%' or course like '%{search}%' or year like '{search[-1:]}'"
         if search.lower() == 'all':
             query: str = "SELECT * FROM ACCOUNTS"
+    data = executeQueryReturn(query)
+    accounts: list = []
+    for acc in data:
+        account = Account(
+            acc['idno'],
+            acc['rfid'],
+            acc['firstname'],
+            acc['lastname'],
+            acc['course'],
+            acc['year'],
+            acc['email']
+        )
+        accounts.append(account)
+    return accounts
+
+
+def getAccountsByRFID(search) -> list:
+    query: str = "SELECT * FROM ACCOUNTS"
+    if search is not None:
+        query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
+                     f" or lastname like '%{search}%' or course like '%{search}%'"
+        try:
+            if search.lower() == 'all':
+                query: str = "SELECT * FROM ACCOUNTS"
+        except:
+            pass
+
     data = executeQueryReturn(query)
     accounts: list = []
     for acc in data:
@@ -710,7 +737,11 @@ def SEARCHMerchOrder(search: str) -> list:
     query: str = "select * from `orders`"
     if search is not None:
         if search != '' and search != 'all':
-            query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            account = getAccountsByRFID(search)
+            if len(account) > 0:
+                query = f"select * from `orders` where account_id like '%{account[0].uid}%'"
+            else:
+                query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
     data: dict = executeQueryReturn(query)
     orders = []
     for order in data:
@@ -751,9 +782,10 @@ def DELETEMerchOrder(uid):
     # executeQueryCommit(f"update `merchandise` set stock = (select `stock` from merchandise where `uid` = {order.merchandise_id})+"
     #                   f"(select `quantity` from `orders` where `uid` = {uid}) "
     #                   f"where `uid` = {order.merchandise_id}")
-    merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
-    merch.stock =  int(merch.stock) + int(order.quantity)
-    UPDATEMerchandise(merch)
+    if order.getStatus() == ORDER_STATUS.ORDERED.value:
+        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+        merch.stock =  int(merch.stock) + int(order.quantity)
+        UPDATEMerchandise(merch)
 
     # delete order
     executeQueryCommit(f"delete from `orders` where uid = {uid}")

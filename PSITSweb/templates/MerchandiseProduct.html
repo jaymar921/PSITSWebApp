@@ -34,6 +34,9 @@
                 {% else %}
                     <p style="color: red;">You can no longer cancel this order</p>
                 {% endif %}
+            {% elif (status == "PAID") %}
+                <p>You already have paid this item, <br>please wait for announcements for claiming of item</p>
+                <p style="color: red;">You can no longer cancel this order</p>
             {% else %}
                 {% if product.stock == 0 %}
                     <p style="color: red;">Out Of Stock</p>
