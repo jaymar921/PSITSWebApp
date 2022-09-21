@@ -654,10 +654,16 @@ def UPDATEEvent(event: Event):
 # This function will insert a new Merchandise into the table
 # @requires a Merchandise object as argument
 def CREATEMerchandise(merch: Merchandise):
+    # add a new merch
     query: str = f"insert into `merchandise`(title,information,price,discount,stock) values " \
                  f"('{merch.title}','{merch.info}'," \
                  f"{merch.price},{merch.discount},{merch.stock})"
     executeQueryCommit(query)
+
+    # get the id of the new merch
+    query: str = f"select max(uid) as new from merchandise"
+    new_merch: dict = executeQueryReturn(query)
+    return new_merch[0]['new']
 
 
 # This function will retrieve all the Merchandise data from the database
@@ -675,6 +681,7 @@ def SEARCHMerchandise(search: str) -> list:
         if search != '' and search != 'all':
             query = f"select * from `merchandise` where uid like '%{search}%' or title like '%{search}%'"
     data: dict = executeQueryReturn(query)
+    print(data)
     merchandise = []
     for merch in data:
         merchandise.append(

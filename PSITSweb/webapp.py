@@ -501,6 +501,7 @@ def psits_merchandise_orders_list():
     if isAdmin(session['username']):
         if flask.request.method == 'POST':
             ORDER_ID = request.form['order_ref']
+            print("Result?: "+ORDER_ID)
             
             # GET THE MATCHING ORDER
             ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
@@ -715,9 +716,9 @@ def addMerch():
             discount,
             stock
         )
-        CREATEMerchandise(merch)
-        databaseLog(f"Merch [{merch.title}] added")
-        merch = SEARCHMerchandise(merch.info)[0]
+        merch_id = CREATEMerchandise(merch)
+        databaseLog(f"Merch [{merchName}] added")
+        merch = SEARCHMerchandise(merch_id)[0]
         if merch is not None:
             if 'merch_image' in request.files:
                 file = request.files['merch_image']
