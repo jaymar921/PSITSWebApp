@@ -654,16 +654,10 @@ def UPDATEEvent(event: Event):
 # This function will insert a new Merchandise into the table
 # @requires a Merchandise object as argument
 def CREATEMerchandise(merch: Merchandise):
-    # add a new merch
     query: str = f"insert into `merchandise`(title,information,price,discount,stock) values " \
-                 f"('{merch.title}','{merch.info}'," \
-                 f"{merch.price},{merch.discount},{merch.stock})"
+                f"('{merch.title}','{merch.info}'," \
+                f"{merch.price},{merch.discount},{merch.stock})"
     executeQueryCommit(query)
-
-    # get the id of the new merch
-    query: str = f"select max(uid) as new from merchandise"
-    new_merch: dict = executeQueryReturn(query)
-    return new_merch[0]['new']
 
 
 # This function will retrieve all the Merchandise data from the database
@@ -681,7 +675,6 @@ def SEARCHMerchandise(search: str) -> list:
         if search != '' and search != 'all':
             query = f"select * from `merchandise` where uid like '%{search}%' or title like '%{search}%'"
     data: dict = executeQueryReturn(query)
-    print(data)
     merchandise = []
     for merch in data:
         merchandise.append(
@@ -770,6 +763,11 @@ def SEARCHMerchOrder(search: str) -> list:
 # This function will update the orders table from MerchOrder uid argument
 # @returns nothing
 def UPDATEMerchOrder(merch: MerchOrder):
+    if merch.status == "CANCELLED":
+        merchandise:Merchandise = SEARCHMerchandise(merch.merchandise_id)[0]
+        merchandise.stock = int(merchandise.stock)+int(merch.quantity)
+        UPDATEMerchandise(merchandise)
+
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
                  f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
                  f"additional_info='{merch.additional_info}'," \

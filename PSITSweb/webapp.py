@@ -180,7 +180,6 @@ def login():
         databaseLog(f"Account ID [{session['username']}] has logged in")
         if has_redirection():
             REDIRECTION = get_redirection()
-            print(REDIRECTION)
             if 'psits_merchandise_product' in REDIRECTION:
                 return redirect(url_for(REDIRECTION,uid=get_redirection_extra()))
             elif REDIRECTION != '':
@@ -501,7 +500,6 @@ def psits_merchandise_orders_list():
     if isAdmin(session['username']):
         if flask.request.method == 'POST':
             ORDER_ID = request.form['order_ref']
-            print("Result?: "+ORDER_ID)
             
             # GET THE MATCHING ORDER
             ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
@@ -521,7 +519,6 @@ def psits_merchandise_orders_list():
                 pushEmail(Email("PSITS Payment receipt "+GetReference(account_order.order.reference), account_order.account.email, messages.product_paid(account_order)))
             elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
                 pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
-            
 
         search: str = flask.request.values.get('search')
         if search is None:
@@ -693,10 +690,10 @@ def removeEventPage(uid):
 
 @app.route("/PSITS@AddMerch", methods=['POST', 'GET'])
 def addMerch():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    account = session['username']
     if flask.request.method == 'GET':
-        if 'username' not in session:
-            return redirect(url_for('cant_find_link'))
-        account = session['username']
         if isAdmin(account):
             return render_template("MerchForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account))
         else:
@@ -716,22 +713,26 @@ def addMerch():
             discount,
             stock
         )
-        merch_id = CREATEMerchandise(merch)
-        databaseLog(f"Merch [{merchName}] added")
-        merch = SEARCHMerchandise(merch_id)[0]
-        if merch is not None:
-            if 'merch_image' in request.files:
-                file = request.files['merch_image']
-                if file is not None:
-                    if file.filename != '':
-                        ext = file.filename.split(".")[1]
-                        if ext in ALLOWED_EXTENSION:
-                            file.filename = "merch" + str(merch.uid) + "." + ext
-                            merch.image_file = "merch" + str(merch.uid) + "." + ext
-                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-                            file.save(path)
-                            file.close()
-                            databaseLog(f"Merch [{merch.title}] comes with an image")
+        if len(SEARCHMerchandise(merchName))==0:
+            CREATEMerchandise(merch)
+            databaseLog(f"Merch [{merchName}] added")
+            merch = SEARCHMerchandise(merchName)[0]
+            if merch is not None:
+                if 'merch_image' in request.files:
+                    file = request.files['merch_image']
+                    if file is not None:
+                        if file.filename != '':
+                            ext = file.filename.split(".")[1]
+                            if ext in ALLOWED_EXTENSION:
+                                file.filename = "merch" + str(merch.uid) + "." + ext
+                                merch.image_file = "merch" + str(merch.uid) + "." + ext
+                                path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                                file.save(path)
+                                file.close()
+                                databaseLog(f"Merch [{merch.title}] comes with an image")
+        else:
+            return render_template("MerchForm.html", login='none', logout='block', account=account, account_data=getAccountByID(account),
+                                   message = "Merch Name already exist")
     return redirect(url_for("psits_merchandise"))
 
 
