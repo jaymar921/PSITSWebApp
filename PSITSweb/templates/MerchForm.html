@@ -5,6 +5,7 @@
         <div class="form_modal">
             <form action="/PSITS@AddMerch" method="post"  enctype="multipart/form-data">
                 <h1>Create Merch</h1>
+                <p style="color:red;">{{ message }}</p>
                 <div class="form_field">
                     <label for="Merch">Merch:</label> <input id="Merch" name="Merch" type="text" placeholder="Merch name" required>
                 </div>
@@ -15,7 +16,7 @@
                     <label for="Price">Price:</label> <input id="Price" name="Price" type="number" required>
                 </div>
                 <div class="form_field">
-                    <label for="Discount">Discount:</label> <input id="Discount" name="Discount" type="number" required>
+                    <label for="Discount">Discount:</label> <input id="Discount" name="Discount" type="number" placeholder="0-99" required>
                 </div>
                 <div class="form_field">
                     <label for="Stock">Stock:</label> <input id="Stock" name="Stock" type="number" required>

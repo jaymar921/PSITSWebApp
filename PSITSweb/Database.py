@@ -655,8 +655,8 @@ def UPDATEEvent(event: Event):
 # @requires a Merchandise object as argument
 def CREATEMerchandise(merch: Merchandise):
     query: str = f"insert into `merchandise`(title,information,price,discount,stock) values " \
-                 f"('{merch.title}','{merch.info}'," \
-                 f"{merch.price},{merch.discount},{merch.stock})"
+                f"('{merch.title}','{merch.info}'," \
+                f"{merch.price},{merch.discount},{merch.stock})"
     executeQueryCommit(query)
 
 
@@ -763,6 +763,11 @@ def SEARCHMerchOrder(search: str) -> list:
 # This function will update the orders table from MerchOrder uid argument
 # @returns nothing
 def UPDATEMerchOrder(merch: MerchOrder):
+    if merch.status == "CANCELLED":
+        merchandise:Merchandise = SEARCHMerchandise(merch.merchandise_id)[0]
+        merchandise.stock = int(merchandise.stock)+int(merch.quantity)
+        UPDATEMerchandise(merchandise)
+
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
                  f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
                  f"additional_info='{merch.additional_info}'," \
