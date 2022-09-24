@@ -916,7 +916,7 @@ def psits_order_remove_request(uid, merch_id):
     if len(ORDERS) > 0:
         ORDER_TO_CANCEL: MerchOrder = ORDERS[0]
         # Grab the necessary info of the USER
-        merch_order = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
+        merch_order: MerchOrder = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
         merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
         account: Account = getAccountByID(merch_order.account_id)
         account_order: AccountOrders = AccountOrders(account,merch,merch_order)
@@ -924,7 +924,8 @@ def psits_order_remove_request(uid, merch_id):
         pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
         databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
-        DELETEMerchOrder(uid)
+        merch_order.setStatus('CANCELLED')
+        UPDATEMerchOrder(merch_order)
 
     return redirect(url_for('psits_merchandise'))
 

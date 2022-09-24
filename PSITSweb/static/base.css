@@ -1057,7 +1057,15 @@ body {
     width:100%;
 
 }
-.table table tbody td input:disabled{
+
+.table table tbody td .information{
+    border-radius:10px;
+    width:100%;
+    margin: auto;
+    color: gray;
+    font-size: 80%;
+}
+.table table tbody td input:disabled, .information{
     outline:none;
     border:none;
     padding:10px 10px;

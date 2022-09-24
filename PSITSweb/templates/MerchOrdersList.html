@@ -22,7 +22,7 @@
             <form action="" method="get">
               <div class="searchTable">
                 <center>
-            <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | ID NUMBER | RFID | LASTNAME" value="{{search}}">
+            <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}">
             <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
             <button type="button" onclick="loadCSVTemplate('orders',document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
             </center>
@@ -42,8 +42,9 @@
                 <th>REF #</th>
                 <th>NAME</th>
                 <th>PRODUCT</th>
-                <th >QUANTITY</th>
-                <th>AMOUNT</th>
+                <th>ADD INFO.</th>
+                <th class="hide">QUANTITY</th>
+                <th class="hide">AMOUNT</th>
                 <th>STATUS</th>
                 <th class="hide">ACTION</th>
               </tr>
@@ -57,8 +58,9 @@
                   <td><input name="ref" id="{{order.order.uid}}ref" type="text" value="{{order.reference}}" disabled></td>
                   <td><input name="name" id="{{order.order.uid}}name" type="text" value="{{order.account.lastname}}, {{order.account.firstname}}" disabled></td>
                   <td><input name="prod" id="{{order.order.uid}}prod" type="text" value="{{order.merch.title}}" disabled></td>
-                  <td><input name="qty" id="{{order.order.uid}}qty" type="text" value="{{order.order.quantity}}" disabled></td>
-                  <td><input name="amt" id="{{order.order.uid}}amt" type="text" value="P{{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}}" disabled></td>
+                  <td><p style="white-space: pre-line;" class="information">{{order.order.additional_info}}&#8203;</p></td>
+                  <td class="hide"><input name="qty" id="{{order.order.uid}}qty" type="text" value="{{order.order.quantity}}" disabled></td>
+                  <td class="hide"><input name="amt" id="{{order.order.uid}}amt" type="text" value="P{{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}}" disabled></td>
                   {% if order.getStatus() == 'ORDERED' %}
                   <td>
                     <select name="status" id="{{order.order.uid}}status" disabled>

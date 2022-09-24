@@ -738,8 +738,11 @@ def SEARCHMerchOrder(search: str) -> list:
     if search is not None:
         if search != '' and search != 'all':
             account = getAccountsByRFID(search)
+            _merch = SEARCHMerchandise(search)
             if len(account) > 0:
                 query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            elif len(_merch) > 0:
+                query = f"select * from `orders` where merch_id like '%{_merch[0].uid}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
             else:
                 query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
     data: dict = executeQueryReturn(query)
@@ -768,10 +771,11 @@ def UPDATEMerchOrder(merch: MerchOrder):
         merchandise.stock = int(merchandise.stock)+int(merch.quantity)
         UPDATEMerchandise(merchandise)
 
+    print(f"\n\nOrder status -> {merch.status} id[{merch.uid}]\n\n")
+
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
                  f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
-                 f"additional_info='{merch.additional_info}'," \
-                 f"reference='{merch.reference}' where uid={merch.uid}"
+                 f"additional_info='{merch.additional_info}' where uid={merch.uid}"
     executeQueryCommit(query)
 
 
