@@ -1,8 +1,13 @@
 from __main__ import app
-from flask import render_template, session, redirect, url_for, request
+import os
+from flask import render_template, session, redirect, url_for, request, flash
 import flask
 import Database
+from Models import STATIC_DATA
 from Util import isAdmin, hashData
+
+ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
+
 
 @app.route('/PSITS@PasswordReset/<uid>', methods=['POST','GET'])
 def reset_password(uid):
@@ -41,3 +46,108 @@ def reset_account_password(uid):
     Database.ResetPassword(uid, hashData(password))
     Database.databaseLog(f'Password reset on account [{uid}]')
     return redirect(url_for('landing_page'))
+
+
+@app.route('/PSITS/PrintingService')
+def psits_printing_service():
+    return render_template("app_templates_1_2/PrintingRequest.html", logout="none", login="none", STATIC_DATA=STATIC_DATA)
+
+
+@app.route('/PSITS/PrintingService/Request', methods=['POST'])
+def psits_printing_request():
+    student_id = request.form['idnum']
+
+    # check if the files are sent
+    if 'files[]' in request.files:
+        files = request.files.getlist('files[]')
+        
+        directory = app.config['UPLOAD_FOLDER']+f"Printing/{student_id}/"
+
+        if directoryExist(directory):
+            if getNumberOfFiles(directory) > 0:
+                return redirect(url_for('printing_service_files',uid=student_id,msg='You have pending documents for printing, you cannot upload unless you\'ve cleared this directory'))
+        for file in files:
+            if file and allowed_file(file.filename):
+                filenmame = file.filename
+
+                
+                
+                if not directoryExist(directory):
+                    createDir(directory)
+                file.save(os.path.join(directory, filenmame))
+        
+        Database.databaseLog(f"[Printing Service] student [{student_id}] has sent {len(files)} file(s) to print")
+        return redirect(url_for('printing_service_files',uid=student_id,msg='ok'))
+    return redirect('/')
+
+
+@app.route('/PSITS/PrintingService/files/<uid>/<msg>')
+def printing_service_files(uid,msg):
+    directory = app.config['UPLOAD_FOLDER']+f"Printing/{uid}/"
+    if not directoryExist(directory):
+        if 'username' in session:
+            return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=0, FILES=[], message=msg, admin=True)
+        return render_template("app_templates_1_2/PrintingRequestFiles.html", logout="none", login="none",uid=0, FILES=[], message='ok', admin=False)
+
+    files = []
+    for file in os.listdir(directory):
+        files.append(file)
+    
+    if 'username' in session:
+        if isAdmin(session['username']):
+            return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=uid, FILES=files, message=msg, admin=True)
+
+    return render_template("app_templates_1_2/PrintingRequestFiles.html", logout="none", login="none",uid=uid, FILES=files, message=msg, admin=False)
+
+
+@app.route('/PSITS/PrintingService/Remove/<uid>/<filename>')
+def printing_service_remove_files(uid, filename):
+    directory = app.config['UPLOAD_FOLDER']+f"Printing/{uid}/"
+    if fileExist(directory+filename):
+        removeFile(directory+filename)
+
+    return redirect(url_for('printing_service_files',uid=uid,msg='ok'))
+
+
+@app.route('/PSITS@PrintingServiceAdmin', methods = ['GET', 'POST'])
+def printing_service_admin():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    if not isAdmin(session['username']):
+        return redirect(url_for('cant_find_link'))
+    
+    ACCOUNTS = os.listdir(app.config['UPLOAD_FOLDER']+f"Printing/")
+    PENDING_ACCOUNTS = []
+    for account in ACCOUNTS:
+        if getNumberOfFiles(app.config['UPLOAD_FOLDER']+f"Printing/{account}/") > 0:
+            PENDING_ACCOUNTS.append(account)
+    # if is post
+    if flask.request.method == 'POST':
+        search = request.form['search']
+        if search == '':
+            return redirect(url_for('printing_service_admin'))
+        return redirect(url_for('printing_service_files',uid=search,msg='ok'))
+    return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']), logout="block", login="none",uid=0, FILES=[], message='ok', admin=True,PENDING_ACCOUNTS=PENDING_ACCOUNTS)
+
+# Utility
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def directoryExist(dir):
+    return os.path.isdir(dir)
+
+
+def createDir(dir):
+    os.makedirs(dir)
+
+
+def getNumberOfFiles(dir):
+    return len(os.listdir(dir))
+
+
+def fileExist(file):
+    return os.path.exists(file)
+
+def removeFile(file):
+    return os.remove(file)

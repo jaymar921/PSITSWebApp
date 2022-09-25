@@ -762,6 +762,28 @@ def SEARCHMerchOrder(search: str) -> list:
         )
     return orders
 
+def SEARCHMerchOrderTABLE(search: str)->list:
+    query: str = "select * from `orders`"
+    if search is not None:
+        if search != '' and search != 'all':
+            query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    orders = []
+    for order in data:
+        orders.append(
+            MerchOrder(
+                order['uid'],
+                order['account_id'],
+                order['order_date'],
+                order['merch_id'],
+                order['status'],
+                order['quantity'],
+                order['additional_info'],
+                order['reference']
+            )
+        )
+    return orders
+
 
 # This function will update the orders table from MerchOrder uid argument
 # @returns nothing
@@ -771,11 +793,12 @@ def UPDATEMerchOrder(merch: MerchOrder):
         merchandise.stock = int(merchandise.stock)+int(merch.quantity)
         UPDATEMerchandise(merchandise)
 
-    print(f"\n\nOrder status -> {merch.status} id[{merch.uid}]\n\n")
+    
 
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
-                 f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
-                 f"additional_info='{merch.additional_info}' where uid={merch.uid}"
+                 f"status='{merch.status}',quantity={merch.quantity}," \
+                 f"additional_info='{merch.additional_info}' where uid={merch.uid} and merch_id={merch.merchandise_id};"
+
     executeQueryCommit(query)
 
 

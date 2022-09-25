@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ 
+<br />
+
+{% if not admin %}
+<button class="backButton" onclick="location.href='/PSITS/PrintingService'">Back</button>
+{% else %}
+<button class="backButton" onclick="location.href='/PSITS'">Back</button>
+{% endif %}
+
+<div class="merch_contents">
+        <br>
+        <div class="announcement_title">
+            <br /><br />
+            {% if not admin %}
+                <h1>FILES FOR PRINTING</h1>
+                <p>You have uploaded {{ FILES | length}} file(s) pending for printing</p>
+                <p style="color: gray;">You have to proceed to the PSITS office to print the documents located at 5th floor UC-MAIN building near room 539.</p>
+                {% if message != 'ok' %}
+                <br><p style="color: red;">{{message}}</p>
+                {% endif %}
+            {% else %}
+                <h1>PSITS PRINTING SERVICES</h1>
+                <br>
+                <form action="/PSITS@PrintingServiceAdmin" method="POST">
+                    <label for="srch">Search ID Number</label> <input id='srch' type="text" name="search" placeholder="ID Number">
+                    <button type="submit" class="normalButton">SEARCH</button>
+                </form>
+                <br>
+                {% if uid != 0 %}
+                <p style="color: gray;">Files found for account {{uid}}</p>
+                {% endif %}
+            {% endif %}
+            <br /><br />
+        </div>
+
+        <br />
+        <div class="merch_container">
+        
+        <div class="merch">
+        {% if (file|length) == 0 %}
+            {% if PENDING_ACCOUNTS != null %}
+                {% for ACCOUNT in PENDING_ACCOUNTS %}
+                <div class="product">
+                    <img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/user_logo.png') }}">
+                    
+                    <h2 class="title" style="text-align: center;">{{ACCOUNT}}</h2>
+                    <br>
+                    <hr>
+                    <br />
+                    {% if admin %}
+                    <br><br>
+                    <a href="{{ url_for('printing_service_files', uid=ACCOUNT,msg='ok') }}"><button class="normalButton">CHECK</button></a>
+                    {% endif %}
+                
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        {% for file in FILES %}
+            <div class="product">
+                <img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/print_logo.png') }}">
+                
+                <h2 class="title">{{file}}</h2>
+                <br>
+                <hr>
+                <p class="price"></p>
+                {% if '.doc' in file %}
+                <p class="stock"><i class="fa-regular fa-file-word"></i>Word Document</p>
+                {% elif '.pdf' in file %}
+                <p class="stock"><i class="fa-regular fa-file-pdf"></i>PDF Document</p>
+                {% elif '.xls' in file %}
+                <p class="stock"><i class="fa-light fa-file-excel"></i>PDF Document</p>
+                {% endif %}
+                <br />
+        
+                <a href="/PSITS/PrintingService/Remove/{{uid}}/{{file}}"><button class="normalButton">REMOVE</button></a>
+
+                {% if admin %}
+                <br><br>
+                <a href="{{ url_for('download_file', filename='Printing/'+uid+'/'+file) }}"><button class="normalButton">DOWNLOAD</button></a>
+                {% endif %}
+            
+            </div>
+        {% endfor %}
+        <br><br><br>
+        </div>
+        
+        
+    </div>
+    <br><br><br><br>
+    {% if (FILES | length) == 0 %}
+        <br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br>
+    {% endif %}
+</div>
+
+
+
+
+
+
+{% endblock %}

@@ -1561,7 +1561,7 @@ body {
 
 }
 .merch_product_individual .rightContent{
-    width:100%;
+    width:87%;
     justify-content: left;
     margin-left:20px;
 }
@@ -1871,7 +1871,6 @@ word-wrap: break-word;
         margin:0;
         width:80%;
         margin:auto;
-     
 
     }
     .dean .rightContent h3{

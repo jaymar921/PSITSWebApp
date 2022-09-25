@@ -12,11 +12,11 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
     getLatestAnnouncement, DELETEEvent, SEARCHMerchandise, UPDATEMerchandise, GETAllMerchandise, DELETEMerchandise, \
     SEARCHPSITSOfficer, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
-    UPDATEFacultyMember, \
+    UPDATEFacultyMember, SEARCHMerchOrderTABLE,\
     SEARCHFacultyMember, SEARCHMerchOrder, CREATEMerchOrder, UPDATEMerchOrder, DELETEMerchOrder, DELETEPSITSOfficer
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
-    MerchOrder, AccountOrders
+    MerchOrder, AccountOrders, STATIC_DATA
 from Util import deprecated, rankOfficers
 from Util import hashData, isAdmin, contentVerifier, PriceParseRef, GetPriceRef, GetReference
 from waitress import serve
@@ -582,7 +582,7 @@ def psits_merchandise_product(uid):
                     delta = d1 - d0
                     cancel_days = int(delta.days+3)
                     stat = order.getStatus()
-                    order_id = order.uid
+                    order_id = GetReference(order.reference)
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
@@ -751,10 +751,10 @@ def psits_merchandise():
     if 'username' in session:
         account = session['username']
         if isAdmin(account):
-            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="block")
+            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="block", STATIC_DATA=STATIC_DATA())
         else:
-            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="none")
-    return render_template("Merchandise.html", all_merch=MERCH, events=events, login='block', logout='none', admin="none")
+            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block', account=account, account_data=getAccountByID(account), admin="none", STATIC_DATA=STATIC_DATA())
+    return render_template("Merchandise.html", all_merch=MERCH, events=events, login='block', logout='none', admin="none", STATIC_DATA=STATIC_DATA())
 
 
 @app.route("/PSITS@RemoveMerch/<uid>")
@@ -907,25 +907,29 @@ def psits_order_remove(uid):
     return redirect(url_for('psits_merchandise_orders_list'))
 
 
-@app.route("/PSITS@RequestCancel/<uid>/<merch_id>")
-def psits_order_remove_request(uid, merch_id):
+@app.route("/PSITS@RequestCancel/<ref>")
+def psits_order_remove_request(ref):
     if 'username' not in session:
         return render_template("404Page.html", logout="none", login="none",
                                message="You must be logged on to access the page!")
-    ORDERS = SEARCHMerchOrder(uid)
+    ORDERS = SEARCHMerchOrderTABLE(ref)
     if len(ORDERS) > 0:
-        ORDER_TO_CANCEL: MerchOrder = ORDERS[0]
-        # Grab the necessary info of the USER
-        merch_order: MerchOrder = SEARCHMerchOrder(ORDER_TO_CANCEL.uid)[0]
-        merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-        account: Account = getAccountByID(merch_order.account_id)
-        account_order: AccountOrders = AccountOrders(account,merch,merch_order)
-        # Email the USER if paid
-        pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
+        for ORDER in ORDERS:
+            if ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+                continue
+            ORDER_TO_CANCEL: MerchOrder = ORDER
+            # Grab the necessary info of the USER
+            merch_order: MerchOrder = SEARCHMerchOrderTABLE(ORDER_TO_CANCEL.uid)[0]
+            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+            account: Account = getAccountByID(merch_order.account_id)
+            account_order: AccountOrders = AccountOrders(account,merch,merch_order)
+            # Email the USER if paid
+            pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
-        databaseLog(f"User [{session['username']}] has cancelled an order -> id[{uid}]")
-        merch_order.setStatus('CANCELLED')
-        UPDATEMerchOrder(merch_order)
+            databaseLog(f"User [{session['username']}] has cancelled an order -> id[{ref}]")
+            ORDER_TO_CANCEL.setStatus('CANCELLED')
+            UPDATEMerchOrder(ORDER_TO_CANCEL)
+            break
 
     return redirect(url_for('psits_merchandise'))
 

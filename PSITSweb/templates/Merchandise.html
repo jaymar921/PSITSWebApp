@@ -20,6 +20,21 @@
         <div class="merch_container">
         
         <div class="merch">
+        
+        <div class="product">
+            <img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/print_logo.png') }}">
+            
+            <h2 class="title">{{STATIC_DATA.PRINTING['TITLE']}}</h2>
+            <br>
+            <hr>
+            <p class="price">₱{{('%0.2f' | format(STATIC_DATA.PRINTING['PRICE_BW']|float))}}*</p>
+            <p class="stock"><i class="fa-solid fa-calendar-days"></i> {{STATIC_DATA.PRINTING['SCHED']}}</p>
+            <br />
+    
+            <a href="/PSITS/PrintingService"><button class="normalButton">REQUEST</button></a>
+        
+        </div>
+        
         {% for merch in all_merch %}
         <div class="product">
 
@@ -33,9 +48,11 @@
             <br>
             <hr>
             
-            <p class="price">₱{{merch.price}} </p>
+            
             {% if merch.discount > 0 %}
-
+            <p class="price"><s>₱{{merch.price}}</s> ₱{{'%0.2f'| format((merch.price|float) - ((merch.price|float)*(merch.discount/100.0)))}}</p>
+            {% else %}
+            <p class="price">₱{{merch.price}} </p>
             {% endif %}
             <p class="stock">Stock: {{merch.stock}} PCS </p>
             <br />

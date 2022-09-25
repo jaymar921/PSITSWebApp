@@ -1,0 +1,56 @@
+{% extends 'base.html'%}
+{% block content %}
+<br />
+<button class="backButton" onclick="merchandise()">Back</button>
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="merch_product_individual">
+    <div class="leftContent hide">
+        <img loading="lazy" class="fade-in-left" src="{{ url_for('static', filename='images/print_logo.png') }}">
+    </div>
+    <hr>
+    <div class="rightContent fade-in-right" >
+        <h3 class="PSITS_title">PSITS</h3>
+        <h1 class="merch_title">{{STATIC_DATA.PRINTING['TITLE']}}<br></h1>
+        <span class="merch_info" style="white-space: pre-line; ">
+            PSITS serves printing of documents and it is open for all departments at UC-MAIN
+            Just can send us the files and we'll print it for you once you are at the office. 
+            You dont need bring a flash-drive at the office! Isn't that awesome?
+
+            PSITS Office is located at 5th floor UC-Main Building, near room 539
+            Office Schedule: {{STATIC_DATA.PRINTING['SCHED']}}
+        </span>
+
+        <p class="merch_price">Pricing: </p>
+        <p class="merch_description">₱{{'%0.2f' | format(STATIC_DATA.PRINTING['PRICE_BW'] | float)}} [B/W any size per piece]</p>
+        <p class="merch_description">₱{{'%0.2f' | format(STATIC_DATA.PRINTING['PRICE_CL'] | float)}} [COLORED any size per piece]</p>
+
+        <form action="/PSITS/PrintingService/Request" class="additional_info" method="post" enctype="multipart/form-data">
+            <span class="merch_info" style="white-space: pre-line;color:red;">
+                We will need your ID number for reference, once you've submitted
+                a request, you'll need to complete the transaction before you can 
+                request a new printing service.
+
+            </span>
+            <label for="idnumber">Student Information  </label><br><input id="idnumber" class="file_input" type="number" name="idnum" placeholder="ID NUMBER" pattern="^[0-9]{8,}" required>
+            
+            <br><br><label for="f2p">Files to print</label><br>
+            <input id="f2p" class="file_input" type="file" name="files[]" accept=".docx,.doc,.pdf,.xls" multiple="" required>
+            <br><br>
+            <button class="normalButton" type="submit">SUBMIT</button>
+        </form>
+        
+
+    </div>
+
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+{% endblock %}

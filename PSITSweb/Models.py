@@ -178,3 +178,12 @@ class ORDER_STATUS(Enum):
     PAID = 'PAID'
     CLAIMED = 'CLAIMED'
     CANCELLED = 'CANCELLED'
+
+
+class STATIC_DATA:
+    PRINTING: dict = {
+        'PRICE_BW': 5.0,
+        'PRICE_CL': 8.0,
+        'TITLE': 'Document Printing',
+        'SCHED': '(Mon-Fri) 8:00am - 4:00pm'
+    }
