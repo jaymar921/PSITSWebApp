@@ -4,10 +4,8 @@ from flask import render_template, session, redirect, url_for, request, flash
 import flask
 import Database
 from Models import STATIC_DATA
-from Util import isAdmin, hashData
+from Util import isAdmin, hashData, allowed_file, directoryExist, createDir, getNumberOfFiles, fileExist, removeFile
 from webapp import save_redirection
-
-ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
 
 
 @app.route('/PSITS@PasswordReset/<uid>', methods=['POST','GET'])
@@ -130,26 +128,3 @@ def printing_service_admin():
             return redirect(url_for('printing_service_admin'))
         return redirect(url_for('printing_service_files',uid=search,msg='ok'))
     return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']), logout="block", login="none",uid=0, FILES=[], message='ok', admin=True,PENDING_ACCOUNTS=PENDING_ACCOUNTS)
-
-# Utility
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def directoryExist(dir):
-    return os.path.isdir(dir)
-
-
-def createDir(dir):
-    os.makedirs(dir)
-
-
-def getNumberOfFiles(dir):
-    return len(os.listdir(dir))
-
-
-def fileExist(file):
-    return os.path.exists(file)
-
-def removeFile(file):
-    return os.remove(file)

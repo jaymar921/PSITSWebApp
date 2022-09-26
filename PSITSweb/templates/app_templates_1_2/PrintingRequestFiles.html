@@ -39,7 +39,7 @@
         <br />
         <div class="merch_container">
         
-        <div class="merch">
+        <div class="merch" id="loadDiv">
         {% if (file|length) == 0 %}
             {% if PENDING_ACCOUNTS != null %}
                 {% for ACCOUNT in PENDING_ACCOUNTS %}
@@ -96,6 +96,19 @@
         <br><br><br><br><br><br><br><br><br>
     {% endif %}
 </div>
+<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+<script type="text/javascript"> 
+    setInterval(updateDiv, 30000);
+
+    function updateDiv()
+    { 
+        //document.getElementById("loadDiv").innerHTML.reload
+        //$("#loadDiv").load(location.href + " #loadDiv")
+        $("#loadDiv").load(location.href + " #loadDiv");
+        //document.getElementById("loadDiv").innerHTML = location.href + " #loadDiv>*";
+    } 
+
+</script>
 
 
 

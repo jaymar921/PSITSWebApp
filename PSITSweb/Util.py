@@ -1,6 +1,9 @@
 import hashlib
 import warnings
 import re, random
+import os
+
+ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
 
 
 def hashData(data: str) -> str:
@@ -146,3 +149,26 @@ def rankOfficers(officers: list) -> list:
         if 'volunteer' in officer.position.lower() and not 'chief' in officer.position.lower():
             new_officers.append(officer)
     return new_officers
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def directoryExist(dir):
+    return os.path.isdir(dir)
+
+
+def createDir(dir):
+    os.makedirs(dir)
+
+
+def getNumberOfFiles(dir):
+    return len(os.listdir(dir))
+
+
+def fileExist(file):
+    return os.path.exists(file)
+
+def removeFile(file):
+    return os.remove(file)
