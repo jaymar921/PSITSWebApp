@@ -27,7 +27,8 @@ def isAdmin(uid) -> bool:
         'CUICO': '19888957',
         'OPINA': '19884253',
         'TIEMPO': '19924414',
-        'SIR DD': '613000'
+        'SIR DD': '613000',
+        'RACUYA': '19845262'
     }
     for key, value in admins.items():
         if str(value).__eq__(str(uid)):

@@ -5,6 +5,7 @@ import flask
 import Database
 from Models import STATIC_DATA
 from Util import isAdmin, hashData
+from webapp import save_redirection
 
 ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
 
@@ -112,7 +113,8 @@ def printing_service_remove_files(uid, filename):
 @app.route('/PSITS@PrintingServiceAdmin', methods = ['GET', 'POST'])
 def printing_service_admin():
     if 'username' not in session:
-        return redirect(url_for('cant_find_link'))
+        save_redirection('printing_service_admin')
+        return redirect(url_for('login_page'))
     if not isAdmin(session['username']):
         return redirect(url_for('cant_find_link'))
     
