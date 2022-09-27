@@ -42,16 +42,18 @@
         <div class="merch" id="loadDiv">
         {% if (file|length) == 0 %}
             {% if PENDING_ACCOUNTS != null %}
-                {% for ACCOUNT in PENDING_ACCOUNTS %}
+                {% for ACCOUNT in PENDING_ACCOUNTS %} 
                 <div class="product">
-                    <img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/user_logo.png') }}">
-                    
+                    <!--<img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/user_logo.png') }}">
+                    -->
+                   <div style="align-content: center; text-align: center ">
+                    <i class="fa-5x fa-solid fa-user" ></i>
+                   </div>
+					
                     <h2 class="title" style="text-align: center;">{{ACCOUNT}}</h2>
-                    <br>
                     <hr>
-                    <br />
                     {% if admin %}
-                    <br><br>
+                    <br>
                     <a href="{{ url_for('printing_service_files', uid=ACCOUNT,msg='ok') }}"><button class="normalButton">CHECK</button></a>
                     {% endif %}
                 
@@ -61,8 +63,9 @@
         {% endif %}
         {% for file in FILES %}
             <div class="product">
-                <img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/print_logo.png') }}">
-                
+                <div style="align-content: center; text-align: center ">
+					<i class="fa-5x fa-solid fa-print" ></i>
+				</div>
                 <h2 class="title">{{file}}</h2>
                 <br>
                 <hr>
@@ -98,7 +101,7 @@
 </div>
 <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 <script type="text/javascript"> 
-    setInterval(updateDiv, 30000);
+    setInterval(updateDiv, 5000);
 
     function updateDiv()
     { 
@@ -109,8 +112,6 @@
     } 
 
 </script>
-
-
 
 
 
