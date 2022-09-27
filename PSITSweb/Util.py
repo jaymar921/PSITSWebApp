@@ -181,7 +181,6 @@ def CONFIGURATION()-> dict:
         settings = []
         
         for line in lines:
-            print(line.strip())
             if '::' in line:
                 settings.append(line.strip())
         for setting in settings:
@@ -193,3 +192,11 @@ def CONFIGURATION()-> dict:
             except Exception as e:
                 configuration_map[setting.split(' = ')[0].replace(":","").replace("=","").strip()] = ''
     return configuration_map
+
+
+def CONFIGURATION_DISPLAY()-> dict:
+    with open("configuration.psits_config", "r") as config:
+        lines = config.readlines()
+        
+        for line in lines:
+            print(line.strip())

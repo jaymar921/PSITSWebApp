@@ -17,7 +17,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders, STATIC_DATA
-from Util import deprecated, rankOfficers, CONFIGURATION
+from Util import deprecated, rankOfficers, CONFIGURATION, CONFIGURATION_DISPLAY
 from Util import hashData, isAdmin, contentVerifier, PriceParseRef, GetPriceRef, GetReference
 from waitress import serve
 import messages
@@ -1169,6 +1169,7 @@ def get_redirection_extra():
 
 
 if __name__ == '__main__':
+    CONFIGURATION_DISPLAY()
     hostname = socket.gethostname()
     IPAddress = socket.gethostbyname(hostname)
     if databaseInit():
