@@ -17,7 +17,7 @@ from Database import getAnnouncements, getAccount, getAccountByID, postAnnouncem
 from EmailAPI import pushEmail
 from Models import Event, Account, Email, OrderAccount, Merchandise, PSITSOfficer, FacultyMember, ORDER_STATUS, \
     MerchOrder, AccountOrders, STATIC_DATA
-from Util import deprecated, rankOfficers
+from Util import deprecated, rankOfficers, CONFIGURATION
 from Util import hashData, isAdmin, contentVerifier, PriceParseRef, GetPriceRef, GetReference
 from waitress import serve
 import messages
@@ -46,6 +46,7 @@ import app_route_1_2
         - Harold Cuico
         - Nathaniel Tiempo
         - Ferrer Mariella
+        - Pia Abellana
 """
 
 
@@ -1171,9 +1172,10 @@ if __name__ == '__main__':
     hostname = socket.gethostname()
     IPAddress = socket.gethostbyname(hostname)
     if databaseInit():
-        databaseLog(f"Server Started, running on {IPAddress}:5000")
+        databaseLog(f"Server Started, running on {IPAddress}:{CONFIGURATION()['PORT']}")
         # use this if you are debugging the app
-        app.run(host="0.0.0.0", port=5000, debug=True)
-        #
-        # Production
-        # serve(app, host="0.0.0.0", port=5000)
+        if CONFIGURATION()['PRODUCTION'] == 'False':
+            app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
+        else:
+            # Production
+            serve(app, host="0.0.0.0", port=5000)

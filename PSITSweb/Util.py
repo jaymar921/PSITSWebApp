@@ -172,3 +172,24 @@ def fileExist(file):
 
 def removeFile(file):
     return os.remove(file)
+
+
+def CONFIGURATION()-> dict:
+    configuration_map = {}
+    with open("configuration.psits_config", "r") as config:
+        lines = config.readlines()
+        settings = []
+        
+        for line in lines:
+            print(line.strip())
+            if '::' in line:
+                settings.append(line.strip())
+        for setting in settings:
+            try:
+                option = setting.split(' = ')[1]
+                if '_' == option:
+                    option = ''
+                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","")] = option
+            except Exception as e:
+                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","").strip()] = ''
+    return configuration_map

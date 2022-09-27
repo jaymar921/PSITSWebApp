@@ -3,12 +3,12 @@ import datetime
 from mysql import connector
 from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS
 import TestApplication
-from Util import deprecated
+from Util import deprecated, CONFIGURATION
 
-DATABASE_NAME = "psitswebapp"
-USERNAME = "root"
-PASSWORD = ""
-HOST = "127.0.0.1"
+DATABASE_NAME = CONFIGURATION()['DATABASE_NAME']
+USERNAME = CONFIGURATION()['USERNAME']
+PASSWORD = CONFIGURATION()['PASSWORD']
+HOST = CONFIGURATION()['DATABASE_HOST']
 
 """
     PSITS version 1.0
