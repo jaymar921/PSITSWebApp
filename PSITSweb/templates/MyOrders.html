@@ -46,11 +46,13 @@
                 <td class="hide">{{order.order.quantity}}</td>
                 {% if order.getStatus() =='ORDERED'%}
                 <td style="color:red;" >{{order.getStatus()}}</td>
-                    {% elif order.getStatus() =='PAID'%}
-                    <td style="color:orange;" >{{order.getStatus()}}</td>
-                    {% else %}
-                    <td style="color:green;" >{{order.getStatus()}}</td>
-                    {% endif %}
+                {% elif order.getStatus() =='PAID'%}
+                <td style="color:orange;" >{{order.getStatus()}}</td>
+                {% elif order.getStatus() =='CANCELLED'%}
+                <td style="color:violet;" >{{order.getStatus()}}</td>
+                {% else %}
+                <td style="color:green;" >{{order.getStatus()}}</td>
+                {% endif %}
                 </td>
                 <td class="hide">₱{{'%0.2f'| format(order.getTotal()|float)}}</td>
                 

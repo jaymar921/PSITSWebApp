@@ -19,13 +19,24 @@
         <br />
         <br />
         <p class="merch_description">Description:</p>
-        <span class="merch_info">{{product.info}}</span>
-        <p class="merch_price">₱ {{product.price}}<br></p>
+        <span class="merch_info" style="white-space: pre-line;">{{product.info}}</span>
+
+
+        {% if product.discount > 0 %}
+        <p class="merch_price"><s>₱{{product.price}}</s> ₱{{'%0.2f'| format((product.price|float) - ((product.price|float)*(product.discount/100.0)))}}</p>
         <p><i class="fa-solid fa-tag"></i> Discount: {{product.discount}}%<br></p> <br />
+        {% else %}
+        <p class="merch_price">₱{{product.price}} </p>
+        {% endif %}
+        
+
+
         <p>STOCK: {{product.stock}}</p> <br />
+
+
         <form action="/PSITS@Order" class="additional_info" method="post">
              <input type="hidden" id="merch_id" name="merch_id" value="{{product.uid}}">
-            
+             <input type="hidden" id="merch_stock" name="merch_stock" value="{{product.stock}}">
             {% if (status == "ORDERED") %}
             <label>You already ordered this item</label>
                 {% if cancel_days > 0 %}
@@ -34,22 +45,33 @@
                 {% else %}
                     <p style="color: red;">You can no longer cancel this order</p>
                 {% endif %}
+            {% elif (status == "PAID") %}
+                <p>You already have paid this item, <br>please wait for announcements for claiming of item</p>
+                <p style="color: red;">You can no longer cancel this order</p>
             {% else %}
-            <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
-            <select name="quantity" id="quantity">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select><br />
-            <br />
-            <label for="additional_info">Additional Info</label><br />
-            <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
-            <br >
-            <br>
-            <input type="submit" class="normalButton" value="Order" onclick="disable(this)">
-            <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+                {% if product.stock == 0 %}
+                    <p style="color: red;">Out Of Stock</p>
+                {% else %}
+                <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
+                <select name="quantity" id="quantity" onchange="checkStockOverOrder()">
+                    {% if 'Ticket' in product.title or 'ticket' in product.title or 'shirt' in product.title or 'Shirt' in product.title or 'lanyard' in product.title or 'Lanyard' in product.title %}
+                        <option value="1">1</option>
+                    {% else %}
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    {% endif %}
+                </select><br />
+                <br />
+                <label for="additional_info">Additional Info</label><br />
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
+                <br >
+                <br>
+                <button type="submit" class="normalButton" onclick="disable(this)" id="submitBTN">Order</button>
+                <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+                {% endif %}
             {% endif %}
         </form>
         

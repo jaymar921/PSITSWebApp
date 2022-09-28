@@ -1,14 +1,14 @@
 import datetime
 
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember
+from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS
 import TestApplication
-from Util import deprecated
+from Util import deprecated, CONFIGURATION
 
-DATABASE_NAME = "psitswebapp"
-USERNAME = "root"
-PASSWORD = ""
-HOST = "127.0.0.1"
+DATABASE_NAME = CONFIGURATION()['DATABASE_NAME']
+USERNAME = CONFIGURATION()['USERNAME']
+PASSWORD = CONFIGURATION()['PASSWORD']
+HOST = CONFIGURATION()['DATABASE_HOST']
 
 """
     PSITS version 1.0
@@ -261,13 +261,40 @@ def getAccount(uid: int, password: str) -> Account:
     return Account(None, None, None, None, None, None, None)
 
 
-def getAllAccounts(search: str):
+def getAllAccounts(search: str) -> list:
     query: str = "SELECT * FROM ACCOUNTS"
     if search is not None:
         query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
                      f" or lastname like '%{search}%' or course like '%{search}%' or year like '{search[-1:]}'"
         if search.lower() == 'all':
             query: str = "SELECT * FROM ACCOUNTS"
+    data = executeQueryReturn(query)
+    accounts: list = []
+    for acc in data:
+        account = Account(
+            acc['idno'],
+            acc['rfid'],
+            acc['firstname'],
+            acc['lastname'],
+            acc['course'],
+            acc['year'],
+            acc['email']
+        )
+        accounts.append(account)
+    return accounts
+
+
+def getAccountsByRFID(search) -> list:
+    query: str = "SELECT * FROM ACCOUNTS"
+    if search is not None:
+        query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
+                     f" or lastname like '%{search}%' or course like '%{search}%'"
+        try:
+            if search.lower() == 'all':
+                query: str = "SELECT * FROM ACCOUNTS"
+        except:
+            pass
+
     data = executeQueryReturn(query)
     accounts: list = []
     for acc in data:
@@ -628,8 +655,8 @@ def UPDATEEvent(event: Event):
 # @requires a Merchandise object as argument
 def CREATEMerchandise(merch: Merchandise):
     query: str = f"insert into `merchandise`(title,information,price,discount,stock) values " \
-                 f"('{merch.title}','{merch.info}'," \
-                 f"{merch.price},{merch.discount},{merch.stock})"
+                f"('{merch.title}','{merch.info}'," \
+                f"{merch.price},{merch.discount},{merch.stock})"
     executeQueryCommit(query)
 
 
@@ -686,6 +713,15 @@ def CREATEMerchOrder(order: MerchOrder):
                  f" values ({order.account_id},'{order.order_date}',{order.merchandise_id}," \
                  f"'{order.status}',{order.quantity},'{order.additional_info}','{order.reference}')"
     executeQueryCommit(query)
+    merch = SEARCHMerchandise(order.merchandise_id)[0]
+    merch.stock =  int(merch.stock) - int(order.quantity)
+    UPDATEMerchandise(merch)
+    # DEDUCTMerchStock(order.merchandise_id, order.quantity)
+
+def DEDUCTMerchStock(merch_id: int, deduction: int):
+    query: str = f"update `merchandise` set `stock` = (select `stock` from `merchandise` where `uid`={merch_id})-{deduction} " \
+                 f"where `uid` = {merch_id}"
+    executeQueryCommit(query)
 
 
 # This function will retrieve all the MerchOrder data from the database
@@ -698,6 +734,35 @@ def GETAllMerchOrder() -> list:
 # that matches with the search argument
 # @returns a list of MerchOrder
 def SEARCHMerchOrder(search: str) -> list:
+    query: str = "select * from `orders`"
+    if search is not None:
+        if search != '' and search != 'all':
+            account = getAccountsByRFID(search)
+            _merch = SEARCHMerchandise(search)
+            if len(account) > 0:
+                query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            elif len(_merch) > 0:
+                query = f"select * from `orders` where merch_id like '%{_merch[0].uid}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            else:
+                query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+    data: dict = executeQueryReturn(query)
+    orders = []
+    for order in data:
+        orders.append(
+            MerchOrder(
+                order['uid'],
+                order['account_id'],
+                order['order_date'],
+                order['merch_id'],
+                order['status'],
+                order['quantity'],
+                order['additional_info'],
+                order['reference']
+            )
+        )
+    return orders
+
+def SEARCHMerchOrderTABLE(search: str)->list:
     query: str = "select * from `orders`"
     if search is not None:
         if search != '' and search != 'all':
@@ -723,10 +788,17 @@ def SEARCHMerchOrder(search: str) -> list:
 # This function will update the orders table from MerchOrder uid argument
 # @returns nothing
 def UPDATEMerchOrder(merch: MerchOrder):
+    if merch.status == "CANCELLED":
+        merchandise:Merchandise = SEARCHMerchandise(merch.merchandise_id)[0]
+        merchandise.stock = int(merchandise.stock)+int(merch.quantity)
+        UPDATEMerchandise(merchandise)
+
+    
+
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
-                 f"merch_id={merch.merchandise_id},status='{merch.status}',quantity={merch.quantity}," \
-                 f"additional_info='{merch.additional_info}'," \
-                 f"reference='{merch.reference}' where uid={merch.uid}"
+                 f"status='{merch.status}',quantity={merch.quantity}," \
+                 f"additional_info='{merch.additional_info}' where uid={merch.uid} and merch_id={merch.merchandise_id};"
+
     executeQueryCommit(query)
 
 
@@ -734,6 +806,20 @@ def UPDATEMerchOrder(merch: MerchOrder):
 # a uid argument
 # @returns nothing
 def DELETEMerchOrder(uid):
+    # Get the order
+    order: MerchOrder = SEARCHMerchOrder(uid)[0]
+
+    # This is working fine but not in the server - Noted by [JayMar]
+    # add back to the stock the canceled orders
+    # executeQueryCommit(f"update `merchandise` set stock = (select `stock` from merchandise where `uid` = {order.merchandise_id})+"
+    #                   f"(select `quantity` from `orders` where `uid` = {uid}) "
+    #                   f"where `uid` = {order.merchandise_id}")
+    if order.getStatus() == ORDER_STATUS.ORDERED.value:
+        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+        merch.stock =  int(merch.stock) + int(order.quantity)
+        UPDATEMerchandise(merch)
+
+    # delete order
     executeQueryCommit(f"delete from `orders` where uid = {uid}")
 
 
@@ -824,3 +910,8 @@ def SEARCHFacultyMember(search: str):
 def UPDATEFacultyMember(m: FacultyMember):
     query = f"UPDATE `faculty_personnel` set name='{m.name}', position='{m.position}', description='{m.description}', job='{m.job}', image_src='{m.image_src}' where uid={m.uid}"
     executeQueryCommit(query)
+
+
+# This function will change the password of a user
+def ResetPassword(uid, password):
+    executeQueryCommit(f"UPDATE `accounts` set password='{password}' where idno={uid}")

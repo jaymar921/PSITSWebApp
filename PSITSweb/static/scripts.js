@@ -159,8 +159,10 @@ function merchandise(){
     location.href="/PSITS@Merchandise"
 }
 
-function loadCSVTemplate(search){
-    location.href="/PSITS@CSVdata/students/"+search
+function loadCSVTemplate(option,search){
+    if(search === '')
+        search = 'all';
+    location.href="/PSITS@CSVdata/"+option+"/"+search;
 }
 
 function removeMerchandise(uid){
@@ -211,5 +213,28 @@ function disable(doc){
 function deleteOfficer(uid){
     if(confirm("Are you sure you want to delete this officer? id=> "+uid) === true){
         location.href="/PSITS@RemoveOfficer/"+uid;
+    }
+}
+
+function checkStockOverOrder(){
+    let stock = 0;
+    let order = 0;
+
+    stock = parseInt(document.getElementById("merch_stock").value);
+    order = parseInt(document.getElementById("quantity").value);
+
+    if(order>stock)
+    {
+        console.log(stock);
+        console.log(order);
+        document.getElementById("submitBTN").disabled = true;
+        document.getElementById("submitBTN").style.background='grey';
+        alert("You order is over the stock available. Please reduce your number of order");
+
+    }
+    else
+    {
+        document.getElementById("submitBTN").disabled = false;
+        document.getElementById("submitBTN").style.background='#004064';
     }
 }
