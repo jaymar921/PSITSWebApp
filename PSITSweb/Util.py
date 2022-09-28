@@ -176,7 +176,7 @@ def removeFile(file):
 
 def CONFIGURATION()-> dict:
     configuration_map = {}
-    with open("configuration.psits_config", "r") as config:
+    with open("PSITSweb/configuration.psits_config", "r") as config:
         lines = config.readlines()
         settings = []
         
@@ -195,7 +195,7 @@ def CONFIGURATION()-> dict:
 
 
 def CONFIGURATION_DISPLAY()-> dict:
-    with open("configuration.psits_config", "r") as config:
+    with open("PSITSweb/configuration.psits_config", "r") as config:
         lines = config.readlines()
         
         for line in lines:
