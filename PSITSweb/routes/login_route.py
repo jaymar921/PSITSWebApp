@@ -2,9 +2,9 @@ from __main__ import app
 
 from flask import session, redirect, url_for, render_template, request
 
-from PSITSWebApp.PSITSweb.Database import getAnnouncements, databaseLog, getAccountByID, GETAllEvent, getAccount
-from PSITSWebApp.PSITSweb.Util import hashData
-from PSITSWebApp.PSITSweb.webApp_utility import has_redirection, get_redirection, get_redirection_extra
+from Database import getAnnouncements, databaseLog, getAccountByID, GETAllEvent, getAccount
+from Util import hashData
+from webApp_utility import has_redirection, get_redirection, get_redirection_extra
 
 
 @app.route("/PSITS@Login")

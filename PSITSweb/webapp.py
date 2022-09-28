@@ -1,4 +1,3 @@
-import datetime
 import os
 import socket
 
@@ -15,8 +14,9 @@ from Util import isAdmin
 from waitress import serve
 import messages
 
-UPLOAD_FOLDER = 'SERVER_FILES/'
+UPLOAD_FOLDER = CONFIGURATION()['SERVER_FILES_PATH']
 ALLOWED_EXTENSION = {'png'}
+RUNNING = False
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -217,14 +217,20 @@ def download_file(filename):
 
 
 if __name__ == '__main__':
-    CONFIGURATION_DISPLAY()
-    hostname = socket.gethostname()
-    IPAddress = socket.gethostbyname(hostname)
-    if databaseInit():
-        databaseLog(f"Server Started, running on {IPAddress}:{CONFIGURATION()['PORT']}")
-        # use this if you are debugging the app
-        if CONFIGURATION()['PRODUCTION'] == 'False':
-            app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
-        else:
-            # Production
-            serve(app, host="0.0.0.0", port=5000)
+    if not RUNNING:
+        RUNNING = True
+        CONFIGURATION_DISPLAY()
+        hostname = socket.gethostname()
+        IPAddress = socket.gethostbyname(hostname)
+        if databaseInit():
+            databaseLog(f"Server Initialized, configured to run on {IPAddress}:{CONFIGURATION()['PORT']}")
+            # use this if you are debugging the app
+            if CONFIGURATION()['PRODUCTION'].lower() == 'false':
+                databaseLog(f"Server started on DEBUG mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
+                app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
+            elif CONFIGURATION()['PRODUCTION'].lower() == 'true':
+                # Production
+                databaseLog(f"Server started on PRODUCTION mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
+                serve(app, host="0.0.0.0", port=5000)
+            else:
+                databaseLog(f"Failed to start web app, check `::PRODUCTION` setting at configuration.psits_config")

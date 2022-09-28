@@ -4,15 +4,15 @@ import datetime
 import flask
 from flask import session, render_template, redirect, url_for, request
 
-from PSITSWebApp.PSITSweb import messages
-from PSITSWebApp.PSITSweb.Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, \
+import messages
+from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, \
     CREATEMerchOrder, databaseLog, DELETEMerchOrder, SEARCHMerchOrderTABLE, getOrderAccount, getEvent, createOrder, \
     updateOrder, getOrderById, getAllOrders
-from PSITSWebApp.PSITSweb.EmailAPI import pushEmail
-from PSITSWebApp.PSITSweb.Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
+from EmailAPI import pushEmail
+from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount
-from PSITSWebApp.PSITSweb.Util import GetReference, isAdmin, PriceParseRef, deprecated
-from PSITSWebApp.PSITSweb.webApp_utility import checkImageExist
+from Util import GetReference, isAdmin, PriceParseRef, deprecated
+from webApp_utility import checkImageExist
 
 
 @app.route("/PSITS@MyOrderList", methods=['GET'])

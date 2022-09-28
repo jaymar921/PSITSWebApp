@@ -4,13 +4,13 @@ from __main__ import app
 import flask
 from flask import render_template, request, redirect, url_for, session
 
-from PSITSWebApp.PSITSweb.Database import getAccountByID, getAnnouncements, registerAccountDB, databaseLog, \
+from Database import getAccountByID, getAnnouncements, registerAccountDB, databaseLog, \
     CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, SEARCHPSITSOfficer, getAllAccounts, SEARCHMerchOrder, \
     DELETEPSITSOfficer, updateAccount, removeAccount
-from PSITSWebApp.PSITSweb.EmailAPI import pushEmail
-from PSITSWebApp.PSITSweb.Models import Account, Email, PSITSOfficer
-from PSITSWebApp.PSITSweb.Util import hashData, isAdmin
-from PSITSWebApp.PSITSweb.webapp import ALLOWED_EXTENSION
+from EmailAPI import pushEmail
+from Models import Account, Email, PSITSOfficer
+from Util import hashData, isAdmin
+from webapp import ALLOWED_EXTENSION
 
 
 # register account

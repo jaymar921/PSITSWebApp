@@ -5,12 +5,12 @@ from __main__ import app
 import flask
 from flask import session, redirect, url_for, render_template, request
 
-from PSITSWebApp.PSITSweb.Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, databaseLog, \
+from Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, databaseLog, \
     SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise
-from PSITSWebApp.PSITSweb.Models import Merchandise, ORDER_STATUS, STATIC_DATA
-from PSITSWebApp.PSITSweb.Util import isAdmin, GetReference, contentVerifier
-from PSITSWebApp.PSITSweb.webApp_utility import save_redirection, checkImageExist
-from PSITSWebApp.PSITSweb.webapp import ALLOWED_EXTENSION
+from Models import Merchandise, ORDER_STATUS, STATIC_DATA
+from Util import isAdmin, GetReference, contentVerifier
+from webApp_utility import save_redirection, checkImageExist
+from webapp import ALLOWED_EXTENSION
 
 
 @app.route("/PSITS@MerchandiseList", methods=['POST','GET'])

@@ -5,9 +5,9 @@ import datetime
 
 from flask import request, session, render_template, redirect, url_for
 
-from PSITSWebApp.PSITSweb.Database import getLatestAnnouncement, postAnnouncement, databaseLog, removeAnnouncement
-from PSITSWebApp.PSITSweb.Util import contentVerifier, isAdmin
-from PSITSWebApp.PSITSweb.webapp import ALLOWED_EXTENSION
+from Database import getLatestAnnouncement, postAnnouncement, databaseLog, removeAnnouncement
+from Util import contentVerifier, isAdmin
+from webapp import ALLOWED_EXTENSION
 
 
 @app.route("/PSITS@announce", methods=['POST'])

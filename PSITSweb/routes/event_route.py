@@ -4,11 +4,11 @@ from __main__ import app
 import flask
 from flask import session, redirect, url_for, render_template, request
 
-from PSITSWebApp.PSITSweb.Database import CREATEEvent, databaseLog, SEARCHEvent, UPDATEEvent, getAccountByID, \
+from Database import CREATEEvent, databaseLog, SEARCHEvent, UPDATEEvent, getAccountByID, \
     removeEvent, DELETEEvent
-from PSITSWebApp.PSITSweb.Models import Event
-from PSITSWebApp.PSITSweb.Util import isAdmin, contentVerifier
-from PSITSWebApp.PSITSweb.webapp import ALLOWED_EXTENSION
+from Models import Event
+from Util import isAdmin, contentVerifier
+from webapp import ALLOWED_EXTENSION
 
 
 @app.route("/PSITS@NewEvent", methods=['GET', 'POST'])

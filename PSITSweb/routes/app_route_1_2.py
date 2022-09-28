@@ -2,10 +2,10 @@ from __main__ import app
 import os
 from flask import render_template, session, redirect, url_for, request, flash
 import flask
-from PSITSWebApp.PSITSweb import Database
-from PSITSWebApp.PSITSweb.Models import STATIC_DATA
-from PSITSWebApp.PSITSweb.Util import isAdmin, hashData, allowed_file, directoryExist, createDir, getNumberOfFiles, fileExist, removeFile
-from PSITSWebApp.PSITSweb.webapp import save_redirection
+import Database
+from Models import STATIC_DATA
+from Util import isAdmin, hashData, allowed_file, directoryExist, createDir, getNumberOfFiles, fileExist, removeFile
+from webapp import save_redirection
 
 
 @app.route('/PSITS@PasswordReset/<uid>', methods=['POST','GET'])
