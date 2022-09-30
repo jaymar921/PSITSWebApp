@@ -49,7 +49,7 @@ def reset_account_password(uid):
 
 @app.route('/PSITS/PrintingService')
 def psits_printing_service():
-    return render_template("app_templates_1_2/PrintingRequest.html", logout="none", login="none", STATIC_DATA=STATIC_DATA)
+    return render_template("app_templates_1_2/PrintingRequest.html", title='Printing Service', logout="none", login="none", STATIC_DATA=STATIC_DATA)
 
 
 @app.route('/PSITS/PrintingService/Request', methods=['POST'])
@@ -64,7 +64,7 @@ def psits_printing_request():
 
         if directoryExist(directory):
             if getNumberOfFiles(directory) > 0:
-                return redirect(url_for('printing_service_files',uid=student_id,msg='You have pending documents for printing, you cannot upload unless you\'ve cleared this directory'))
+                return redirect(url_for('printing_service_files', title='Printing Service',uid=student_id,msg='You have pending documents for printing, you cannot upload unless you\'ve cleared this directory'))
         for file in files:
             if file and allowed_file(file.filename):
                 filenmame = file.filename
@@ -76,7 +76,7 @@ def psits_printing_request():
                 file.save(os.path.join(directory, filenmame))
         
         Database.databaseLog(f"[Printing Service] student [{student_id}] has sent {len(files)} file(s) to print")
-        return redirect(url_for('printing_service_files',uid=student_id,msg='ok'))
+        return redirect(url_for('printing_service_files', title='Printing Service',uid=student_id,msg='ok'))
     return redirect('/')
 
 
@@ -85,8 +85,8 @@ def printing_service_files(uid,msg):
     directory = app.config['UPLOAD_FOLDER']+f"Printing/{uid}/"
     if not directoryExist(directory):
         if 'username' in session:
-            return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=0, FILES=[], message=msg, admin=True)
-        return render_template("app_templates_1_2/PrintingRequestFiles.html", logout="none", login="none",uid=0, FILES=[], message='ok', admin=False)
+            return render_template("app_templates_1_2/PrintingRequestFiles.html", title='Printing Service',account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=0, FILES=[], message=msg, admin=True)
+        return render_template("app_templates_1_2/PrintingRequestFiles.html", title='Printing Service', logout="none", login="none",uid=0, FILES=[], message='ok', admin=False)
 
     files = []
     for file in os.listdir(directory):
@@ -94,9 +94,9 @@ def printing_service_files(uid,msg):
     
     if 'username' in session:
         if isAdmin(session['username']):
-            return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=uid, FILES=files, message=msg, admin=True)
+            return render_template("app_templates_1_2/PrintingRequestFiles.html", title='Printing Service',account_data=Database.getAccountByID(session['username']),logout="block", login="none",uid=uid, FILES=files, message=msg, admin=True)
 
-    return render_template("app_templates_1_2/PrintingRequestFiles.html", logout="none", login="none",uid=uid, FILES=files, message=msg, admin=False)
+    return render_template("app_templates_1_2/PrintingRequestFiles.html", title='Printing Service', logout="none", login="none",uid=uid, FILES=files, message=msg, admin=False)
 
 
 @app.route('/PSITS/PrintingService/Remove/<uid>/<filename>')
@@ -127,4 +127,4 @@ def printing_service_admin():
         if search == '':
             return redirect(url_for('printing_service_admin'))
         return redirect(url_for('printing_service_files',uid=search,msg='ok'))
-    return render_template("app_templates_1_2/PrintingRequestFiles.html",account_data=Database.getAccountByID(session['username']), logout="block", login="none",uid=0, FILES=[], message='ok', admin=True,PENDING_ACCOUNTS=PENDING_ACCOUNTS)
+    return render_template("app_templates_1_2/PrintingRequestFiles.html", title='[ADMIN] Printing Service',account_data=Database.getAccountByID(session['username']), logout="block", login="none",uid=0, FILES=[], message='ok', admin=True,PENDING_ACCOUNTS=PENDING_ACCOUNTS)

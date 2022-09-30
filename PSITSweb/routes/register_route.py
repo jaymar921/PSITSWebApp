@@ -93,7 +93,7 @@ def psits_students_list():
             search = ''
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST',
+                               admin='block', title='PSITS ACCOUNTS LIST',
                                accounts=getAllAccounts(search), search=search)
     else:
         search: str = flask.request.values.get('search')
@@ -110,7 +110,7 @@ def psits_students_list():
         databaseLog(f"Updated account ID [{updated_account.uid}]")
         return render_template("StudentsList.html",
                                logout='block', login='none', account_data=getAccountByID(session['username']),
-                               admin='block', title='PSITS STUDENTS LIST',
+                               admin='block', title='PSITS ACCOUNTS LIST',
                                accounts=getAllAccounts(search), search=search)
 
 

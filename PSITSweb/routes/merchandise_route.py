@@ -25,7 +25,7 @@ def psits_merchandise_list():
                 search = 'all'
             return render_template("MerchandiseList.html",
                                 logout='block', login='none', account_data=getAccountByID(session['username']),
-                                admin='block', title='OFFICERS LIST',
+                                admin='block', title='Merchandise List',
                                 Merchandise=SEARCHMerchandise(search), search=search)
         else: # POST
             search: str = flask.request.values.get('search')
@@ -46,7 +46,7 @@ def psits_merchandise_list():
                 databaseLog(f"Updated Merchandise data [{MERCHANDISE.title}]")
             return render_template("MerchandiseList.html",
                                 logout='block', login='none', account_data=getAccountByID(session['username']),
-                                admin='block', title='OFFICERS LIST',
+                                admin='block', title='Merchandise List',
                                 Merchandise=SEARCHMerchandise(search), search=search)
 
     return redirect(url_for('cant_find_link'))
@@ -75,7 +75,7 @@ def psits_merchandise_product(uid):
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-        return render_template('MerchandiseProduct.html', product =  product, logout='block', login='none',
+        return render_template('MerchandiseProduct.html', title=uid, product =  product, logout='block', login='none',
                                account_data=getAccountByID(session['username']), status=stat, cancel_days=cancel_days,order_id=order_id)
 
 
@@ -86,7 +86,7 @@ def addMerch():
     account = session['username']
     if flask.request.method == 'GET':
         if isAdmin(account):
-            return render_template("MerchForm.html", login='none', logout='block', account=account,
+            return render_template("MerchForm.html", title='New Merchandise!', login='none', logout='block', account=account,
                                    account_data=getAccountByID(account))
         else:
             return redirect(url_for('cant_find_link'))
@@ -142,14 +142,14 @@ def psits_merchandise():
     if 'username' in session:
         account = session['username']
         if isAdmin(account):
-            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block',
+            return render_template("Merchandise.html", title='PSITS Merch!', all_merch=MERCH, events=events, login='none', logout='block',
                                    account=account, account_data=getAccountByID(account), admin="block",
                                    STATIC_DATA=STATIC_DATA())
         else:
-            return render_template("Merchandise.html", all_merch=MERCH, events=events, login='none', logout='block',
+            return render_template("Merchandise.html", title='PSITS Merch!', all_merch=MERCH, events=events, login='none', logout='block',
                                    account=account, account_data=getAccountByID(account), admin="none",
                                    STATIC_DATA=STATIC_DATA())
-    return render_template("Merchandise.html", all_merch=MERCH, events=events, login='block', logout='none',
+    return render_template("Merchandise.html", title='PSITS Merch!', all_merch=MERCH, events=events, login='block', logout='none',
                            admin="none", STATIC_DATA=STATIC_DATA())
 
 

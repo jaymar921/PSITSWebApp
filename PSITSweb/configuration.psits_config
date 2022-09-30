@@ -24,5 +24,5 @@ to True, if you are debugging then set it to False
 ::PRODUCTION = False
 ::PORT = 5000
 ::APP_HOST = 0.0.0.0
-::SERVER_FILES_PATH = /SERVER_FILES/
+::SERVER_FILES_PATH = D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb\SERVER_FILES\
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
