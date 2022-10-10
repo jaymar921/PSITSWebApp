@@ -107,7 +107,19 @@
     { 
         //document.getElementById("loadDiv").innerHTML.reload
         //$("#loadDiv").load(location.href + " #loadDiv")
-        $("#loadDiv").load(location.href + " #loadDiv");
+		var div_to_load = location.href + " #loadDiv";
+		
+		
+		if(div_to_load != null){
+			$("#loadDiv").load(div_to_load,  function( response, status, xhr ) {
+				if ( status == "error" ) {
+					document.getElementById("loadDiv").innerHTML = "Network error! Failed to contact server";
+				}
+			});
+		}
+		
+		
+        
         //document.getElementById("loadDiv").innerHTML = location.href + " #loadDiv>*";
     } 
 
