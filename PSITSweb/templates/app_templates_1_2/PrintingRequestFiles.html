@@ -43,6 +43,7 @@
         {% if (file|length) == 0 %}
             {% if PENDING_ACCOUNTS != null %}
                 {% for ACCOUNT in PENDING_ACCOUNTS %} 
+                
                 <div class="product">
                     <!--<img class="merch_product"  loading="lazy" src="{{ url_for('static', filename='images/user_logo.png') }}">
                     -->
@@ -59,6 +60,8 @@
                 
                 </div>
                 {% endfor %}
+            {% else %}
+            <div class="account"></div>
             {% endif %}
         {% endif %}
         {% for file in FILES %}
@@ -111,18 +114,26 @@
 		
 		
 		if(div_to_load != null){
+            // check if there is no requests, printing files
+            if($('.merch').children('.product').length === 0){
+                if($('.merch').children('.account').length !== 0){
+                    location.href = "/PSITS@PrintingServiceAdmin"
+                }
+            }
+
+            // reload the div
 			$("#loadDiv").load(div_to_load,  function( response, status, xhr ) {
 				if ( status == "error" ) {
 					document.getElementById("loadDiv").innerHTML = "Network error! Failed to contact server";
 				}
 			});
+            
 		}
-		
 		
         
         //document.getElementById("loadDiv").innerHTML = location.href + " #loadDiv>*";
     } 
-
+    
 </script>
 
 
