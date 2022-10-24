@@ -2,11 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PSITS_Web_Application.Models;
 using PSITS_Web_Application.Models.Data;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PSITS_Web_Application.Controllers
 {
@@ -24,7 +20,7 @@ namespace PSITS_Web_Application.Controllers
         public IActionResult Index()
         {
             
-            return View(dataRepository.GetAccount("jayharron"));
+            return View(dataRepository.GetAccount("Abejar"));
         }
 
         public IActionResult Privacy()

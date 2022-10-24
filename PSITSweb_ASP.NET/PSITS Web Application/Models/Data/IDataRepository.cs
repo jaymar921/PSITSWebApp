@@ -7,7 +7,7 @@ namespace PSITS_Web_Application.Models.Data
     {
         IEnumerable<Account> GetAccounts();
         Account GetAccount(string search);
-        Account GetAccount(string username, string password);
+        Account GetAccount(int id_number, string password);
 
     }
 }
