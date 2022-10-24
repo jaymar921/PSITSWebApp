@@ -1,5 +1,7 @@
+from concurrent.futures import thread
 import os
 import socket
+from time import sleep
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
@@ -13,6 +15,9 @@ from Util import rankOfficers, CONFIGURATION, CONFIGURATION_DISPLAY
 from Util import isAdmin
 from waitress import serve
 import messages
+import threading
+
+THREADS = []
 
 UPLOAD_FOLDER = CONFIGURATION()['SERVER_FILES_PATH']
 ALLOWED_EXTENSION = {'png'}
@@ -217,20 +222,19 @@ def download_file(filename):
 
 
 if __name__ == '__main__':
-    if not RUNNING:
-        RUNNING = True
-        CONFIGURATION_DISPLAY()
-        hostname = socket.gethostname()
-        IPAddress = socket.gethostbyname(hostname)
-        if databaseInit():
-            databaseLog(f"Server Initialized, configured to run on {IPAddress}:{CONFIGURATION()['PORT']}")
-            # use this if you are debugging the app
-            if CONFIGURATION()['PRODUCTION'].lower() == 'false':
-                databaseLog(f"Server started on DEBUG mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
-                app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
-            elif CONFIGURATION()['PRODUCTION'].lower() == 'true':
-                # Production
-                databaseLog(f"Server started on PRODUCTION mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
-                serve(app, host="0.0.0.0", port=5000)
-            else:
-                databaseLog(f"Failed to start web app, check `::PRODUCTION` setting at configuration.psits_config")
+    CONFIGURATION_DISPLAY()
+    hostname = socket.gethostname()
+    IPAddress = socket.gethostbyname(hostname)
+    if databaseInit():
+        databaseLog(f"Server Initialized, configured to run on {IPAddress}:{CONFIGURATION()['PORT']}")
+        # use this if you are debugging the app
+        if CONFIGURATION()['PRODUCTION'].lower() == 'false':
+            databaseLog(f"Server started on DEBUG mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
+            app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
+        elif CONFIGURATION()['PRODUCTION'].lower() == 'true':
+            # Production
+            databaseLog(f"Server started on PRODUCTION mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
+            serve(app, host="0.0.0.0", port=5000)
+        else:
+            databaseLog(f"Failed to start web app, check `::PRODUCTION` setting at configuration.psits_config")
+

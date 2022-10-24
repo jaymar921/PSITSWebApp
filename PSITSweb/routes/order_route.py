@@ -88,7 +88,12 @@ def psits_merchandise_orders_list():
         TOTAL_TALLY: float = 0
         PAID_TALLY: float = 0
 
+        counter: int = 0
+
         for order in merch_orders:
+            counter += 1
+            if counter == 100:
+                break
             merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
             account: Account = getAccountByID(order.account_id)
             account_order: AccountOrders = AccountOrders(account, merch, order)

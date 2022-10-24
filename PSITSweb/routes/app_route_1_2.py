@@ -62,9 +62,9 @@ def psits_printing_request():
         
         directory = app.config['UPLOAD_FOLDER']+f"Printing/{student_id}/"
 
-        if directoryExist(directory):
-            if getNumberOfFiles(directory) > 0:
-                return redirect(url_for('printing_service_files', title='Printing Service',uid=student_id,msg='You have pending documents for printing, you cannot upload unless you\'ve cleared this directory'))
+        #if directoryExist(directory):
+        #    if getNumberOfFiles(directory) > 0:
+        #        return redirect(url_for('printing_service_files', title='Printing Service',uid=student_id,msg='You have pending documents for printing, you cannot upload unless you\'ve cleared this directory'))
         for file in files:
             if file and allowed_file(file.filename):
                 filenmame = file.filename
