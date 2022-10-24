@@ -1,9 +1,12 @@
-﻿@{
+﻿@model Account
+@{
     ViewData["Title"] = "PSITS";
 }
 <br /><br /><br /><br /><br /><br />
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome @Model.LastName</h1>
+    <h5>@Model.Course - @Model.Year</h5>
+    <p>Retrieved from PSITS Database</p>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 <br /><br /><br /><br /><br /><br />
