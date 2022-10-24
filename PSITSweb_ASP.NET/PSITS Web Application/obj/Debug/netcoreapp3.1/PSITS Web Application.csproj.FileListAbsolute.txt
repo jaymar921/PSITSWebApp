@@ -1,0 +1,38 @@
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\appsettings.Development.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\appsettings.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.exe
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.deps.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.runtimeconfig.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.runtimeconfig.dev.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.Views.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.Views.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.AssemblyReference.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.AssemblyInfoInputs.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.AssemblyInfo.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.CoreCompileInputs.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.MvcApplicationPartsAssemblyInfo.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorAssemblyInfo.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorAssemblyInfo.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\staticwebassets\PSITS Web Application.StaticWebAssets.Manifest.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\staticwebassets\PSITS Web Application.StaticWebAssets.xml
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\scopedcss\bundle\PSITS Web Application.styles.css
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.TagHelpers.input.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.TagHelpers.output.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorCoreGenerate.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorTargetAssemblyInfo.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorTargetAssemblyInfo.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.Views.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.genruntimeconfig.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.CopyComplete

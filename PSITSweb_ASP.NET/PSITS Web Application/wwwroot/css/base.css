@@ -1,0 +1,2109 @@
+ @import url('https://fonts.googleapis.com/css?family=Montserrat:500'); 
+ @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800);
+/* @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap'); */
+/* FADE IN ANIMATION */
+@keyframes fadeInLeft {
+    0% { opacity: 0; 
+        margin-left:-200px;}
+    100% { opacity: 1;
+        margin-left:0px; }
+  }
+@keyframes fadeInRight {
+    0% { opacity: 0; 
+        margin-right:-200px;}
+    100% { opacity: 1;
+        margin-right:0px; }
+  }
+/*-----------------------------------*/
+.fade-in-left { 
+    animation: fadeInLeft 2s; 
+}
+.fade-in-right { 
+    animation: fadeInRight 2s; 
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+
+
+}
+
+/*ANIMATION HOVER EFFECT*/
+@-webkit-keyframes bounceOut {
+    0% {
+      box-shadow: 0 0 0 4px #074873;
+      opacity: 1;
+    }
+    25% {
+      box-shadow: 0 0 0 1px #074873;
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 7px #074873;
+      opacity: 1;
+    }
+    75% {
+      box-shadow: 0 0 0 4px #074873;
+      opacity: 1;
+    }
+    100% {
+      box-shadow: 0 0 0 5px #074873;
+      opacity: 1;
+    }
+  }
+  @keyframes bounceOut {
+    0% {
+      box-shadow: 0 0 0 6px #074873;
+      opacity: 1;
+    }
+    25% {
+      box-shadow: 0 0 0 2px #074873;
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 9px #074873;
+      opacity: 1;
+    }
+    75% {
+      box-shadow: 0 0 0 3px #074873;
+      opacity: 1;
+    }
+    100% {
+      box-shadow: 0 0 0 5px #074873;
+      opacity: 1;
+    }
+  }
+
+
+body {
+    background-color: #f0f2f5;
+    display: block;
+    min-height: 100vh;
+    height: 100%;
+    
+}
+
+/* .wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+} */
+
+.clickable {
+    cursor: pointer;
+    width: 100%;
+}
+
+.clickable:hover {
+    transition: 0.5s ease-in-out;
+    background-color: #2993ad;
+}
+
+.center {
+    margin: auto;
+}
+
+.noBG{
+    background-color: white;
+}
+
+.hide{
+   
+}
+.warning{
+    display:none;
+}
+/* .content {
+    flex-grow: 1;
+} */
+/*MODAL CSS CODE EXTRACTED FROM BOOTSTRAP */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    z-index: 1050;
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    overflow: hidden;
+    outline: 0
+   
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: .5rem;
+    pointer-events: none
+}
+
+.modal.fade .modal-dialog {
+    transition: -webkit-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    transition: transform .3s ease-out, -webkit-transform .3s ease-out;
+    -webkit-transform: translate(0, -50px);
+    transform: translate(0, -50px)
+}
+
+@media (prefers-reduced-motion:reduce) {
+    .modal.fade .modal-dialog {
+        transition: none
+    }
+}
+
+.modal.show .modal-dialog {
+    -webkit-transform: none;
+    transform: none
+}
+
+.modal.modal-static .modal-dialog {
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02)
+}
+
+.modal-dialog-scrollable {
+    display: -ms-flexbox;
+    display: flex;
+    max-height: calc(100% - 1rem)
+}
+
+.modal-dialog-scrollable .modal-content {
+    max-height: calc(100vh - 1rem);
+    overflow: hidden
+}
+
+.modal-dialog-scrollable .modal-footer,
+.modal-dialog-scrollable .modal-header {
+    -ms-flex-negative: 0;
+    flex-shrink: 0
+}
+
+.modal-dialog-scrollable .modal-body {
+    overflow-y: auto
+}
+
+.modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: calc(100% - 1rem)
+}
+
+.modal-dialog-centered::before {
+    display: block;
+    height: calc(100vh - 1rem);
+    height: -webkit-min-content;
+    height: -moz-min-content;
+    height: min-content;
+    content: ""
+}
+
+.modal-dialog-centered.modal-dialog-scrollable {
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    height: 100%
+}
+
+.modal-dialog-centered.modal-dialog-scrollable .modal-content {
+    max-height: none
+}
+
+.modal-dialog-centered.modal-dialog-scrollable::before {
+    content: none
+}
+
+.modal-content {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000
+}
+
+.modal-backdrop.fade {
+    opacity: 0
+}
+
+.modal-backdrop.show {
+    opacity: .5
+}
+
+.modal-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px)
+}
+
+.modal-header .close {
+    padding: 1rem 1rem;
+    margin: -1rem -1rem -1rem auto
+}
+
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5
+}
+
+.modal-body {
+    position: relative;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1rem
+}
+
+.modal-footer {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    padding: .75rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px)
+}
+
+.modal-footer>* {
+    margin: .25rem
+}
+
+.modal-scrollbar-measure {
+    position: absolute;
+    top: -9999px;
+    width: 50px;
+    height: 50px;
+    overflow: scroll
+}
+
+@media (min-width:576px) {
+    .modal-dialog {
+        max-width: 500px;
+        margin: 1.75rem auto
+    }
+
+    .modal-dialog-scrollable {
+        max-height: calc(100% - 3.5rem)
+    }
+
+    .modal-dialog-scrollable .modal-content {
+        max-height: calc(100vh - 3.5rem)
+    }
+
+    .modal-dialog-centered {
+        min-height: calc(100% - 3.5rem)
+    }
+
+    .modal-dialog-centered::before {
+        height: calc(100vh - 3.5rem);
+        height: -webkit-min-content;
+        height: -moz-min-content;
+        height: min-content
+    }
+
+    .modal-sm {
+        max-width: 300px
+    }
+}
+
+@media (min-width:992px) {
+
+    .modal-lg,
+    .modal-xl {
+        max-width: 800px
+    }
+}
+
+@media (min-width:1200px) {
+    .modal-xl {
+        max-width: 1140px
+    }
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: .875rem;
+    word-wrap: break-word;
+    opacity: 0
+}
+
+.tooltip.show {
+    opacity: .9
+}
+
+.tooltip .arrow {
+    position: absolute;
+    display: block;
+    width: .8rem;
+}
+
+
+/*=========================================================================*/
+/*BASE CSS (HEADER AND FOOTER) */
+/*=========================================================================*/
+.dean{
+    width:100%;
+    display:flex;
+    background-image: url("./images/banner_dean.png"); 
+    background-color: #05223a;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: bottom;
+    color:white;
+    padding-top:40px;
+    padding-bottom:40px;
+}
+.dean hr{
+    opacity:0.3;
+}
+.dean .leftContent{
+    display:block;
+   
+    width:50%;
+    margin:auto;
+    margin-top:10px;
+    text-align: center;
+    justify-content: space-around;
+}
+.dean .leftContent img{
+    width:250px;
+    margin:auto;
+    
+    border-radius:250px;
+    border:10px solid white;
+
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.dean .leftContent h5{
+    font-weight: lighter;
+}
+.dean .rightContent {
+    width:70%;
+    margin-left:10px;
+    margin-right:200px;
+}
+.dean .rightContent h3{
+    font-size:200%;
+}
+.dean .rightContent span{
+    font-size:12px;
+    width:50px;
+    white-space: pre-line;
+  
+   
+}
+.dean .rightContent hr{
+    width:50%;
+    margin-top:5px;
+}
+.banner nav {
+    position: fixed;
+    z-index: 10;
+    display: flex;
+    height: 100px;
+    width: 100%;
+    background: #074873;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.banner nav .logo {
+    color: #fff;
+
+  
+}
+
+.banner nav .logo {
+    display: flex;
+    float: left;
+    margin-left: 5px;
+}
+
+.banner nav .logo img {
+
+    margin: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+    width:35px;
+}
+
+
+.banner nav .logo h1 {
+    font-size: 18px;
+    color: white;
+    margin-left: 20px;
+    width: 360px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.banner nav .logo .headerLong{
+    display:block;
+}
+.banner nav .logo .headerShort{
+    display:none;
+}
+
+
+.banner nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.banner nav ul li {
+    margin: 0 5px;
+}
+
+.banner nav ul .account {
+    color: white;
+}
+
+.banner nav ul li p {
+    margin-top: auto;
+    margin-bottom: auto;
+
+    font-size: 18px;
+    color: white;
+}
+
+.banner nav ul li button {
+    font-size: 18px;
+    padding: 0px 20px;
+    border-radius: 20px;
+    border: none;
+    color: white;
+    background-color: none;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.banner nav ul li button:hover {
+    background-color: #004064;
+    transition: 0.3s ease-out;
+}
+
+.banner nav ul li .account p {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.banner nav ul li a {
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.banner nav ul li a.active,
+.banner nav ul li a:hover {
+    color: #111;
+    background: #fff;
+}
+
+.banner nav .menu-btn i {
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    display: none;
+}
+
+.banner input[type="checkbox"] {
+    display: none;
+}
+
+.modal-footer {
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+
+}
+
+.modal-footer a {
+    padding: 15px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    text-decoration: none;
+    color: grey;
+    font-size: 14px;
+}
+
+.modal-footer a:hover {
+    background-color: #1C45EF;
+    color: white;
+    transition: 1s;
+
+}
+
+/*=========================================================================*/
+/*HOME PAGE */
+/*=========================================================================*/
+.contents {
+    display: flex;
+    transition: 0.5s ease-in-out;
+    width: 100%;
+}
+
+.contents .events {
+    width:20%;
+    padding: 20px 0px;
+    margin:auto;
+    margin-top:10px;
+}
+
+.contents hr {
+    opacity: 0.3;
+}
+
+.contents .events h1 {
+    font-size:200%;
+    color: #004064;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-align: center;
+    width: 100%;
+
+    margin: 10px 10px 10px 10px;
+}
+
+.contents .events .events_thread {
+   
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    background-color: white;
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    padding: 30px 20px;
+    width: 100%;
+    border-radius: 10px;
+
+}
+
+.contents .events .events_thread hr {
+    width: 100%;
+    opacity: 0.5;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+
+.contents .events .events_thread .info {
+    font-size: 14px;
+    overflow-wrap: break-word;
+
+}
+
+.contents .events .events_thread h2 i {
+    margin-right: 10px;
+}
+
+.contents .announcement_content {
+    width: 75%;
+}
+
+.announcement_title {
+    color:#004064;
+    text-align: center;
+
+}
+
+.announcement_thread {
+    /*
+    h2 title
+    h3 date
+    span content
+    img image
+    a action
+    */
+    margin: auto;
+    display: block;
+    background-color: white;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 50%;
+    border-radius: 10px;
+    padding: 20px 30px;
+    
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    overflow: hidden;
+}
+
+.announcement_thread .removePost {
+    color: red;
+    cursor: pointer;
+}
+
+.announcement_thread h2 {
+    font-size: 16px;
+}
+
+.announcement_thread h3 {
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.announcement_thread hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+    opacity: 0.3;
+}
+
+.announcement_thread span {
+    width:100%;
+    font-size: 12px;
+    padding: 10px 0px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #3b3b3b;
+    white-space: pre-line;
+    text-align: center;
+    overflow-wrap: break-word;
+   
+ 
+
+}
+
+.announcement_thread img {
+    transition: 0.2s ease-out;
+    width: 100%;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 10px;
+    max-height:fit-content;
+    border: 1px solid #8e8e8e;
+
+}
+
+.announcement_thread img:hover {
+    opacity: 0.7;
+    transition: 0.2s ease-in;
+}
+
+
+.announcement_thread form .announcement_field input {
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: 1px solid #efefef;
+    width: 100%;
+}
+
+.announcement_thread form .announcement_field input:focus {
+    border: 1px solid;
+    transition: 0.5s ease;
+}
+
+.announcement_thread form .announcement_field_content textarea {
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 10px;
+    border: 1px solid #efefef;
+    width: 100%;
+    margin-top: 15px;
+    resize: none;
+    height: 150px;
+}
+
+.announcement_thread form .announcement_field_content textarea:focus {
+    border: 1px solid;
+    transition: 0.5s ease;
+}
+
+.announcement_thread form .announcement_field label {
+    font-size: 14px;
+}
+
+.announcement_thread form .announcement_field label i {
+    color: #8e8e8e;
+}
+
+.announcement_thread form .announcement_field button {
+    width: 100%;
+    border-radius: 20px;
+}
+
+.announcement_thread .adminActions{
+    display:block;
+    width:100%;
+    justify-content: space-around;
+
+}
+
+.announcement_thread .adminActions .announcement_field button{
+    width:100%;
+    height:100px;
+    font-size:21px;
+}
+
+
+/*
+
+.banner{
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    z-index: 1;
+    background-color: #1a5dac;
+    justify-content: space-between;
+}
+
+
+
+.banner .links ul{
+
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    color:white;
+    margin-top:auto;
+    margin-bottom:auto;
+}
+
+.banner .links ul li{
+    margin: 0 5px;
+    margin-top:auto;
+    margin-bottom:auto;
+}
+.banner .links ul li:hover{
+    cursor:pointer;
+}
+
+.banner .account{
+    float:right;
+    display: flex;
+    margin-top:auto;
+    margin-bottom:auto;
+    margin-right:10px;
+    
+}
+
+.banner .account p{
+    color: white;
+    font-size: 1.4em;
+ 
+}
+
+.banner .account button{
+    font-size: 18px;
+    color: white;
+    padding:5px 20px;
+    background-color: #002e48;
+    border:none;
+    margin-top:auto;
+    margin-bottom:auto;
+    border-radius: 20px;
+    margin-left:25px;
+    width: 120px;
+}
+
+.banner .account button:hover{
+    cursor: pointer;
+}
+
+*/
+
+
+.footerPage {
+    background-color: #074873;
+    color: white;
+    width: 100%;
+    padding:20px;
+}
+
+.footerPage hr {
+    width: 100%;
+
+}
+
+.footerPage .footerUpper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.footerPage .footerUpper ul {
+    display: block;
+}
+
+.footerPage .footerUpper ul li {
+    list-style: none;
+    padding: 3px 0px;
+
+}
+
+.footerPage .footerUpper ul li a {
+    text-decoration: none;
+    color: white;
+}
+
+.footerPage .footerLower {
+    display: block;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+}
+
+/* .copyright {
+    margin-left: 20%;
+    overflow: hidden;
+}
+
+.copyright p {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    ;
+    width: 50ch;
+    color: white;
+}
+
+.copyright a {
+    color: aqua;
+}
+ */
+
+
+.content {
+    position: relative;
+    top: 100px;
+}
+
+.line_1 {
+    display: none;
+}
+
+.backButton {
+    transition: 0.5s ease;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 10px 20px;
+    color: white;
+    background-color: #004064;
+    border: none;
+    outline: none;
+
+
+}
+
+.backButton:hover {
+    transition: 0.5s ease;
+    background-color: #006299;
+}
+.backButton a{
+    color: white;
+    text-decoration: none;
+}
+
+.normalButton {
+    transition: 0.5s ease;
+    cursor: pointer;
+    margin: auto;
+    padding: 10px 20px;
+    color: white;
+    background-color: #004064;
+    border: none;
+    outline: none;
+    text-decoration:none;
+}
+.normalButton a{
+    color: white;
+    text-decoration: none;
+}
+
+.normalButton:hover {
+    transition: 0.5s ease;
+    background-color: #006299;
+}
+
+
+
+/*=========================================================================*/
+/*END OF BASE CSS */
+/*=========================================================================*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*=========================================================================*/
+/*TABLE CSS (for ADMINS) */
+/*=========================================================================*/
+.tableTitle{
+    text-align: center;
+    color:#004064;
+    font-size:150%;
+}
+.searchTable{
+    width:100%;
+    margin:auto;
+    justify-content: center;
+    
+}
+.searchTable input[type='text']{
+    width:40%;
+    padding:5px 0px;
+    margin:auto;
+}
+.searchTable form{
+    margin:auto;
+    width:100%;
+    
+}
+.table{
+    width:100%;
+    margin:auto;
+    padding:10px 10px;
+
+
+
+}
+.table table{
+    table-layout: auto;
+    width:100%;
+    border-collapse: collapse;
+}
+
+
+.table table thead tr{
+    width:100%;
+}
+.table table thead th{
+    font-size:90%;
+   text-align: center;
+   justify-content: center;
+   margin: auto;
+   height:100px;
+
+}
+
+.table table tbody tr{
+    
+    background-color: white;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  
+}
+
+.table table tbody td{
+    font-size:100%;
+    height:50px;
+    padding:0px 5px;
+}
+.table table tbody td input{
+    border-radius:50px;
+    width:100%;
+
+}
+
+.table table tbody td .information{
+    border-radius:10px;
+    width:100%;
+    margin: auto;
+    color: gray;
+    font-size: 80%;
+}
+.table table tbody td input:disabled, .information{
+    outline:none;
+    border:none;
+    padding:10px 10px;
+    background-color: #eeeeee;
+
+}
+.table table tbody td input:enabled{
+    outline:1px;
+    padding:10px 10px;
+    background-color: #eeeeee;
+    border:1px solid grey;
+
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*=========================================================================*/
+/*LOGIN PAGE and REGISTER PAGE CSS */
+/*=========================================================================*/
+
+.welcome {
+
+    text-align: center;
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 40px;
+
+}
+
+.welcome h1{
+    font-size:60px;
+}
+.welcome h3{
+    font-size:26px;
+}
+
+.form_modal {
+
+    border-radius: 10px;
+    background-color: white;
+    margin: auto;
+    width: 350px;
+    margin-bottom: 200px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.form_modal .formHeader {
+    border-radius: 10px 10px 0px 0px;
+    color: white;
+    background-color: #318BA2;
+    padding: 15px 50px;
+    text-align: center;
+    width: 100%;
+
+}
+
+.form_modal form {
+    margin: 20px;
+    padding: 20px 10px;
+}
+
+.form_modal form hr {
+    width: 80%;
+    margin: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.form_modal form .errorForm {
+    color: red;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.form_modal .form_field {
+    display: flex;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 100%;
+
+
+}
+
+.form_modal form .form_field input {
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: 1px solid #efefef;
+    width: 100%;
+}
+
+.form_modal form .form_field input:focus {
+    border: 1px solid;
+    transition: 0.5s ease;
+}
+
+.form_modal form .form_field .selectField {
+    display: flex;
+
+    width: 100%;
+}
+
+.form_modal form .form_field .selectField label {
+    margin: auto;
+    width: 25%;
+
+    font-size: 14px;
+}
+
+.form_modal form .form_field .selectField select {
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: 1px solid #efefef;
+    color: black;
+    width: 100%;
+    font-size: 14px;
+    text-decoration: none;
+    width: 75%;
+
+}
+
+.form_modal form .form_field .registerSection {
+    display: flex;
+    margin: auto;
+}
+
+.form_modal form .form_field p {
+    font-size: 12px;
+}
+
+.form_modal form .form_field a {
+    font-size: 12px;
+    cursor: pointer;
+    color: blue;
+}
+
+.form_modal form .form_field i {
+    cursor: pointer;
+    margin: auto;
+    padding: 0px 10px;
+}
+
+.form_modal form .form_field .id_number {
+    width: 100%;
+}
+
+.form_modal form .form_field .password {
+    width: 100%;
+}
+
+
+.form_modal form .form_field button {
+    transition: 0.5s ease;
+    color: white;
+    border-radius: 20px;
+    background-color: #074873;
+    padding: 10px 20px;
+    font-size: 14px;
+    margin: auto;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+}
+
+.form_modal form .form_field button:hover {
+    transition: 0.5s ease;
+    background-color: #006299;
+}
+
+
+
+/*=========================================================================*/
+/*END OF LOGIN CSS */
+/*=========================================================================*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*=========================================================================*/
+/*ABOUT US CSS */
+/*=========================================================================*/
+
+.contents .aboutUs{
+    background-color:#074873;
+    padding:50px 10px;
+    width:100%;
+    display:flex;
+    color:white;
+   
+   
+}
+.contents .aboutUs .leftAboutUs{
+    margin:auto;
+    text-align: center;
+    
+}
+
+.contents .aboutUs .leftAboutUs span{
+    font-size:14px;
+}
+.contents .aboutUs .leftAboutUs hr{
+    width:100%;
+    opacity: 0.3;
+    margin-top:10px;
+}
+.contents .aboutUs hr{
+    opacity: 0.1;
+
+}
+.contents .aboutUs .rightAboutUs{
+
+    margin-top:10px;
+    text-align:center;
+
+
+}
+
+.contents .aboutUs .rightAboutUs img{
+    max-width:500px;
+    width:100%;
+    margin:auto;
+}
+.contents .aboutUs .rightAboutUs span{
+    font-size:14px;
+}
+.contents .aboutUs .rightAboutUs hr{
+    width:100%;
+    opacity: 0.3;
+    margin-top:10px;
+}
+
+/* ABOUT US UC MISSION,VISION CSS*/
+.contents .aboutUsUC{
+    width:100%;
+    display:block;
+}
+.contents .aboutUsUC .aboutUsHeader {
+    display:block;
+    margin:auto;
+    width:100%;
+    text-align: center;
+
+}
+.contents .aboutUsUC .aboutUsHeader img {
+    width:200px;
+  
+}
+
+.contents .aboutUsUC .aboutUsHeader h1{
+    font-size:300%;
+}
+.contents .aboutUsUC .aboutUsContent{
+    display:flex;
+    width:100%;
+    margin-top:10px;
+    padding:20px 20px;
+    justify-content: center;
+}
+.contents .aboutUsUC .aboutUsContent .leftAboutUs{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+   
+}
+
+.contents .aboutUsUC .aboutUsContent .centerLine{
+    
+    border:1px solid black;
+}
+
+.contents .aboutUsUC .aboutUsContent .leftAboutUs li{
+    list-style: none;
+    text-align: justify;
+    margin: auto;
+    display:block;
+}
+
+.contents .aboutUsUC .aboutUsContent .rightAboutUs{
+    width:100%;
+    margin-top:20px;
+    margin-left:20px;
+    align-content: flex-start;
+    display:block;
+}
+
+/*------------------------------------------------*/
+.carousel{
+    background-color: black;
+}
+.carousel .carousel-inner .item img{
+    width:100%;
+    height:400px;
+    object-fit: contain;
+}
+
+.developers .title{
+    text-align: center;
+    background-color: #074873;
+    color:white;
+    padding:10px 10px;
+}
+.developers .developer_content .developer_title{
+    font-size:150%;
+    text-align:center;
+}
+.developers .developer_content{
+    display:block;
+    width:100%;
+}
+.developers .developer_content hr{
+    opacity:0.7;
+}
+.developers .developer_content .developer_message{
+    display:block;
+    width:50%;
+    margin:auto;
+}
+.developers .developer_content .developer_members{
+    display:flex;
+    width:100%;
+    margin:auto;
+    justify-content: center;
+}
+.developers .developer_content .developer_members .left{
+    margin:auto;
+    width:80%;
+    display:flex;
+}
+.developers .developer_content .developer_members .left .image_left{
+    width:50%;
+}
+.developers .developer_content .developer_members .left .image_left img{
+    width:25%;  
+    float:right;
+    margin-right:50px;
+   
+    
+}
+.developers .developer_content .developer_members .left .developer_info{
+    display:block;
+    text-align: left;
+    
+    width:50%;
+}
+.developers .developer_content .developer_members .left .developer_info h1{
+    font-size:200%;
+}
+.developers .developer_content .developer_members .left .developer_info h3{
+    font-size:150%;
+}
+.developers .developer_content .developer_members .left .developer_info h4{
+    font-size:150%;
+}
+.developers .developer_content .developer_members .left .developer_info hr{
+    width:80%;
+}
+
+.developers .developer_content .developer_message span{
+    white-space: pre-line;
+    text-align: left;
+    text-justify: auto;
+    font-size:150%;
+}
+
+/*PSITS OFFICERS*/
+.officer_contents{
+    display:block;
+    width:100%;
+    justify-content: space-around;
+}
+
+.officers_container{
+    display:flex;
+    width:100%;
+    margin: 10px 10px;
+}
+.officers_container .officers_div{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.officers_container .officers_div .officers{
+    width:300px;
+    background-color:white;
+    padding:10px 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.officers_container .officers_div .officers img{
+    margin:auto;
+    width:100%;
+}
+/*=========================================================================*/
+/*END OF ABOUT US CSS */
+/*=========================================================================*/
+/*MERCHANDISE CSS*/
+/*==========================================================================*/
+
+.merch_contents{
+    display:block;
+    width:100%;
+    align-items: center;
+    justify-content: space-around;
+}
+.merch_container{
+    display:flex;
+    justify-content: center;
+    align-content:center;
+    width:100%;
+    margin: 10px 10px;
+}
+
+
+.merch_container .merch{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin:auto;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.merch_container .merch .product{
+    width:300px;
+    margin:auto;
+    background-color:white;
+    padding:10px 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.merch_container .merch .product .merch_product{
+    width:100%;
+    height:200px;   
+    object-fit:contain;
+}
+.merch_container .merch .product .title{
+    font-weight: bold;
+    width:100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.merch_container .merch .product .info{
+
+}
+.merch_container .merch .product .price{
+    font-weight:normal;
+    color:red;
+    font-size:150%;
+}
+.merch_container .merch .product .promo{
+
+}
+.merch_container .merch .product .stock{
+
+}
+.merch_container .merch .product button{
+    margin:auto;
+    width:100%;
+}
+/* MERCHANDISE PRODUCT INDIVIDUAL CSS*/
+
+.merch_product_individual{
+    display:flex;
+    width:100%;
+    margin:auto;
+    margin-left:10px;
+    margin-right:10px;
+    justify-content: space-around;
+}
+.merch_product_individual hr{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.merch_product_individual .leftContent {
+    width:100%;
+}
+.merch_product_individual .leftContent img{
+    width:100%;
+    height:400px;   
+    object-fit:contain;
+
+}
+.merch_product_individual .rightContent{
+    width:87%;
+    justify-content: left;
+    margin-left:20px;
+}
+
+.merch_product_individual .rightContent .PSITS_title{
+    font-weight:bold;
+    color:#006299;
+}
+.merch_product_individual .rightContent .merch_title{
+    font-size:350%;
+    font-weight: bold;
+    width:100%;
+
+}
+
+.merch_product_individual .rightContent .merch_description{
+    opacity:0.7;
+
+}
+.merch_product_individual .rightContent .merch_info{
+    opacity:0.7;
+ 
+}
+.merch_product_individual .rightContent .merch_price{
+    margin-top:25px;
+    margin-bottom:25px;
+    font-weight:bolder;
+    font-size:200%;
+}
+.merch_product_individual .rightContent textarea{
+    resize:none;
+    width:70%;
+    height:100px;
+}
+
+.orderTitle{
+    color:#004064;
+    font-size: 150%;
+}
+.orderTitle hr{
+    opacity: 0.3;
+}
+.myOrder{
+    width:100%;
+    margin:auto;
+    margin-left:10px;
+
+
+
+}
+.myOrder table{
+    width:100%;
+    padding:20px 20px;
+    border-collapse: collapse;
+}
+.myOrder table img {
+    width:100px;
+}
+
+.myOrder table thead tr{
+
+}
+.myOrder table thead th{
+    font-size:90%;
+   text-align: center;
+   justify-content: center;
+   margin: auto;
+   height:100px;
+}
+
+.myOrder table tbody tr{
+    background-color: white;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  
+}
+
+.myOrder table tbody td{
+    margin:auto;
+    justify-content: center;
+    text-align: center;
+    white-space: break-spaces;
+    font-size:90%;
+}
+.myOrder table tbody .order_img{
+    width:10%;
+}
+.myOrder table tbody tr .order_info{
+    max-width:100px;
+    white-space: pre-line;
+word-wrap: break-word;
+
+    
+}
+
+/*=========================================================================*/
+/*END OF MERCHANDISE CSS*/
+/*==========================================================================*/
+
+/*===========================================================================*/
+/*FACULTY CSS*/
+/*===========================================================================*/
+.faculty_contents{
+    display:block;
+    width:100%;
+    align-items: center;
+    justify-content: space-around;
+}
+.faculty_container{
+    display:flex;
+    justify-content: center;
+    align-content:center;
+    width:100%;
+    margin: 10px 10px;
+}
+
+
+.faculty_container .faculty{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin:auto;
+ 
+}
+
+.faculty_container .faculty .faculty_member{
+    width:100%;
+    margin-top:50px;
+    margin-bottom:50px;
+
+}
+
+.profile-card .mask-shadow img{
+    max-width:100%;
+  }
+  .profile-card{
+    font-family: 'Open Sans', sans-serif;
+    position:relative;
+    width:300px;
+    height:100%;
+    margin:0 auto;
+    padding:40px 30px 30px;
+    background:#fff;
+    border: 5px solid rgba(255,255,255,.7);
+    text-align:center;
+    border-radius:4px;
+    transition: all 200ms ease;
+  }
+  .mask-shadow{
+    z-index:-1 !important;
+    width:95%;
+    height:12px;
+    background:#000;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:0 auto;
+    position:absolute;
+    border-radius:4px;
+    opacity:0;
+    transition: all 400ms ease-in;
+  }
+  .profile-card:hover{
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    transform: translate3d(0,-5px,0);
+    .mask-shadow{
+      opacity:1;
+      box-shadow: 0px 30px 60px -5px rgba(55,55,71,0.3);
+      position:absolute;
+    }
+  }
+  .profile-card header{
+    display:block;
+    margin-bottom:10px;
+  }
+  .profile-card header a{
+    width:150px;
+    height:150px;
+    display:block;
+    border-radius:100%;
+    margin:-120px auto 0;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  }
+  .profile-card header a img{
+    border-radius: 50%;
+    width:150px;
+    height:150px;
+  }
+  
+  .profile-card:hover header a, .profile-card header a:hover{
+    animation: bounceOut .4s linear; 
+    -webkit-animation: bounceOut .4s linear;
+  }
+  .profile-card header h1{
+    font-size:20px;
+    color:#444;
+    text-transform:uppercase;
+    margin-bottom:5px;
+  }
+  .profile-card header h2{
+    font-size:14px;
+    color:#acacac;
+    text-transform:uppercase;
+    margin:0;
+  }
+  /*content*/
+  .profile-bio{
+    font-size:14px;
+    color:#a5a5a5;
+    line-height:1.7;
+    font-style: italic;
+    margin-bottom:30px;
+  }
+ .profile-bio span{
+    white-space: pre-line;
+ }
+  
+  
+/*===========================================================================*/
+/*END OF FACULTY CSS*/
+/*===========================================================================*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+/*=========================================================================*/
+/*MOBILE RESPONSIVENESS CSS */
+/*=========================================================================*/
+
+@media (max-width: 1168px) {
+
+    .banner nav {
+        padding: 0 40px 0 50px;
+        z-index: 1;
+    }
+}
+
+@media (max-width: 1168px) {
+
+    .banner nav {
+        z-index: 1;
+    }
+
+    .banner nav .bannerLine {
+        display: block;
+    }
+
+    .banner nav .menu-btn i {
+        display: block;
+    }
+
+    #click:checked~.menu-btn i:before {
+        content: "\f00d";
+    }
+
+    .banner nav ul {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        background: #111;
+        height: 100vh;
+        width: 100%;
+        text-align: center;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    #click:checked~ul {
+        left: 0;
+    }
+
+    .banner nav ul li {
+        width: 100%;
+        margin: 40px 0;
+    }
+
+    .banner nav ul li a {
+        width: 100%;
+        margin-left: -100%;
+        display: block;
+        font-size: 20px;
+        transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    #click:checked~ul li a {
+        margin-left: 0px;
+    }
+
+    .banner nav ul li a.active,
+    .banner nav ul li a:hover {
+        background: none;
+        color: cyan;
+    }
+}
+
+
+@media(max-width: 1000px) {
+    .dean{
+        display:block;
+        width:100%;
+
+    }
+    .dean .leftContent{
+        width:100%;
+    }
+    .dean .rightContent{
+        margin:0;
+        width:80%;
+        margin:auto;
+
+    }
+    .dean .rightContent h3{
+        text-align: center;
+        
+    }
+    .dean .rightContent span{
+       width:200px;
+       margin:auto;
+
+    }
+    .dean hr{
+        width:50%;
+        margin:auto;
+        opacity:0.3;
+    }
+    /* THIS IS*/
+    /* .content {
+        position: relative;
+        top: 80px;
+    } */
+
+    .copyright {
+        margin-left: 200px;
+    }
+
+    .copyright p {
+        position: absolute;
+        width: 50ch;
+        font-size: 0.8em;
+        text-align: center;
+    }
+
+    .announcement_content {
+        width: 100%;
+        margin: auto;
+    }
+    
+    .contents .announcement_content {
+        width: 100%;
+    }
+
+    .announcement_thread {
+        width: 100%;
+    }
+
+    .contents {
+        display: block;
+       
+        margin-left: none;
+        margin-right: none;
+        margin: auto;
+        padding: none;
+    }
+
+    .contents .events {
+        width: 100%;
+    }
+
+    .contents .events .events_thread {
+
+
+        display: block;
+        padding: 50px 50px;
+        margin-left: 0;
+        margin: auto;
+        margin-top:15px;
+        margin-bottom:15px;
+
+    }
+
+    .contents .events .events_thread h2 {
+        width: 100%;
+        margin-left: 0px;
+        margin: auto;
+
+    }
+
+    .contents .events .normalButton {
+        width: 60%;
+        align-content: center;
+        margin: auto;
+    }
+    .footerPage {
+        font-size: 12px;
+        width:100%;
+        margin-left:0px;
+        margin-right:0px;
+    }
+
+    .footerPage .footerUpper {
+        display: block;
+        justify-content: center;
+    }
+    /*
+    ABOUT US 
+    */
+    .contents .aboutUs{
+        background-color:#074873;
+        padding:50px 10px;
+        width:100%;
+        display:block;
+        justify-content: center;
+        margin:auto;
+      
+
+    }
+    .contents .aboutUs .leftAboutUs{
+        margin:auto;
+        width:100%;
+       
+    }
+    .contents .aboutUsUC .aboutUsContent{
+        display:block;
+    }
+    .contents .aboutUsUC .aboutUsContent .centerLine{
+        border:none;
+    }
+    .developers .developer_content .developer_members .left .image_left img{
+        width:90%;  
+  
+       
+        
+    }
+    .developers .developer_content .developer_members .left .developer_info h1{
+        font-size:150%;
+    }
+    .developers .developer_content .developer_members .left .developer_info h3{
+        font-size:120%;
+    }
+    .developers .developer_content .developer_members .left .developer_info h4{
+        font-size:120%;
+    }
+    .developers .developer_content .developer_message{
+        width:80%;
+    }
+    .developers .developer_content .developer_message span{
+
+        font-size:120%;
+    }
+    /*MERCHANDISE*/
+    .merch_product_individual{
+        display:block;
+        width:100%;
+        align-items: center;
+   
+    }
+    .hide{
+        display:none;
+    }
+    .warning{
+        display:block;
+    }
+    
+}
+
+@media(max-width:915px){
+    .banner nav .logo h1{
+        width:400px;
+    }
+    .announcement_thread .adminActions{
+        display:block;
+    }
+}
+@media(max-width: 679px) {
+
+    .line_1 {
+        display: block;
+    }
+
+    .banner nav {
+        z-index: 1;
+    }
+
+    .banner nav .logo h1 {
+        width:100%;
+    }
+    .banner nav .logo .headerLong {
+        display:none;
+    }
+    .banner nav .logo .headerShort {
+        display:block;
+    }
+
+    /* 
+    .content {
+        position: relative;
+        top: 55px;
+    } */
+
+
+    /* .copyright {
+        margin-left: 200px;
+    }
+
+    .copyright p {
+        position: absolute;
+        width: 50ch;
+        font-size: 0.4em;
+        text-align: center;
+    } */
+
+    .banner .account p {
+        border: 0;
+        margin: 0;
+        font-size: 14px;
+    }
+
+
+    .announcement_content {
+        width: 100%;
+
+    }
+
+@media(max-width: 363px){
+    .footerPage {
+        width:100%;
+        margin-left:0px;
+        margin-right:0px;
+
+    }
+    .footerPage .footerUpper{
+        width:100%;
+    }
+    .footerPage .footerLower{
+        width:100%;
+    }
+
+
+}
+
+}
+
+
+
+
