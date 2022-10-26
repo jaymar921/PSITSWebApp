@@ -1,4 +1,4 @@
-﻿namespace PSITS_Web_Application.Models.Objects
+﻿namespace PSITSWeb_ASP.NET.data.Models.Objects
 {
     public class Merchandise
     {

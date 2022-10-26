@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PSITS_Web_Application.Models.Data;
+using PSITSWeb_ASP.NET.data.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,6 +30,15 @@ namespace PSITS_Web_Application
 
             services.AddSingleton<SQLConnector>();
             services.AddScoped<IDataRepository, DataRepository>();
+
+            // adding cookie authentication
+            services.AddAuthentication(
+                    option =>
+                    {
+                        option.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    }
+                )
+                .AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +58,8 @@ namespace PSITS_Web_Application
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            // always put authentication between use routing and endpoints
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

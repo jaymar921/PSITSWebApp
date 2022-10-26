@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PSITS_Web_Application.Models;
-using PSITS_Web_Application.Models.Data;
+using PSITS_Web_Application.ViewModels;
+using PSITSWeb_ASP.NET.data.Models.Data;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PSITS_Web_Application.Controllers
 {
+
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -20,7 +25,7 @@ namespace PSITS_Web_Application.Controllers
         public IActionResult Index()
         {
             
-            return View(dataRepository.GetAccount("Abejar"));
+            return View(new HomeViewModel(dataRepository));
         }
 
         public IActionResult Privacy()

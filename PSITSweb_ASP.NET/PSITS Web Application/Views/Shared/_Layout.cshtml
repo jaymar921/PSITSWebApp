@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie-edge,Chome=1">
-    <title>@ViewData["Title"] </title>
+    <title>@ViewData["Title"] - ASP.NET</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/base.css" />
@@ -46,7 +46,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a href="/PSITS@Logout">YES</a>
+                    <a asp-controller="Account" asp-action="Logout">YES</a>
                     <a data-dismiss="modal">NO</a>
                 </div>
 
@@ -72,18 +72,34 @@
                 <i class="fas fa-bars"></i>
             </label>
             <ul>
-                
 
-                <li><p><i class="fa-solid fa-circle-user"></i> ACCOUNT | </p></li>
-                
+                @{
+                    // Grab the cookie yum yum
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <li><p><i class="fa-solid fa-circle-user"></i> @User.Identity.Name.ToUpper() | </p></li>
+                    }
+                }
+
+
                 <li><a href="#">HOME</a></li>
                 <li><a href="#">ABOUT US</a></li>
                 <li><a href="#">MERCH</a></li>
                 <li><a href="#">FACULTY</a></li>
                 <li><hr class="bannerLine" style="display:none;"></li>
 
-                <li style="display: block"><a onclick="location.href='/PSITS@Login'" style="cursor:pointer;">LOG IN</a></li>
-                <li style="display: block"><a data-toggle="modal" data-target="#logoutModal" style="cursor:pointer;">LOG OUT</a></li>
+                @{
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <li style="display: block"><a data-toggle="modal" data-target="#logoutModal" style="cursor:pointer;">LOG OUT</a></li>
+                    }
+                    else
+                    {
+                        <li style="display: block"><a asp-controller="Account" asp-action="Login" style="cursor:pointer;">LOG IN</a></li>
+                    }
+                }
+
+
             </ul>
         </nav>
     </div>
@@ -96,8 +112,10 @@
     <br />
     <br />
     <br />
+    <br />
+    <br />
 
-    <div class="footerPage">
+    <footer class="footerPage">
 
         <div class="footerUpper">
             <ul>
@@ -114,17 +132,14 @@
                 <li><a href="/PSITS">Events</a></li>
                 <li><a href="/PSITS@Merchandise">Merchandise</a></li>
             </ul>
-
         </div>
-
         <div class="footerLower">
             <br />
             <hr>
             <br />
             <p></p><a href="/PSITS@AboutUs" style="color: white;">PSITS&copy;2022 - Developed by PSITS OFFICERS and CO.</a></p>
         </div>
-
-    </div>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

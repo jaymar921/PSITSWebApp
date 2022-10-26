@@ -1,4 +1,4 @@
-﻿namespace PSITS_Web_Application.Models.Entity
+﻿namespace PSITSWeb_ASP.NET.data.Models.Entity
 {
     public class Account
     {
@@ -10,5 +10,6 @@
         public int Year { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Role { get; set; }
     }
 }

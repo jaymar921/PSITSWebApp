@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
+using System.Threading.Tasks;
 
-namespace PSITS_Web_Application.Models.Data
+namespace PSITSWeb_ASP.NET.data.Models.Data
 {
     public class SQLConnector
     {
@@ -10,7 +11,13 @@ namespace PSITS_Web_Application.Models.Data
 
         public SQLConnector(IConfiguration configuration)
         {
-            connStr = configuration.GetConnectionString("PSITSweb");
+            bool debug;
+            bool.TryParse(configuration["Environment:Development"], out debug);
+
+            if (debug)
+                connStr = configuration.GetConnectionString("PSITSwebDebugging");
+            else
+                connStr = configuration.GetConnectionString("PSITSweb");
 
         }
         public MySqlConnection GetConnection()
@@ -26,7 +33,7 @@ namespace PSITS_Web_Application.Models.Data
                 conn.Open();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -38,6 +45,14 @@ namespace PSITS_Web_Application.Models.Data
             var conn = GetConnection();
             conn.Open();
             return new MySqlCommand(query, conn).ExecuteReader();
+        }
+
+        public async Task<MySqlDataReader> ExecuteQueryReturnAsync(string query)
+        {
+            var conn = GetConnection();
+            conn.Open();
+            MySqlCommand sqlCommand = new MySqlCommand(query, conn);
+            return (MySqlDataReader)await sqlCommand.ExecuteReaderAsync();
         }
 
         // Must be disposed

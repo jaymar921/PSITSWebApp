@@ -1,7 +1,7 @@
-﻿using PSITS_Web_Application.Models.Entity;
+﻿using PSITSWeb_ASP.NET.data.Models.Entity;
 using System;
 
-namespace PSITS_Web_Application.Models.Objects
+namespace PSITSWeb_ASP.NET.data.Models.Objects
 {
     public class PSITSOrders
     {

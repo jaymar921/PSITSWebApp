@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PSITS_Web_Application.Models.Objects
+namespace PSITSWeb_ASP.NET.data.Models.Objects
 {
-    public class Announcements
+    public class Announcement
     {
         public int Id { get; set; }
         public string Title { get; set; }

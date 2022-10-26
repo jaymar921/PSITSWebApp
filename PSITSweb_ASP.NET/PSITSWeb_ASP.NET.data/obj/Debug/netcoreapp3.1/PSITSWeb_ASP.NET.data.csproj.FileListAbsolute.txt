@@ -1,0 +1,10 @@
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.deps.json
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.csproj.AssemblyReference.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.GeneratedMSBuildEditorConfig.editorconfig
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.AssemblyInfoInputs.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.AssemblyInfo.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.csproj.CoreCompileInputs.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITSWeb_ASP.NET.data\obj\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.pdb
