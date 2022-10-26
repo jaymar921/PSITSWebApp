@@ -18,6 +18,15 @@
     <div class="formHeader">
         <h3>LOG IN</h3>
     </div>
+    @{
+        if (TempData["AccountInformation"] != null)
+        {
+            <br />
+            <div class="alert alert-primary text-center" role="alert">
+                @TempData["AccountInformation"]
+            </div>
+        }
+    }
     <form method="post" asp-route="Login">
 
         <input type="hidden" asp-for="ReturnUrl" />
@@ -49,7 +58,7 @@
         <div class="form_field">
 
             <div class="registerSection">
-                <p>Don’t have an account yet? </p><a onclick="register()">Register</a>
+                <p>Don’t have an account yet? </p><a asp-controller="Account" asp-action="Register">Register</a>
             </div>
 
         </div>

@@ -1,0 +1,115 @@
+﻿@model Account
+
+    <br /><br /><br class="line_1" /><br class="line_1" />
+    <a class="backButton" asp-controller="Home" asp-action="Index">Back</a>
+
+    <div class="content">
+        <br>
+                <div class="form_modal">
+                    <div class="formHeader">
+                        <h3>Register</h3>
+                    </div>
+
+                    @{
+                        if (TempData["AccountInformation"] != null)
+                        {
+                            <br />
+                            <div class="alert alert-danger text-center" role="alert">
+                                @TempData["AccountInformation"]
+                            </div>
+                        }
+                    }
+
+                    <form asp-route="Register" method="post">
+
+                        <div class="form_field">
+                            <i class="fa-solid fa-user"></i><input asp-for="Id" placeholder="ID NUMBER" pattern="[0-9]{7,}" required>
+                        </div>
+                        <div class="form_field">
+                            <input asp-for="RFID" type="number" placeholder="RFID Code (can leave empty)"
+                                   pattern="[0-9]{7,}">
+                        </div>
+                        <div class="form_field">
+                            <input asp-for="Firstname" type="text" placeholder="Firstname" pattern="[a-zA-ZÑñ ]{3,}"
+                                   required>
+                        </div>
+                        <div class="form_field">
+                            <input asp-for="LastName" type="text" placeholder="Lastname" pattern="[a-zA-ZÑñ ]{2,}" required>
+                        </div>
+                        <div class="form_field">
+                            <div class="selectField">
+
+                                <label for="course">Course</label>
+
+                                <select asp-for="Course">
+                                    <option value="BSIT">BSIT</option>
+                                    <option value="BSCS">BSCS</option>
+                                    <option value="ACT">ACT</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_field">
+                            <div class="selectField">
+                                <label for="year">Year</label>
+
+                                <select asp-for="Year">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_field">
+                            <i class="fa-solid fa-envelope"></i><input asp-for="Email" type="text" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form_field">
+                            <i class="fa-solid fa-lock"></i><input asp-for="Password" name="password" id="password" type="password" placeholder="Password" onchange="onChange()"
+                                                                   required> <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+                        </div>
+                        <div class="form_field">
+                            <i class="fa-solid fa-check"></i>
+                            <input id="confirm" name="confirm" type="password" placeholder="Confirm Password" onchange="onChange()"
+                                   required> <i class="fa-solid fa-eye-slash" id="toggleConfirmPassword"></i>
+
+                        </div>
+
+                        <br>
+                        <div class="form_field">
+                            <button type="submit">Register</button>
+                        </div>
+                        <br />
+                        <hr>
+                        <div class="form_field">
+
+                            <div class="registerSection">
+                                <p>Already have an account? </p><a asp-controller="Account" asp-action="Login">Log In</a>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+    </div>
+    <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+    const toggleConfirmPassword = document.querySelector("#toggleConfirmPassword");
+    const confirmpassword = document.querySelector("#confirm");
+    togglePassword.addEventListener("click", function () {
+        // toggle the type attribute
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+        // toggle the icon
+        this.classList.toggle("fa-eye");
+    });
+
+    toggleConfirmPassword.addEventListener("click", function () {
+        // toggle the type attribute
+        const type = confirmpassword.getAttribute("type") === "password" ? "text" : "password";
+        confirmpassword.setAttribute("type", type);
+        // toggle the icon
+        this.classList.toggle("fa-eye");
+    });
+
+    </script>

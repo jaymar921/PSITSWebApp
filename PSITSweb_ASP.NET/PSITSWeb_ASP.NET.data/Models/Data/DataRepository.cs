@@ -136,6 +136,39 @@ namespace PSITSWeb_ASP.NET.data.Models.Data
 
         }
 
+        public Account GetAccountById(int id)
+        {
+
+            Account account = null;
+
+            string query = $"SELECT * FROM accounts where " +
+                $"idno = {id}";
+
+            using (var reader = connector.ExecuteQueryReturn(query))
+            {
+                if (reader.Read())
+                {
+                    account = new Account
+                    {
+                        Id = (int)reader[0],
+                        RFID = (string)reader[1],
+                        Firstname = (string)reader[2],
+                        LastName = (string)reader[3],
+                        Course = (string)reader[4],
+                        Year = (int)reader[5],
+                        Email = (string)reader[6],
+                        Password = (string)reader[7],
+                    };
+                    setRole(account);
+                }
+                if (account != null)
+                    return account;
+                return null;
+            }
+
+
+        }
+
         public IEnumerable<Account> GetAllAccounts()
         {
             throw new NotImplementedException();
@@ -167,6 +200,22 @@ namespace PSITSWeb_ASP.NET.data.Models.Data
                     );
                 }
                 return announcements;
+            }
+        }
+
+        public bool RegisterAccount(Account account)
+        {
+            string query = $"INSERT INTO accounts values ({account.Id}, '{account.RFID}','{account.Firstname}','{account.LastName}','{account.Course}',{account.Year},'{account.Email}','{account.Password.HashMD5()}')";
+
+            try
+            {
+                connector.ExecuteQuery(query);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
             }
         }
     }

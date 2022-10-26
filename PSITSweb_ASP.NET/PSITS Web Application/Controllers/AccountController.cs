@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using PSITS_Web_Application.Models.Auth;
 using PSITSWeb_ASP.NET.data.Models.Data;
+using PSITSWeb_ASP.NET.data.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +18,12 @@ namespace PSITS_Web_Application.Controllers
     public class AccountController: Controller
     {
         private readonly IDataRepository dataRepository;
+        private readonly LinkGenerator linkGenerator;
 
-        public AccountController(IDataRepository dataRepository)
+        public AccountController(IDataRepository dataRepository, LinkGenerator linkGenerator)
         {
             this.dataRepository = dataRepository;
+            this.linkGenerator = linkGenerator;
         }
 
         [AllowAnonymous]
@@ -34,7 +38,13 @@ namespace PSITS_Web_Application.Controllers
         {
             var user = dataRepository.GetAccountByUserAndPass(model.Username, model.Password);
             if (user == null)
-                return Unauthorized();
+            {
+                if (dataRepository.GetAccountById(int.Parse(model.Username)) != null)
+                    TempData["AccountInformation"] = "Invalid Password";
+                else TempData["AccountInformation"] = "Account not found :/";
+                return View();
+            }
+                
 
 
             var claims = new List<Claim>
@@ -61,6 +71,34 @@ namespace PSITS_Web_Application.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect("/");
+        }
+
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Register(Account account)
+        {
+            
+            var oldAcc = dataRepository.GetAccountById(account.Id);
+            if(oldAcc != null)
+            {
+                TempData["AccountInformation"] = "Account already exists!";
+                return View();
+            }
+
+            if (!dataRepository.RegisterAccount(account))
+            {
+                TempData["AccountInformation"] = "Registration Failure";
+                return View();
+            }
+            TempData["AccountInformation"] = "Account Created";
+
+            return RedirectToAction("Login", "Account");
         }
     }
 }

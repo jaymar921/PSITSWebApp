@@ -52,3 +52,4 @@ D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS W
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.dll
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.pdb
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs

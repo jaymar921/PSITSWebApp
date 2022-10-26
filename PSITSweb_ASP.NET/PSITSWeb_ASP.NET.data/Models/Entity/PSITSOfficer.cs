@@ -1,6 +1,4 @@
-﻿using PSITSWeb_ASP.NET.data.Models.Entity;
-
-namespace PSITS_Web_Application.Models.Entity
+﻿namespace PSITSWeb_ASP.NET.data.Models.Entity
 {
     public class PSITSOfficer
     {

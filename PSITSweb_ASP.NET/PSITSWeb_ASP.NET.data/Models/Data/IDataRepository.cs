@@ -9,10 +9,10 @@ namespace PSITSWeb_ASP.NET.data.Models.Data
     {
         IEnumerable<Account> GetAllAccounts();
         Account GetAccount(string search);
-
+        Account GetAccountById(int id);
         Account GetAccountByUserAndPass(string user, string pass);
-
         Task<IEnumerable<Announcement>> GetAllAnnouncementsAsync();
+        bool RegisterAccount(Account account);
 
     }
 }
