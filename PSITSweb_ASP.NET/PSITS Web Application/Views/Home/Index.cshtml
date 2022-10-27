@@ -2,16 +2,68 @@
 @{
     ViewData["Title"] = "PSITS";
 }
-<br /><br /><br /><br /><br /><br />
-<div class="text-center">
-    @{
-        foreach(var announcement in await Model.GetAnnouncementsAsync())
-            {
-                <h1 class="display-4">@announcement.Title</h1>
-                <h5>@announcement.Content</h5>
-            }
-    }
-    <p>Retrieved from PSITS Database</p>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<partial name="_HomePartial" />
+
+<div class="contents">
+
+
+
+    <div class="announcement_content">
+        <br>
+        <br>
+        @{
+            string option = "BUTTONS";
+            <partial name="_AdminMenu" model="option" />
+        }
+        <div class="announcement_title">
+            <br /><br />
+            <h1>ANNOUNCEMENTS</h1>
+            <br /><br />
+        </div>
+        @{
+            option = "POST_THREADS";
+            <partial name="_AdminMenu" model="option" />
+        }
+        <br />
+
+        @foreach (var announcement in await Model.GetAnnouncementsAsync())
+        {
+            <partial name="_AnnouncementPartial" model="announcement" />
+        }
+        <br><br><br>
+    </div>
+    <hr>
+    <div class="events">
+        <h1>Upcoming Events</h1>
+
+
+        @{
+            option = "ADD_EVENTS";
+            <partial name="_AdminMenu" model="option" />
+        }
+
+        <br />
+        <!--
+            {% for event in events %}
+            <div class="events_thread">
+                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
+                <hr>
+                <br />
+                <span class="info">{{ event.information }}</span>
+            </div>
+            {% endfor %}
+        -->
+        <br>
+    </div>
+
+
+
+
 </div>
-<br /><br /><br /><br /><br /><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -1,0 +1,23 @@
+﻿@model Announcement
+
+<div class="announcement_thread">
+    <h2>@Model.Title</h2>
+
+    <h3>(@Model.PublishedDate.ToShortDateString())</h3>
+    <hr>
+    <span>@Model.Content</span>
+    
+    @if (!string.IsNullOrWhiteSpace(Model.ImgUrl)) { 
+        <img class="announcement_image"  loading="lazy" src="@Model.ImgUrl" >
+    }
+    
+    @{ 
+        if (User.IsInRole("ADMIN"))
+        {
+            <a onclick="#" class="removePost">Remove</a>
+        }
+    }
+    <br />
+    <br />
+    <br />
+</div>

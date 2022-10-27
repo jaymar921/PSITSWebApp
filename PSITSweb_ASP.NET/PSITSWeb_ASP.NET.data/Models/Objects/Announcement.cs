@@ -8,5 +8,6 @@ namespace PSITSWeb_ASP.NET.data.Models.Objects
         public string Title { get; set; }
         public DateTime PublishedDate { get; set; }
         public string Content { get; set; }
+        public string ImgUrl { get; set; }
     }
 }

@@ -1,6 +1,44 @@
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\appsettings.json
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.exe
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\banner_dean.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\CCS_LOGO.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\durano.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\ferrer.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\harold.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\jay.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\nat.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\devs\pia.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\amores.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\basabe.jpg
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\basabe.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\caminade.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\cataraja.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\durano.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\ferolino.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\gungob.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\intong.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\satorre.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\vilan.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\fulltime\ybanez.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\amora.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\arranguez.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\barral.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\bentulan.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\bermudez.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\cabrillos.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\campanilla.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\digamos.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\florentino.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\lapena.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\marinduque.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\montecino.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\patino.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\salaysay.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\parttime\salimbangon.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\faculties\user.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\PSITS_LOGO.png
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\images\uc.png
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.deps.json
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.runtimeconfig.json
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.runtimeconfig.dev.json
@@ -8,6 +46,21 @@ D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS W
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.pdb
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.Views.dll
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITS Web Application.Views.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Google.Protobuf.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Compression.LZ4.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Compression.LZ4.Streams.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Hash.xxHash.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\MySql.Data.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\ZstdNet.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.dll
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.pdb
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.AssemblyReference.cache
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.GeneratedMSBuildEditorConfig.editorconfig
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.AssemblyInfoInputs.cache
@@ -22,9 +75,14 @@ D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS W
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.TagHelpers.input.cache
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.TagHelpers.output.cache
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorCoreGenerate.cache
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_AdminMenu.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_AnnouncementPartial.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_HomePartial.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
@@ -32,24 +90,8 @@ D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS W
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorTargetAssemblyInfo.cache
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.RazorTargetAssemblyInfo.cs
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.Views.pdb
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.CopyComplete
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.dll
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.pdb
 D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.genruntimeconfig.cache
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\PSITS Web Application.csproj.CopyComplete
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Google.Protobuf.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Compression.LZ4.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Compression.LZ4.Streams.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\K4os.Hash.xxHash.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\MySql.Data.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\ZstdNet.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.dll
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\PSITSWeb_ASP.NET.data.pdb
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
-D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
+D:\Important\Programming Langs\Python\PSITS\PSITSWebApp\PSITSweb_ASP.NET\PSITS Web Application\bin\Debug\netcoreapp3.1\wwwroot\css\base.css

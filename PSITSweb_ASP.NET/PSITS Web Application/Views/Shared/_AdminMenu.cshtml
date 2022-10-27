@@ -1,0 +1,68 @@
+﻿@model string
+
+@if (User.IsInRole("ADMIN"))
+{
+
+    if (!string.IsNullOrWhiteSpace(Model) && Model.Equals("BUTTONS"))
+    {
+        <div class="announcement_thread">
+
+            <h1>ADMINISTRATION</h1>
+            <hr>
+            <br />
+            <div class="adminActions">
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"><i class="fa-solid fa-user"></i> ACCOUNTS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"><i class="fa-solid fa-calendar-days"></i> EVENTS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"> <i class="fa-sharp fa-solid fa-cart-shopping"></i> ORDERS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"><i class="fa-solid fa-shirt"></i> MERCH</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"><i class="fa-solid fa-user"></i> OFFICERS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="#" class="normalButton"><i class="fa-solid fa-user"></i> PRINTING SERVICE</button>
+                </div>
+                <br>
+            </div>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model) && Model.Equals("POST_THREADS"))
+    {
+        <div class="announcement_thread">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="announcement_field">
+                    <input type="text" name="title" placeholder="Announcement Title" required>
+                </div>
+
+                <div class="announcement_field_content">
+                    <textarea name="content" cols="5" rows="5" required placeholder="What's on your mind, @User.Identity.Name?"></textarea>
+                </div>
+                <div class="announcement_field">
+                    <label for="file_input">Include image:  <i>**Accept only PNG</i></label> <br />
+                    <input class="file_input" type="file" name="file" accept=".png">
+                </div>
+
+                <hr>
+                <div class="announcement_field">
+                    <button name="submit" type="submit" class="normalButton">Post Announcement</button>
+                </div>
+            </form>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model) && Model.Equals("ADD_EVENTS"))
+    {
+        <button class="normalButton" onclick="#"><i class="fa-solid fa-plus"></i> Add Event</button>
+    }
+}
