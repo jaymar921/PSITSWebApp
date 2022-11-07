@@ -1,7 +1,7 @@
 import datetime
 
 from mysql import connector
-from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS
+from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS, PROMO
 import TestApplication
 from Util import deprecated, CONFIGURATION
 
@@ -141,6 +141,17 @@ def databaseInit() -> True:
                                     image_src varchar(50) not null
                                 ) engine = innodb;
                             """)
+            cursor.execute("""
+                                create table promo(
+                                    uid int primary key auto_increment,
+                                    promo varchar(20) not null,
+                                    merch int not null,
+                                    FOREIGN KEY (merch) REFERENCES merchandise(uid) on delete cascade on update cascade,
+                                    discount decimal(7,2) not null,
+                                    slot int(10) not null
+                                ) engine = innodb;
+                            """)
+                            
             print("\n")
             TestApplication.TestDatabase()
             print("\n")
@@ -915,3 +926,42 @@ def UPDATEFacultyMember(m: FacultyMember):
 # This function will change the password of a user
 def ResetPassword(uid, password):
     executeQueryCommit(f"UPDATE `accounts` set password='{password}' where idno={uid}")
+
+
+# Add promo
+def AddPromo(code: str, merch: int, discount: float, slot: int):
+    executeQueryCommit(f"INSERT INTO `promo`(`promo`,`merch`,`discount`,`slot`) values ('{code}',{merch},{discount},{slot})")
+
+# delete promo
+def DeletePromo(code: str):
+    executeQueryCommit(f"DELETE FROM `promo` where promo='{code}'")
+
+# deduct slot
+def DeductPromoSlot(code: str):
+    executeQueryCommit(f"UPDATE `promo` SET slot=slot-1 where `promo`='{code}'")
+
+# get all promo
+def GetAllPromo():
+    query: str = "select * from `promo`"
+    data: dict = executeQueryReturn(query)
+    promos = []
+    for promo in data:
+        promos.append(
+            PROMO(
+                int(promo['uid']),
+                str(promo['promo']),
+                int(promo['merch']),
+                float(promo['discount']),
+                int(promo['slot'])
+            )
+        )
+    return promos
+
+# get promo
+def GetPromo(code: str):
+    promos: list = GetAllPromo()
+
+    for promo in promos:
+        if str(promo.code) == code:
+            return promo
+    return None

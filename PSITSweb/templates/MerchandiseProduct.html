@@ -68,9 +68,11 @@
                 <label for="additional_info">Additional Info</label><br />
                 <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
                 <br >
+                <label for="promocode">Promo Code: </label><input type="text" name="promocode" id="promocode" placeholder="code here..." />
                 <br>
+                <br />
                 <button type="submit" class="normalButton" onclick="disable(this)" id="submitBTN">Order</button>
-                <button class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
+                <button type="reset" class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
                 {% endif %}
             {% endif %}
         </form>

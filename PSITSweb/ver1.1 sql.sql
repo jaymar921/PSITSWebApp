@@ -76,3 +76,12 @@ create table psits_officers(
     birthday date not null,
     image_src varchar(50) not null
 ) engine = innodb;
+
+create table promo(
+    uid int primary key auto_increment,
+    promo varchar(20) not null,
+    merch int not null,
+    FOREIGN KEY (merch) REFERENCES merchandise(uid) on delete cascade on update cascade,
+    discount decimal(7,2) not null,
+    slot int(10) not null
+) engine = innodb;

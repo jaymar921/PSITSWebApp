@@ -1,5 +1,65 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<!-- This styling code is designed by Jayharron -->
+<style>
+  .j-modal{
+    position: fixed;
+    top: 50%;
+    z-index: 1000;
+    width: 35%;
+    background-color: white;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 2px dotted #074873;
+    border-radius: 10px;
+    padding: 10px;
+    color: #074873;
+  }
+  .j-center{
+    text-align: center;
+  }
+  .j-hidden{
+    display: none;
+  }
+  .j-form-div{
+    display: flex;
+    margin: auto;
+    padding: 2px;
+  }
+
+  .j-form-div *{
+    margin: auto;
+  }
+
+  .j-consume-less{
+    width: 25%;
+  }
+
+  .j-consume-half{
+    width: 50%;
+  }
+
+  .j-consume-more{
+    width: 75%;
+  }
+
+  .j-consume-all{
+    width: 100%;
+  }
+
+  .j-form-div label{
+    margin: 2px;
+  }
+  .j-form-div input, select{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 8px;
+  }
+  
+</style>
+<!-- This styling code is designed by Jayharron -->
+
 <br />
 <br />
 <br />
@@ -24,6 +84,7 @@
             <input id="search_student" type="text" name="search" placeholder="SEARCH MERCH | UID" value="{{search}}">
             <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
             <button type="button" onclick="location.href='/PSITS@AddMerch'" class="normalButton hide"><div class="flexer" style="display:flex;"><i class="fa-solid fa-plus"></i><p>ADD MERCH</p></div></button>
+            <button type="reset" class="normalButton hide" onclick="showPromoModal();"><div class="flexer" style="display:flex;"><i class="fa-solid fa-plus"></i><p>ADD PROMO</p></div></button>
             </center>
           </div>
           </form>
@@ -54,7 +115,7 @@
                   <td><input name="uid" id="{{merch.uid}}uid" type="text" value="{{merch.uid}}" disabled></td>
                   <td><input name="title" id="{{merch.uid}}title" type="text" value="{{merch.title}}" disabled></td>
                   <td class="hide"><textarea name="info" id="{{merch.uid}}info" type="text" disabled style="resize:none;">{{merch.info}}</textarea></td>
-                  <td><input name="price" id="{{merch.uid}}price" type="number" step="2" value="{{merch.price}}" disabled></td>
+                  <td><input name="price" id="{{merch.uid}}price" type="number" value="{{merch.price}}" disabled></td>
                   <td><input name="discount" id="{{merch.uid}}discount" type="number" value="{{merch.discount}}" disabled></td>
                   <td class="hide"><input name="stock" id="{{merch.uid}}stock" type="number" value="{{merch.stock}}" disabled></td>
                   <td class="hide"><a id="{{merch.uid}}edit" onclick="editMerchInfo('{{merch.uid}}')">✎</a><button id="{{merch.uid}}button" type="submit" hidden>💾</button>  <a onclick="removeMerchandise('{{merch.uid}}')">❌</a></td>
@@ -64,6 +125,77 @@
 
             </tbody>
           </table>
+        </div>
+        <br><br><br>
+        <!-- PROMO TABLE CREATE BY JAYHARRON MAR ABEJAR-->
+        <div class="table">
+          <div class="tableTitle">
+            <h1>Promos</h1>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>CODE</th>
+                <th>APPLIES TO</th>
+                <th>DISCOUNT</th>
+                <th>SLOT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for promo in Promos %}
+              <tr>
+
+                <td><input value="{{promo.code}}" disabled></td>
+                {% for merch in Merchandise %}
+                  {% if promo.merch == merch.uid %}
+                    <td><input value="{{merch.title}}" disabled></td>
+                  {% endif %}
+                {% endfor %}
+                <td><input value="₱ {{promo.discount}}" disabled></td>
+                <td><input value="{{promo.slot}}" disabled></td>
+                <td><a style="cursor: pointer;" onclick="removePromoCode('{{promo.code}}');">❌</a></td>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+        <!-- END OF PROMO TABLE-->
+        <div id="j_modal" class="j-modal j-consume-less hide j-hidden">
+          <div>
+            <h1 class="j-center">Add Promo code</h1>
+            <hr>
+            <form action="/PSITS@AddPromo" method="post">
+              <br/>
+              <div class="j-form-div">
+                <label class="j-consume-half" for="promocode">PROMO CODE: </label>
+                <input class="j-consume-half" type="text" name="promocode" id="promocode" placeholder="PROMOCODE, CASE SENSITIVE" required/>
+              </div>
+              <div class="j-form-div">
+                <label class="j-consume-half" for="applto">APPLIES TO</label>
+                <select class="j-consume-half"  name="applicable" id="applto" required>
+                  {% for merch in Merchandise %}
+                    <option value="{{merch.uid}}">{{merch.title}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="j-form-div">
+                <label class="j-consume-half" for="discount">PROMO DISCOUNT: </label>
+                <input class="j-consume-half"  type="number" name="discount" id="discount" placeholder="Discount in Peso" required/>
+              </div>
+              <div class="j-form-div">
+                <label class="j-consume-half" for="slot">SLOT: </label>
+                <input class="j-consume-half"  type="number" name="slot" id="slot"  placeholder="Number of slot" value="1" required/>
+              </div>
+              <br/>
+              <div class="j-form-div">
+                <button class="j-consume-half normalButton" type="submit">ADD</button>&nbsp;
+                <button class="j-consume-half normalButton" type="reset" onclick="showPromoModal();">CLOSE</button>
+              </div>
+            </form>
+          </div>
         </div>
 
       <br>
@@ -144,5 +276,31 @@
 
   </div> -->
 
+  <script>
+    'use strict';
+
+    function showPromoModal(){
+      let modal = document.getElementById('j_modal');
+
+      if(modal.classList.contains('j-hidden')){
+        modal.classList.remove('j-hidden');
+      }else{
+        modal.classList.add('j-hidden');
+      }
+    }
+
+    /**
+    * 
+    * @param {string} code 
+    */
+    function removePromoCode(code){
+      fetch("/PSITS@RemovePromo",{
+          method: "POST",
+          body: JSON.stringify(code),
+          headers: { "Content-Type": "application/json" }
+      }).then(res => {console.log("Response: ",res); location.reload();});
+    }
+    
+  </script>
 
 {% endblock %}

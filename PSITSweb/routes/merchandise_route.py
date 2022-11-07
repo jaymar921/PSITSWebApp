@@ -3,10 +3,11 @@ import os
 from __main__ import app
 
 import flask
-from flask import session, redirect, url_for, render_template, request
+import json
+from flask import session, redirect, url_for, render_template, request, jsonify
 
 from Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, databaseLog, \
-    SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise
+    SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise, AddPromo, GetAllPromo, DeletePromo
 from Models import Merchandise, ORDER_STATUS, STATIC_DATA
 from Util import isAdmin, GetReference, contentVerifier
 from webApp_utility import save_redirection, checkImageExist
@@ -26,7 +27,7 @@ def psits_merchandise_list():
             return render_template("MerchandiseList.html",
                                 logout='block', login='none', account_data=getAccountByID(session['username']),
                                 admin='block', title='Merchandise List',
-                                Merchandise=SEARCHMerchandise(search), search=search)
+                                Merchandise=SEARCHMerchandise(search), search=search, Promos=GetAllPromo())
         else: # POST
             search: str = flask.request.values.get('search')
             # OFFICER_ACCOUNT = SEARCHPSITSOfficer(request.form['idnum'])[0]
@@ -47,7 +48,7 @@ def psits_merchandise_list():
             return render_template("MerchandiseList.html",
                                 logout='block', login='none', account_data=getAccountByID(session['username']),
                                 admin='block', title='Merchandise List',
-                                Merchandise=SEARCHMerchandise(search), search=search)
+                                Merchandise=SEARCHMerchandise(search), search=search, Promos=GetAllPromo())
 
     return redirect(url_for('cant_find_link'))
 
@@ -164,3 +165,42 @@ def psits_remove_merchandise(uid):
         return redirect(url_for("psits_merchandise_list"))
     else:
         return redirect(url_for('cant_find_link'))
+
+
+@app.route("/PSITS@AddPromo", methods=['POST'])
+def add_promo():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    
+    if 'username' in session:
+        account = session['username']
+        if not isAdmin(account):
+            return redirect(url_for('cant_find_link'))
+
+    # grab the info from the form
+    promo_code: str = request.form['promocode']
+    merch_id: int = request.form['applicable']
+    discount: float = request.form['discount']
+    slot: int = request.form['slot']
+
+    databaseLog(f"Promo code [{promo_code}] was created by ID[{session['username']}]")
+    AddPromo(promo_code, merch_id, discount, slot)
+    return redirect(url_for('psits_merchandise_list'))
+
+@app.route("/PSITS@RemovePromo", methods=['POST'])
+def remove_promo():
+    if 'username' not in session:
+        return redirect(url_for('cant_find_link'))
+    
+    if 'username' in session:
+        account = session['username']
+        if not isAdmin(account):
+            return redirect(url_for('cant_find_link'))
+
+    # grab the info from the form
+    #promo_code: str = request.data.replace('\'','')
+    json_data = request.json
+    databaseLog(f"Promo [{str(json_data)}] was removed")
+    DeletePromo(str(json_data))
+
+    return redirect(url_for('psits_merchandise_list'))

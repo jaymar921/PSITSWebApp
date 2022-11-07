@@ -54,7 +54,7 @@
                 <td style="color:green;" >{{order.getStatus()}}</td>
                 {% endif %}
                 </td>
-                <td class="hide">₱{{'%0.2f'| format(order.getTotal()|float)}}</td>
+                <td class="hide">₱{{'%0.2f'| format(order.getTotal() * order.order.quantity|float)}}</td>
                 
                 <td> {{order.reference}}</td>
             </tr>

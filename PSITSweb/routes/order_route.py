@@ -7,10 +7,10 @@ from flask import session, render_template, redirect, url_for, request
 import messages
 from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, \
     CREATEMerchOrder, databaseLog, DELETEMerchOrder, SEARCHMerchOrderTABLE, getOrderAccount, getEvent, createOrder, \
-    updateOrder, getOrderById, getAllOrders
+    updateOrder, getOrderById, getAllOrders, DeductPromoSlot, GetPromo
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
-    OrderAccount
+    OrderAccount, PROMO
 from Util import GetReference, isAdmin, PriceParseRef, deprecated
 from webApp_utility import checkImageExist
 
@@ -132,13 +132,28 @@ def psits_order_product():
             status = ORDER_STATUS.ORDERED.value
             quantity = request.form['quantity']
             additional_info = request.form['additional_info']
+            promocode = request.form['promocode']
 
             # Get the price and the discount
             merch: Merchandise = SEARCHMerchandise(merch_uid)[0]
             PRICE: int = int(merch.price)
             DISCOUNT: float = float(merch.discount)
 
+            print(promocode)
+            
+
             DISCOUNTED_PRICE: float = PRICE - (PRICE* (DISCOUNT/100))
+
+            # get the promo
+            promo: PROMO = GetPromo(promocode)
+
+            if promo is not None:
+                if promo.slot > 0 and promo.merch == int(merch_uid):
+                    # calculate the percentage
+                    total = PRICE * int(quantity)
+                    percentage = promo.discount/total
+                    DISCOUNTED_PRICE = DISCOUNTED_PRICE - (DISCOUNTED_PRICE * percentage)
+                    DeductPromoSlot(promo.code)
 
             # Generate a reference Code
             REF_CODE: str = PriceParseRef(DISCOUNTED_PRICE)
@@ -163,7 +178,7 @@ def psits_order_product():
             )
 
             # Send email to user
-            pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder)))
+            pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder, promo)))
 
     else:
         return redirect(url_for('login_page'))

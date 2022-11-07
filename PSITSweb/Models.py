@@ -187,3 +187,12 @@ class STATIC_DATA:
         'TITLE': 'Document Printing',
         'SCHED': '(Mon-Fri) 8:00am - 4:00pm'
     }
+
+
+class PROMO:
+    def __init__(self, uid, code, merch, discount, slot):
+        self.uid: int = uid
+        self.code: str = code
+        self.merch: int = merch
+        self.discount: float = discount
+        self.slot: int = slot
