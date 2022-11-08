@@ -27,7 +27,7 @@
    {% endblock %}
 </head>
 
-<body>
+<body onload="anchorLinks();">
       
         <!-- The Modal -->
         <div class="modal" id="logoutModal">
@@ -127,6 +127,47 @@
    
     </div>
 
+	<!-- This script is added by Jayharron -->
+	<script type = "text/javascript">
+		'use strict';
+		function anchorLinks(){
+			const elements = document.getElementsByClassName('contain-links');
+			
+			for(const element of elements){
+				// grabbing all the content inside the element and split it from spaces
+				let strings = element.innerHTML.split(" ");
+
+        let hasPostedBy = false;
+				
+				// this res variable will be the result string
+				let res = "";
+				
+				// iterate through the array of strings
+				for(let index = 0; index < strings.length; index++){
+				    // check if the string has a substring of "http"
+					// if yes then add an anchor tag using the JavaScript string literal
+					// otherwise just append the string
+					if(strings[index].substring(0,4) === "http"){
+						let link = strings[index];
+						res += `<a href='${link}'>${link}</a>`;
+					}else{
+
+            // check if `Posted By: {name} (time)` exist
+            if(strings[index].substring(0,6) === "Posted" && !hasPostedBy){
+              res += `<b>`;
+              hasPostedBy = true;
+            }else if(strings[index].includes("(") && hasPostedBy){
+              res += `</b>`;
+              hasPostedBy =false;
+            }
+              
+						res += `${strings[index]} `;
+					}
+				}
+				element.innerHTML = res;
+			}
+		}
+	</script>
 
 </body>
 </html>

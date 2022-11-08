@@ -107,7 +107,7 @@
 
             <h3>({{announcement.date}})</h3>
             <hr>
-            <span>{{announcement.content}}</span>
+            <span class="contain-links">{{announcement.content}}</span>
             {% if announcement.image_location != '' %}
             <img class="announcement_image" id="{{announcement.uid}}" onclick="zoomPicture({{announcement.uid}})" loading="lazy"
                 src="{{ url_for('download_file', filename=announcement.image_location) }}">
@@ -162,4 +162,6 @@
 
 
 </div>
+
+
 {% endblock %}

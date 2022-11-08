@@ -5,8 +5,9 @@ import datetime
 
 from flask import request, session, render_template, redirect, url_for
 
-from Database import getLatestAnnouncement, postAnnouncement, databaseLog, removeAnnouncement
+from Database import getLatestAnnouncement, postAnnouncement, databaseLog, removeAnnouncement, getAccountByID
 from Util import contentVerifier, isAdmin
+from Models import Account
 from webapp import ALLOWED_EXTENSION
 
 
@@ -17,8 +18,17 @@ def post_announcement():
     title: str = contentVerifier(request.form['title'])
     content: str = request.form['content']
 
+    
+
     if "username" in session:
         if isAdmin(session['username']):
+            account: Account = getAccountByID(session['username'])
+            content = f"""
+                {content}
+
+                Posted by: {account.firstname} {account.lastname} ({datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")})
+            """
+
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), contentVerifier(content))
             ID = getLatestAnnouncement()
             databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
