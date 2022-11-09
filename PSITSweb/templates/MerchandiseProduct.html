@@ -1,5 +1,8 @@
 {% extends 'base.html'%}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <br />
 <button class="backButton" onclick="merchandise()">Back</button>
 <br />
@@ -10,7 +13,49 @@
 <br />
 <div class="merch_product_individual">
     <div class="leftContent">
-        <img loading="lazy" class="fade-in-left" src="{{ url_for('download_file', filename=product.image_file) }}">
+        {% if img_extras|length > 0%}
+        <div class="container" style="width: 100%;background-color: white;height: 100%;">
+
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+              <!-- Indicators -->
+              <ol class="carousel-indicators" style="z-index: 0;">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                
+                    {% for index in range(0,img_extras|length) %}
+                        <li data-target="#myCarousel" data-slide-to=index></li>
+                    {% endfor %}
+                
+              </ol>
+          
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner" style="background-color: white; height: 100%;">
+                <div class="item active" style="height: 100%;">
+                    <img src="{{ url_for('download_file', filename=product.image_file) }}" alt="">
+                  </div>
+                
+                    {% for item in img_extras %}
+                        <div class="item" style="height:100%;">
+                            <img src="{{url_for('download_file', filename=item)}}" alt="">
+                        </div>
+                    {% endfor %}
+                
+              </div>
+          
+              <!-- Left and right controls -->
+              <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+          {% else %}
+            <img loading="lazy" class="fade-in-left" src="{{ url_for('download_file', filename=product.image_file) }}">
+          {% endif %}
+        <!--<img loading="lazy" class="fade-in-left" src="{{ url_for('download_file', filename=product.image_file) }}">-->
     </div>
     <hr>
     <div class="rightContent fade-in-right">

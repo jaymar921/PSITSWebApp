@@ -34,6 +34,7 @@ import routes.register_route
 import routes.event_route
 import routes.order_route
 import routes.merchandise_route
+import routes.app_route_1_3
 from webApp_utility import save_redirection, checkImageExist
 
 """

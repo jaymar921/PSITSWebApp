@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .logo{
+        width: auto;
+        height: 150px;
+    }
+    
+    body{
+        background-color: #f1f3f3;
+    }
+    
+    /*Bottom Area*/
+    .bottomArea{
+        background-color: #424243;
+        height: 8rem;
+        color: #fff;
+        font-size: .8rem;
+        position: relative;
+        bottom: 0;
+        left: 0;
+    }
+    
+    .bottomArea p{
+        font-size: .7rem;
+    }
+    
+    .bottomArea h5{
+        font-weight: 800;
+        font-size: 16px;
+    }
+    
+    h3, h4{
+        font-weight: 200;
+        color: #424243;
+    }
+    
+    h4{
+        color: #b8b8b8;
+        font-weight: 200;
+        text-transform: uppercase;
+    }
+    
+    .totalNum{
+        color: #40bb3d;
+        font-weight: bold;
+        font-size: 5rem;
+    }
+    
+    .graphSec{
+        /* margin: 5px; */
+        box-shadow: 0 0 10px rgba(173, 176, 180, 0.3);
+        background-color: #fff;
+    }
+    
+    .newSalesArea{
+        box-shadow: 0 0 10px rgba(173, 176, 180, 0.3);
+        background-color: #fff;
+    }
+    
+    .list-group-item:first-child{
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    
+    .list-group-item:last-child{
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    
+    .descText{
+        color: #a8a8a8;
+        font-size: 1rem;
+    }
+    
+    .modal-header{
+        background-color: #7a7c7f;
+        color: #fff;
+        border-bottom: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    
+    .modal-title{
+        font-weight: 200;
+    }
+    
+    .close{
+        color: #fff;
+    }
+    
+    .close:hover{
+        color: rgb(192, 192, 192);
+    }
+    
+    .btn{
+        border-radius: 1.25rem;
+    }
+    
+    .modal-content{
+        border-radius: 0;
+        border: 1px solid rgba(0,0,0,.1);
+    }
+    
+    .w-90{
+        width: 90%!important;
+    }
+    
+    .w-60{
+        width: 60%!important;
+    }
+    
+    .h-30{
+        width: 30%!important;
+    }
+    
+    .w-20{
+        width: 20%!important;
+    }
+    
+    .w-10{
+        width: 10%!important;
+    }
+    
+    .w-5{
+        width: 5%!important;
+    }
+    
+    .h-30{
+        height: 30%!important;
+    }
+    
+    /*Responsive code*/
+    @media (min-width: 576px) {
+        
+    }
+    
+    /*Medium devices (tablets, 768px and up)*/
+    @media (min-width: 768px) {
+        
+    }
+    
+    /*Large devices (desktops, 992px and up)*/
+    @media (min-width: 992px) {
+        
+    }
+    
+    /*Extra large devices (large desktops, 1200px and up)*/
+    @media (min-width: 1200px) {
+    
+    }
+</style>
+<br />
+<button class="backButton" onclick="location.href='/PSITS@MerchandiseOrdersList'">Back</button>
+    <!-- Bootstrap Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Logo Area -->
+    <div class="d-flex flex-row justify-content-center">
+        <img src='{{url_for("static",filename="images/PSITS_LOGO.png")}}' class="img-fluid logo p-3">
+    </div>
+    
+    <input type="hidden" id="dataset_revenue" value="{{monthly_revenue}}">
+    <input type="hidden" id="dataset_sales" value="{{department_sales}}">
+
+    <!-- Graph -->
+    <div class="container">
+        <div class="d-flex flex-row pb-2">
+            <h3>Sales Tracker</h3>
+        </div>
+        
+        <!-- Yearly Number -->
+        <div class="row">
+            <div class="col-12 w-100">
+                <div class="graphSec">
+                    <h4 class="text-center pt-3">Yearly Revenue</h4>
+                    <h1 class="text-center pb-3 totalNum" id="yearlyTotal"></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mt-3 mb-3">
+            <div class="col-12 col-md-6 w-100 mb-4 mb-md-0">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Monthly Sales</h4>
+                    <canvas id="monthlySales" width="400" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 w-100">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Department Sales</h4>
+                    <canvas id="deptSales" class="pb-2" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- Bootstrap Files -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<!-- Chart JS -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.2/dist/Chart.min.js"></script>
+
+    <!-- THIS SCRIPT WAS ADDED BY JAYHARRON -->
+    <script>
+        'use strict';
+        // getting the dataset value and attributes
+        let dataset_revenue = document.getElementById('dataset_revenue').value;
+        let dataset_sales = document.getElementById('dataset_sales').value
+        let monthlyChartHTML = document.getElementById('monthlySales').getContext('2d');
+        let deptChartHTML = document.getElementById('deptSales').getContext('2d');
+        let yearlyLabel = document.getElementById('yearlyTotal');
+        let yearlyTotal = 0
+        
+        // converting the dataset value to object
+        let dataset_revenue_object = JSON.parse(dataset_revenue);
+        let dataset_sales_object = JSON.parse(dataset_sales);
+
+        // creating the array of monthly sales and label data 
+        let monthlySales = new Array();
+        let monthlyLabels = new Array();
+
+        // creating the array of department sales and label
+        let deptSales = new Array();
+        let deptLabels = new Array()
+
+        // currency formatter
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'PHP',
+          
+            // These options are needed to round to whole numbers if that's what you want.
+            //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+            //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+          });
+        
+        // iterate with the object properties
+        for(let key in dataset_revenue_object){
+            // the key format is 'YYYY MM', we will convert it into a string
+            // and get only the month
+            const month_string = getMonthByNumber(parseInt(key.toString().split(" ")[1]));
+            monthlySales.push(parseFloat(dataset_revenue_object[key]))
+            monthlyLabels.push(month_string);
+            yearlyTotal = yearlyTotal + parseFloat(dataset_revenue_object[key]);
+            yearlyLabel.innerHTML = `${formatter.format(yearlyTotal)}`;
+        }
+
+        // iterate through the object properties
+        for(let key in dataset_sales_object){
+            deptSales.push(parseInt(dataset_sales_object[key]));
+            deptLabels.push(key);
+        }
+
+        // this function will convert int to string, 1 = January, I think you already know the point :>
+        function getMonthByNumber(m){
+            switch(m){
+                case 1: return 'January';
+                case 2: return 'February';
+                case 3: return 'March';
+                case 4: return 'April';
+                case 5: return 'May';
+                case 6: return 'June';
+                case 7: return 'July';
+                case 8: return 'August';
+                case 9: return 'September';
+                case 10: return 'October';
+                case 11: return 'November';
+                case 12: return 'December';
+            }
+            return "InvalidMonth";
+        }
+
+
+        // Bar chart
+        var monthlySalesChart = new Chart(monthlyChartHTML, {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: '# of Sales',
+                    data: monthlySales,
+                    backgroundColor: [
+                        'rgba(238, 184, 104, 1)',
+                        'rgba(75, 166, 223, 1)',
+                        'rgba(239, 118, 122, 1)',
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        // Pie Chart
+        var deptSalesChart = new Chart(deptChartHTML, {
+             type: 'pie',
+             data: {
+                 labels: deptLabels,
+                 datasets: [{
+                     label: '# of Sales',
+                     data: deptSales,
+                     backgroundColor: [
+                         'rgba(238, 184, 104, 1)',
+                         'rgba(75, 166, 223, 1)',
+                         'rgba(239, 118, 122, 1)',
+                     ],
+                     borderWidth: 0
+                 }]
+             },
+             options: {
+          
+             }
+         })
+         // clear the values
+         document.getElementById('dataset_revenue').value = '';
+         document.getElementById('dataset_sales').value = '';
+    </script>
+
+
+{% endblock %}

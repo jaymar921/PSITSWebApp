@@ -35,7 +35,7 @@ def login():
     account = getAccount(int(account_id), hashData(password))
     if account.uid is not None:
         session['username'] = account.uid
-        databaseLog(f"Account ID [{session['username']}] has logged in")
+        databaseLog(f"Account [{account.lastname}, {account.firstname} - ID: {account.uid}] has logged in")
         if has_redirection():
             REDIRECTION = get_redirection()
             if 'psits_merchandise_product' in REDIRECTION:

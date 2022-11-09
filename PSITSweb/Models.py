@@ -100,6 +100,7 @@ class Merchandise:
         self.discount = discount
         self.stock = stock
         self.image_file = ""
+        self.image_file_extras = []
 
 
 class MerchOrder:

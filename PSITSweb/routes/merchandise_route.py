@@ -59,7 +59,7 @@ def psits_merchandise_product(uid):
         save_redirection('psits_merchandise_product',uid)
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
-        product = SEARCHMerchandise(str(uid))[0]
+        product: Merchandise = SEARCHMerchandise(str(uid))[0]
         stat = "NONE"
         cancel_days = 0
         order_id = ''
@@ -76,7 +76,10 @@ def psits_merchandise_product(uid):
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-        return render_template('MerchandiseProduct.html', title=uid, product =  product, logout='block', login='none',
+            for num in range(0,5):
+                if checkImageExist("merch" + str(product.uid) + f"_{num}" + ".png"):
+                    product.image_file_extras.append(f"merch{str(product.uid)}_{num}.png")
+        return render_template('MerchandiseProduct.html', title=uid, product =  product, img_extras = product.image_file_extras, logout='block', login='none',
                                account_data=getAccountByID(session['username']), status=stat, cancel_days=cancel_days,order_id=order_id)
 
 
