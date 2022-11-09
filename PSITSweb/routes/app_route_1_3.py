@@ -14,7 +14,7 @@ def psits_data_analytics():
     if 'username' not in session:
         save_redirection('psits_data_analytics')
         return redirect(url_for('login_page'))
-    account: Account = Database.getAccountByID(session['username'])
+    ADMIN_ACCOUNT: Account = Database.getAccountByID(session['username'])
     if not isAdmin(session['username']):
         return redirect(url_for('landing_page'))
 
@@ -88,6 +88,6 @@ def psits_data_analytics():
             # add a new entry to the level population
             student_levels[year] = 1
     return render_template('app_templates_1_3/DataAnalytics.html',
-                                logout='block', login='none', account_data=account,
+                                logout='block', login='none', account_data=ADMIN_ACCOUNT,
                                 admin='block',monthly_revenue = json.dumps(monthly_revenue), department_sales = json.dumps(department_sales),
                                 student_courses = json.dumps(student_courses), student_levels = json.dumps(student_levels))
