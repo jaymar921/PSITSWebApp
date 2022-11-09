@@ -163,6 +163,9 @@
     
     <input type="hidden" id="dataset_revenue" value="{{monthly_revenue}}">
     <input type="hidden" id="dataset_sales" value="{{department_sales}}">
+    <input type="hidden" id="dataset_courses" value="{{student_courses}}">
+    <input type="hidden" id="dataset_levels" value="{{student_levels}}">
+    
 
     <!-- Graph -->
     <div class="container">
@@ -192,6 +195,40 @@
                 <div class="graphSec px-2">
                     <h4 class="text-center py-3">Department Sales</h4>
                     <canvas id="deptSales" class="pb-2" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <!-- Graph -->
+    <div class="container">
+        <div class="d-flex flex-row pb-2">
+            <h3>Account Population</h3>
+        </div>
+        
+        <!-- Yearly Number -->
+        <div class="row">
+            <div class="col-12 w-100">
+                <div class="graphSec">
+                    <h4 class="text-center pt-3">Registered Accounts</h4>
+                    <h1 class="text-center pb-3 totalNum" id="registeredAccounts"></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mt-3 mb-3">
+            <div class="col-12 col-md-6 w-100 mb-4 mb-md-0">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Courses</h4>
+                    <canvas id="courses" width="400" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 w-100">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Year Level</h4>
+                    <canvas id="levels" class="pb-2" width="400" height="300"></canvas>
                 </div>
             </div>
         </div>

@@ -21,9 +21,12 @@ def psits_data_analytics():
     # get all merch order
     dataset = Database.GETAllMerchOrder()
     merchandise_data = Database.GETAllMerchandise()
+    account_data = Database.getAllAccounts('all')
 
     monthly_revenue: dict = {}
     department_sales: dict = {}
+    student_levels: dict = {}
+    student_courses: dict = {}
 
     for data in dataset:
         order: MerchOrder = data
@@ -60,6 +63,31 @@ def psits_data_analytics():
             # add a new entry to the department sales
             department_sales[merch_item] = 1
         
+    # grab all accounts data
+    for data in account_data:
+        account: Account = data
+
+        if account.course in student_courses:
+            # get the value
+            population = student_courses[account.course]
+            # update the population
+            student_courses[account.course] = population + 1
+        else:
+            # add a new course population
+            student_courses[account.course] = 1
+        
+        year = account.year 
+        if str(year) == '5':
+            year = 'ALUMNI'
+        if year in student_levels:
+            # get the value
+            population = student_levels[year]
+            # update the population
+            student_levels[year] = population + 1
+        else:
+            # add a new entry to the level population
+            student_levels[year] = 1
     return render_template('app_templates_1_3/DataAnalytics.html',
                                 logout='block', login='none', account_data=account,
-                                admin='block',monthly_revenue = json.dumps(monthly_revenue), department_sales = json.dumps(department_sales))
+                                admin='block',monthly_revenue = json.dumps(monthly_revenue), department_sales = json.dumps(department_sales),
+                                student_courses = json.dumps(student_courses), student_levels = json.dumps(student_levels))
