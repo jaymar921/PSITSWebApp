@@ -165,6 +165,8 @@
     <input type="hidden" id="dataset_sales" value="{{department_sales}}">
     <input type="hidden" id="dataset_courses" value="{{student_courses}}">
     <input type="hidden" id="dataset_levels" value="{{student_levels}}">
+    <input type="hidden" id="dataset_montly_orders" value="{{montly_orders}}">
+    <input type="hidden" id="dataset_dept_orders" value="{{department_orders}}">
     
 
     <!-- Graph -->
@@ -195,6 +197,38 @@
                 <div class="graphSec px-2">
                     <h4 class="text-center py-3">Department Sales</h4>
                     <canvas id="deptSales" class="pb-2" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="container">
+        <div class="d-flex flex-row pb-2">
+            <h3>Orders Tracker</h3>
+        </div>
+        
+        <!-- Yearly Number -->
+        <div class="row">
+            <div class="col-12 w-100">
+                <div class="graphSec">
+                    <h4 class="text-center pt-3">Yearly Orders</h4>
+                    <h1 class="text-center pb-3 totalNum" id="yearlyOrder"></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row mt-3 mb-3">
+            <div class="col-12 col-md-6 w-100 mb-4 mb-md-0">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Monthly Orders</h4>
+                    <canvas id="monthlyOrders" width="400" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 w-100">
+                <div class="graphSec px-2">
+                    <h4 class="text-center py-3">Department Orders</h4>
+                    <canvas id="deptOrders" class="pb-2" width="400" height="300"></canvas>
                 </div>
             </div>
         </div>

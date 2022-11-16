@@ -51,9 +51,11 @@ def registerAccount():
            We are happy to know that you've signed up for PSITS!
            This email is auto generated, please do not reply :)
         """
-        databaseLog(f"New account created. Account ID [{account.uid}]")
+        databaseLog(f"New account created. Account ID [{account.uid}] - {account.firstname} {account.lastname}")
         try:
-            pushEmail(Email('Welcome to PSITS', email, content))
+            # Avoid sending emails to new accounts
+            # pushEmail(Email('Welcome to PSITS', email, content))
+            None
         finally:
             return redirect(url_for("login_page"))
 

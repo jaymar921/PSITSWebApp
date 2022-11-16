@@ -5,21 +5,30 @@ function loadAnalytic(){
     // getting the dataset value and attributes
     let dataset_revenue = document.getElementById('dataset_revenue').value;
     let dataset_sales = document.getElementById('dataset_sales').value;
+    let dataset_monthly_orders = document.getElementById('dataset_montly_orders').value;
+    let dataset_dept_orders = document.getElementById('dataset_dept_orders').value;
+    
     let dataset_courses = document.getElementById('dataset_courses').value;
     let dataset_levels = document.getElementById('dataset_levels').value;
     let monthlyChartHTML = document.getElementById('monthlySales').getContext('2d');
     let deptChartHTML = document.getElementById('deptSales').getContext('2d');
     let courseChartHTML = document.getElementById('courses').getContext('2d');
     let levelChartHTML = document.getElementById('levels').getContext('2d');
+    let mOrderChartHTML = document.getElementById('monthlyOrders').getContext('2d');
+    let dOrderChartHTML = document.getElementById('deptOrders').getContext('2d');
     let yearlyLabel = document.getElementById('yearlyTotal');
+    let yearlyOrder = document.getElementById('yearlyOrder');
     let totalPopulationLabel = document.getElementById('registeredAccounts');
-    let yearlyTotal = 0
+    let yearlyTotal = 0;
+    let yrlyOrder = 0;
 
     // converting the dataset value to object
     let dataset_revenue_object = JSON.parse(dataset_revenue);
     let dataset_sales_object = JSON.parse(dataset_sales);
     let dataset_courses_object = JSON.parse(dataset_courses);
     let dataset_levels_object = JSON.parse(dataset_levels);
+    let dataset_monthly_orders_object = JSON.parse(dataset_monthly_orders);
+    let dataset_dept_orders_object = JSON.parse(dataset_dept_orders)
 
     // creating the array of monthly sales and label data 
     let monthlySales = new Array();
@@ -28,6 +37,13 @@ function loadAnalytic(){
     // creating the array of department sales and label
     let deptSales = new Array();
     let deptLabels = new Array()
+
+    // creating the array of monthly orders and label data
+    let monthlyOrders = new Array();
+    let monthlyOrderLabels = new Array();
+
+    let deptOrders = new Array();
+    let deptOrderLabels = new Array();
 
     // currency formatter
     const formatter = new Intl.NumberFormat('en-US', {
@@ -50,10 +66,27 @@ function loadAnalytic(){
         yearlyLabel.innerHTML = `${formatter.format(yearlyTotal)}`;
     }
 
+    // iterate with the object properties
+    for(let key in dataset_monthly_orders_object){
+        // the key format is 'YYYY MM', we will convert it into a string
+        // and get only the month
+        const month_string = getMonthByNumber(parseInt(key.toString().split(" ")[1]));
+        monthlyOrders.push(parseFloat(dataset_monthly_orders_object[key]))
+        monthlyOrderLabels.push(month_string);
+        yrlyOrder = yrlyOrder + parseFloat(dataset_monthly_orders_object[key]);
+        yearlyOrder.innerHTML = `${formatter.format(yrlyOrder)}`;
+    }
+
     // iterate through the object properties
     for(let key in dataset_sales_object){
         deptSales.push(parseInt(dataset_sales_object[key]));
         deptLabels.push(key);
+    }
+
+    // iterate through the object properties
+    for(let key in dataset_dept_orders_object){
+        deptOrders.push(parseInt(dataset_dept_orders_object[key]));
+        deptOrderLabels.push(key);
     }
 
     // this function will convert int to string, 1 = January, I think you already know the point :>
@@ -206,6 +239,72 @@ function loadAnalytic(){
             datasets: [{
                 label: '# of student levels',
                 data: levelPopulation,
+                backgroundColor: [
+                    'rgba(238, 184, 104, 1)',
+                    'rgba(75, 166, 223, 1)',
+                    'rgba(239, 118, 122, 1)',
+                    'rgba(251, 123, 20, 1)',
+                    'rgba(239, 252, 122, 1)',
+                    'rgba(122, 118, 120, 1)',
+                    'rgba(10, 22, 89, 1)',
+                    'rgba(152, 235, 76, 1)',
+                    'rgba(232, 118, 120, 1)',
+                    'rgba(112, 97, 120, 1)',
+                    'rgba(32, 67, 98, 1)',
+                    'rgba(52, 12, 65, 1)',
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+    
+        }
+    })
+
+    // Bar chart
+    var mOrders = new Chart(mOrderChartHTML, {
+        type: 'bar',
+        data: {
+            labels: monthlyOrderLabels,
+            datasets: [{
+                label: '# of order revenue',
+                data: monthlyOrders,
+                backgroundColor: [
+                    'rgba(238, 184, 104, 1)',
+                    'rgba(75, 166, 223, 1)',
+                    'rgba(239, 118, 122, 1)',
+                    'rgba(251, 123, 20, 1)',
+                    'rgba(239, 252, 122, 1)',
+                    'rgba(122, 118, 120, 1)',
+                    'rgba(10, 22, 89, 1)',
+                    'rgba(152, 235, 76, 1)',
+                    'rgba(232, 118, 120, 1)',
+                    'rgba(112, 97, 120, 1)',
+                    'rgba(32, 67, 98, 1)',
+                    'rgba(52, 12, 65, 1)',
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Pie Chart
+    var dOrders = new Chart(dOrderChartHTML, {
+        type: 'pie',
+        data: {
+            labels: deptOrderLabels,
+            datasets: [{
+                label: '# of product orders',
+                data: deptOrders,
                 backgroundColor: [
                     'rgba(238, 184, 104, 1)',
                     'rgba(75, 166, 223, 1)',
