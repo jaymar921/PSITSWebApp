@@ -11,15 +11,26 @@
       <div class="tableTitle">
         <h1>Orders List</h1>
       </div>
+      <div style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
+        <span style="color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
+          ‣<a style="color: green;">'all'</a> - Search all orders
+          ‣<a style="color: green;">'student: [ID/NAME]'</a> - Search all orders with specific student 
+          ‣<a style="color: green;">'merch: [TITLE]'</a> - Search all orders with specific merchandise
+        </span>
+      </div>
 
 
       <div class="warning">
         <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
 
       </div>
-         
+      <br>
+      
+      
+    
        <br />
             <form action="" method="get">
+              
               <div class="searchTable">
                 <center>
             <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}">
@@ -32,9 +43,10 @@
        <br />
           <div class="tableTitle">
             <h1 style="color: orange; font-size:120%;"> Orders: ₱{{'%0.2f'| format(reserve|float)}}  |  Total: ₱{{'%0.2f'| format(paid|float)}}/{{'%0.2f'| format(total|float)}}  </h1>
+          
           </div>
           <br />
-     
+          
         <br>
         <div class="table">
           <table>

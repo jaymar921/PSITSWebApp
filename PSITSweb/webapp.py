@@ -59,11 +59,13 @@ from webApp_utility import save_redirection, checkImageExist
 
 @app.route("/")
 def webpage():
+    save_redirection('landing_page')
     return redirect(url_for("landing_page"))
 
 
 @app.route("/PSITS")
 def landing_page():
+    save_redirection('landing_page')
     events: list = GETAllEvent()
     announcements: list = getAnnouncements()
 

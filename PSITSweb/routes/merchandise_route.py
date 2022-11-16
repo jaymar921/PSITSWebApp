@@ -76,7 +76,8 @@ def psits_merchandise_product(uid):
                     continue
         if checkImageExist("merch" + str(product.uid) + ".png"):
             product.image_file = f"merch{str(product.uid)}.png"
-            for num in range(0,5):
+            # up to 10 more photos
+            for num in range(0,10):
                 if checkImageExist("merch" + str(product.uid) + f"_{num}" + ".png"):
                     product.image_file_extras.append(f"merch{str(product.uid)}_{num}.png")
         return render_template('MerchandiseProduct.html', title=uid, product =  product, img_extras = product.image_file_extras, logout='block', login='none',

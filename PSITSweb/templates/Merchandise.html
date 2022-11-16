@@ -35,7 +35,8 @@
         
         </div>
         
-        {% for merch in all_merch %}
+        {% for merch in all_merch if not "hidden" in merch.title %}
+        
         <div class="product">
 
             {% if merch.image_file != '' %}

@@ -215,7 +215,7 @@ def getAnnouncements() -> list:
             date_published - date
             content - varchar
     """
-    query: str = "SELECT * FROM ANNOUNCEMENTS"
+    query: str = "SELECT * FROM `announcements`"
     data: dict = executeQueryReturn(query)
 
     contents: list = []
@@ -255,7 +255,7 @@ def getAccount(uid: int, password: str) -> Account:
             email - varchar
             password - varchar
         """
-    query: str = "SELECT * FROM ACCOUNTS where idno=%s and password=%s"
+    query: str = "SELECT * FROM `accounts` where idno=%s and password=%s"
     data: dict = executeQueryReturnParam(query, (uid, password))
 
     if len(data) > 0:
@@ -273,12 +273,12 @@ def getAccount(uid: int, password: str) -> Account:
 
 
 def getAllAccounts(search: str) -> list:
-    query: str = "SELECT * FROM ACCOUNTS"
+    query: str = "SELECT * FROM `accounts`"
     if search is not None:
-        query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
+        query: str = f"SELECT * FROM `accounts` where idno like '%{search}%' or rfid like '%{search}%'" \
                      f" or lastname like '%{search}%' or course like '%{search}%' or year like '{search[-1:]}'"
         if search.lower() == 'all':
-            query: str = "SELECT * FROM ACCOUNTS"
+            query: str = "SELECT * FROM `accounts`"
     data = executeQueryReturn(query)
     accounts: list = []
     for acc in data:
@@ -296,13 +296,13 @@ def getAllAccounts(search: str) -> list:
 
 
 def getAccountsByRFID(search) -> list:
-    query: str = "SELECT * FROM ACCOUNTS"
+    query: str = "SELECT * FROM `accounts`"
     if search is not None:
-        query: str = f"SELECT * FROM ACCOUNTS where idno like '%{search}%' or rfid like '%{search}%'" \
+        query: str = f"SELECT * FROM `accounts` where idno like '%{search}%' or rfid like '%{search}%'" \
                      f" or lastname like '%{search}%' or course like '%{search}%'"
         try:
             if search.lower() == 'all':
-                query: str = "SELECT * FROM ACCOUNTS"
+                query: str = "SELECT * FROM `accounts`"
         except:
             pass
 
@@ -335,7 +335,7 @@ def removeAccount(uid):
 
 
 def getAccountByID(uid: int) -> Account:
-    query: str = f"SELECT * FROM ACCOUNTS where idno='{uid}'"
+    query: str = f"SELECT * FROM `accounts` where idno='{uid}'"
     data = executeQueryReturn(query)
 
     if len(data) > 0:
@@ -748,12 +748,24 @@ def SEARCHMerchOrder(search: str) -> list:
     query: str = "select * from `orders`"
     if search is not None:
         if search != '' and search != 'all':
-            account = getAccountsByRFID(search)
-            _merch = SEARCHMerchandise(search)
-            if len(account) > 0:
-                query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
-            elif len(_merch) > 0:
-                query = f"select * from `orders` where merch_id like '%{_merch[0].uid}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            search_specific = ''
+            try:
+                search_specific = search.split(":")
+                if len(search_specific) == 2:
+                    search_specific[1] = search_specific[1].strip()
+                else:
+                    search_specific.append('all')
+            except:
+                search_specific = [search, search]
+            
+            if 'student' in  str(search_specific[0]):
+                account = getAllAccounts(search_specific[1])
+                if len(account) > 0:
+                    query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            elif 'merch' in str(search_specific[0]):
+                _merch = SEARCHMerchandise(search_specific[1])
+                if len(_merch) > 0:
+                    query = f"select * from `orders` where merch_id like '%{_merch[0].uid}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
             else:
                 query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
     data: dict = executeQueryReturn(query)
