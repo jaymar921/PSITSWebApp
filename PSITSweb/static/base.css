@@ -6,7 +6,7 @@
     0% { opacity: 0; 
         margin-left:-200px;}
     100% { opacity: 1;
-        margin-left:0px; }
+        margin: 0; }
   }
 @keyframes fadeInRight {
     0% { opacity: 0; 
@@ -620,7 +620,6 @@ body {
     text-align: center;
     width: 100%;
 
-    margin: 10px 10px 10px 10px;
 }
 
 .contents .events .events_thread {
@@ -1485,7 +1484,6 @@ body {
     justify-content: center;
     align-content:center;
     width:100%;
-    margin: 10px 10px;
 }
 
 
@@ -1542,9 +1540,6 @@ body {
 .merch_product_individual{
     display:flex;
     width:100%;
-    margin:auto;
-    margin-left:10px;
-    margin-right:10px;
     justify-content: space-around;
 }
 .merch_product_individual hr{
@@ -1606,8 +1601,6 @@ body {
 }
 .myOrder{
     width:100%;
-    margin:auto;
-    margin-left:10px;
 
 
 
@@ -1674,7 +1667,6 @@ word-wrap: break-word;
     justify-content: center;
     align-content:center;
     width:100%;
-    margin: 10px 10px;
 }
 
 

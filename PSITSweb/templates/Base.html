@@ -104,7 +104,7 @@
         <ul>
           <li>CONTACT US</li>
           <br />
-          <li><a href="https://www.facebook.com/PSITS.UCmain"><i class="fa-brands fa-square-facebook"></i> PSITS.UCmain</a></li>
+          <li><a href="https://www.facebook.com/PSITS.UCmain" target="_blank"><i class="fa-brands fa-square-facebook"></i> PSITS.UCmain</a></li>
 
           <li><i class="fa-solid fa-envelope"></i> <a href="https://mail.google.com/mail/u/1/?view=cm&to=psits.ccsmain@gmail.com">psits.ccsmain@gmail.com</a></li>
         </ul>
@@ -149,7 +149,7 @@
 					// otherwise just append the string
 					if(strings[index].substring(0,4) === "http"){
 						let link = strings[index];
-						res += `<a href='${link}'>${link}</a>`;
+						res += `<a href='${link}' target='_blank'>${link}</a>`;
 					}else{
 
             // check if `Posted By: {name} (time)` exist

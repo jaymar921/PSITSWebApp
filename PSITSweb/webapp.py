@@ -268,7 +268,6 @@ def download_file(filename):
 
 def CSVtoExl(data):
     GenerateCSVFile(data)
-    print(app.config['UPLOAD_FOLDER'] + 'GENERATED.csv')
     read_file = pd.read_csv (app.config['UPLOAD_FOLDER'] + 'GENERATED.csv')
     read_file.to_excel (app.config['UPLOAD_FOLDER'] +'GENERATED.xlsx', index = None, header=True)
 
