@@ -756,7 +756,7 @@ def SEARCHMerchOrder(search: str) -> list:
                 else:
                     search_specific.append('all')
             except:
-                search_specific = [search, search]
+                search_specific = [search, 'not-found']
             
             if 'student' in  str(search_specific[0]):
                 account = getAllAccounts(search_specific[1])
@@ -764,10 +764,13 @@ def SEARCHMerchOrder(search: str) -> list:
                     query = f"select * from `orders` where account_id like '%{account[0].uid}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
             elif 'merch' in str(search_specific[0]):
                 _merch = SEARCHMerchandise(search_specific[1])
+                
                 if len(_merch) > 0:
-                    query = f"select * from `orders` where merch_id like '%{_merch[0].uid}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+                    query = f"select * from `orders` where merch_id = {_merch[0].uid}  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+                else: query = f"select * from `orders` where merch_id like '-1'" # basically fail the search
             else:
                 query = f"select * from `orders` where account_id like '%{search}%' or merch_id like '%{search}%'  or status like '%{search}%' or reference like '%{search}%' or uid like '%{search}%'"
+            
     data: dict = executeQueryReturn(query)
     orders = []
     for order in data:

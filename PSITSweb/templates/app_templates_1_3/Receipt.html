@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+<style>
+
+    ._center{
+        position: relative;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .autoWidth{
+        display: inline-block;
+        width: 300px;
+    }
+
+</style>
+<br />
+<button class="backButton" onclick="location.href='/PSITS@MyOrderList'">Back</button>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="_center autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px;">
+    <h1 style="text-align: center;">PSITS Receipt</h1>
+    <br />
+    <div id="qrcode"></div>
+    <script type="text/javascript">
+        new QRCode(document.getElementById("qrcode"), {
+            text: "{{ref}}",
+            width: 275,
+            height: 275,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+    <h3 style="text-align: center;">{{ref}}</h3>
+    <br />
+    <hr>
+    <br />
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Buyer: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.account.lastname}}, {{ORDER.account.firstname}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Product: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.merch.title}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;width:  50%;">Original-Price: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 50%;">₱{{ORDER.merch.price}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Discounted Price: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 51%;">₱{{price}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Purchase-Date: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 57%;">{{ORDER.order.order_date}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Quantity: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.order.quantity}}</a>
+    </div>
+    <br />
+    <hr>
+    <br />
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Total: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">₱{{total}}</a>
+    </div>
+    <div style="display: flex;">
+        <label style="font-size: 15px;">Status: </label><a style="color:red; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.order.status}}</a>
+    </div>
+    <br />
+    <hr>
+</div>
+
+{% endblock %}

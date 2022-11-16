@@ -32,7 +32,7 @@
        
             {% for order in orders %}
            
-            <tr>
+            <tr onclick="location.href='/PSITS/Orders/Receipt/{{order.reference}}'" style="cursor: pointer;">
                 <td class="order_img">
                 {% if order.merch.image_file != '' %}
                 <img id="{{order.merch.uid}}" loading="lazy"

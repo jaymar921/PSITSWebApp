@@ -8,8 +8,8 @@ from flask import session, redirect, url_for, render_template, request, jsonify
 
 from Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, databaseLog, \
     SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise, AddPromo, GetAllPromo, DeletePromo
-from Models import Merchandise, ORDER_STATUS, STATIC_DATA
-from Util import isAdmin, GetReference, contentVerifier
+from Models import Merchandise, ORDER_STATUS, STATIC_DATA, MerchOrder, AccountOrders, Account
+from Util import isAdmin, GetReference, contentVerifier, GetPriceRef
 from webApp_utility import save_redirection, checkImageExist
 from webapp import ALLOWED_EXTENSION
 
@@ -208,3 +208,17 @@ def remove_promo():
     DeletePromo(str(json_data))
 
     return redirect(url_for('psits_merchandise_list'))
+
+
+@app.route("/PSITS/Orders/Receipt/<ref>", methods = ['GET'])
+def psits_receipt_generator(ref):
+    try:
+        order: MerchOrder = SEARCHMerchOrder(ref)[0]
+        account: Account = getAccountByID(order.account_id)
+        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+        accountOrder: AccountOrders = AccountOrders(account, merch, order)
+        total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
+        price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
+    except:
+        return redirect(url_for('cant_find_link'))
+    return render_template('app_templates_1_3/Receipt.html', title=f'Receipt {ref}', ORDER = accountOrder, ref = ref, total = total, price = price)
