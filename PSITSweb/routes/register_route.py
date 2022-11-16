@@ -5,7 +5,7 @@ import flask
 from flask import render_template, request, redirect, url_for, session
 
 from Database import getAccountByID, getAnnouncements, registerAccountDB, databaseLog, \
-    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, SEARCHPSITSOfficer, getAllAccounts, SEARCHMerchOrder, \
+    CREATEPSITSOfficer, UPDATEPSITSOfficer, GETAllPSITSOfficer, SEARCHPSITSOfficer, getAllAccounts, \
     DELETEPSITSOfficer, updateAccount, removeAccount
 from EmailAPI import pushEmail
 from Models import Account, Email, PSITSOfficer
@@ -56,25 +56,6 @@ def registerAccount():
             pushEmail(Email('Welcome to PSITS', email, content))
         finally:
             return redirect(url_for("login_page"))
-
-
-# create a CSV list for students and orders list
-@app.route("/PSITS@CSVdata/<fn>/<search>")
-def showCSVData(fn, search):
-    if "username" in session:
-        if isAdmin(session['username']):
-            if fn is not None:
-                if fn == "students":
-                    students = getAllAccounts(search)
-                    return render_template("CSVTemplate.html", students=students)
-                elif fn == 'orders':
-                    orders = SEARCHMerchOrder(search)
-                    return render_template("CSVTemplate.html", orders=orders)
-
-        else:
-            return render_template("404Page.html", logout="none", login="none",
-                                   message="Don't try to break the page :<")
-    return redirect(url_for("landing_page"))
 
 
 # See all registered account

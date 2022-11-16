@@ -2,6 +2,7 @@ from concurrent.futures import thread
 import os
 import socket
 from time import sleep
+import pandas as pd
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
@@ -9,10 +10,10 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from Database import getAnnouncements, getAccountByID,\
     databaseInit, databaseLog, GETAllEvent, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember,  \
-    SEARCHFacultyMember
-from Models import FacultyMember
+    SEARCHFacultyMember, GETAllMerchandise, SEARCHMerchOrder, getAllAccounts
+from Models import FacultyMember, Merchandise, Account
 from Util import rankOfficers, CONFIGURATION, CONFIGURATION_DISPLAY
-from Util import isAdmin
+from Util import isAdmin, GetReference
 from waitress import serve
 import messages
 import threading
@@ -203,6 +204,47 @@ def about_us():
                            officers=officers)
 
 
+# create a CSV list for students and orders list
+@app.route("/PSITS@CSVdata/<fn>/<search>")
+def showCSVData(fn, search):
+    if "username" in session:
+        if isAdmin(session['username']):
+            if fn is not None:
+                if fn == "students":
+                    students = getAllAccounts(search)
+                    return render_template("CSVTemplate.html", students=students)
+                elif fn == 'orders':
+                    orders = SEARCHMerchOrder(search)
+                    accounts = getAllAccounts('all')
+                    merchandise = GETAllMerchandise()
+
+                    data: list = []
+
+                    data.append("\"REF #\",\"NAME\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"STATUS\"\n")
+
+                    for order in orders:
+                        account: Account = None
+                        merch: Merchandise = None
+                        for acc in accounts:
+                            if acc.uid == order.account_id:
+                                account = acc
+                        for mer in merchandise:
+                            if mer.uid == order.merchandise_id:
+                                merch = mer
+                        val = f"\"{GetReference(order.reference)}\",\"{account.firstname} {account.lastname}\",\"{merch.title}\",\"{order.order_date}\",\"{order.quantity}\",\"{order.additional_info}\",\"{order.status}\"\n"
+                        data.append(val)
+
+                    CSVtoExl(data)
+                    
+                    #return render_template("CSVTemplate.html", orders=data)
+                    return redirect(url_for('download_file',filename='GENERATED.csv'))
+
+        else:
+            return render_template("404Page.html", logout="none", login="none",
+                                   message="Don't try to break the page :<")
+    return redirect(url_for("landing_page"))
+
+
 @app.route("/CannotFindLink")
 def cant_find_link():
     return render_template("404Page.html", logout="none", login="none", title="PSITS I'm lost :<")
@@ -222,6 +264,21 @@ def after_request(response):
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+
+def CSVtoExl(data):
+    GenerateCSVFile(data)
+    print(app.config['UPLOAD_FOLDER'] + 'GENERATED.csv')
+    read_file = pd.read_csv (app.config['UPLOAD_FOLDER'] + 'GENERATED.csv')
+    read_file.to_excel (app.config['UPLOAD_FOLDER'] +'GENERATED.xlsx', index = None, header=True)
+
+
+def GenerateCSVFile(data):
+    with open(app.config['UPLOAD_FOLDER'] + 'GENERATED.csv', 'w') as file:
+        for line in data:
+            file.write(line)
+
+
 
 
 if __name__ == '__main__':

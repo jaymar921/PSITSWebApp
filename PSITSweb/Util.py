@@ -3,6 +3,8 @@ import warnings
 import re, random
 import os
 
+
+
 ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
 
 
@@ -172,7 +174,6 @@ def fileExist(file):
 
 def removeFile(file):
     return os.remove(file)
-
 
 def CONFIGURATION()-> dict:
     configuration_map = {}
