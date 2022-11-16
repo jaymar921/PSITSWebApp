@@ -263,7 +263,7 @@ function loadAnalytic(){
 
     // Bar chart
     var mOrders = new Chart(mOrderChartHTML, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: monthlyOrderLabels,
             datasets: [{

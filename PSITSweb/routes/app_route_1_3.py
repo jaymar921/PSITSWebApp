@@ -117,7 +117,7 @@ def psits_data_analytics():
         else:
             # add a new entry to the level population
             student_levels[year] = 1
-    return render_template('app_templates_1_3/DataAnalytics.html',
+    return render_template('app_templates_1_3/DataAnalytics.html', title = 'PSITS Data Analytic',
                                 logout='block', login='none', account_data=ADMIN_ACCOUNT,
                                 admin='block',monthly_revenue = json.dumps(monthly_revenue), department_sales = json.dumps(department_sales),
                                 student_courses = json.dumps(student_courses), student_levels = json.dumps(student_levels), montly_orders = json.dumps(montly_orders), department_orders = json.dumps(department_orders))
