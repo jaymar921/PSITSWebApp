@@ -746,17 +746,29 @@ def GETAllMerchOrder() -> list:
 # @returns a list of MerchOrder
 def SEARCHMerchOrder(search: str) -> list:
     query: str = "select * from `orders`"
+    SEARCH_STATUS = 'not-found'
     if search is not None:
         if search != '' and search != 'all':
-            search_specific = ''
+            search_specific = [search, 'not-found', 'not-found']
             try:
                 search_specific = search.split(":")
-                if len(search_specific) == 2:
+                if len(search_specific) >= 2:
                     search_specific[1] = search_specific[1].strip()
+                    if len(search_specific) == 3:
+                        search_specific[2] = search_specific[2].strip()
                 else:
                     search_specific.append('all')
+                    search_specific.append('not-found')
             except:
-                search_specific = [search, 'not-found']
+                search_specific = [search, 'not-found', 'not-found']
+           
+
+            
+            if len(search_specific) == 3:
+                if 'not-found' not in search_specific[2]:
+                    SEARCH_STATUS = search_specific[2]
+            
+            
             
             if 'student' in  str(search_specific[0]):
                 account = getAllAccounts(search_specific[1])
@@ -774,6 +786,9 @@ def SEARCHMerchOrder(search: str) -> list:
     data: dict = executeQueryReturn(query)
     orders = []
     for order in data:
+        if 'not-found' not in SEARCH_STATUS:
+            if order['status'].lower() != SEARCH_STATUS.lower():
+                continue
         orders.append(
             MerchOrder(
                 order['uid'],
