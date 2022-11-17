@@ -592,6 +592,12 @@ body {
 
 }
 
+.totalVal{
+    font-size: 80px;
+    font-weight: 800;
+    color: #40BB3D;
+}
+
 /*=========================================================================*/
 /*HOME PAGE */
 /*=========================================================================*/
@@ -2075,6 +2081,10 @@ word-wrap: break-word;
     .announcement_content {
         width: 100%;
 
+    }
+
+    .totalVal{
+        font-size: 35px;
     }
 
 @media(max-width: 363px){

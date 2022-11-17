@@ -10,7 +10,7 @@ from Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, datab
     SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise, AddPromo, GetAllPromo, DeletePromo
 from Models import Merchandise, ORDER_STATUS, STATIC_DATA, MerchOrder, AccountOrders, Account
 from Util import isAdmin, GetReference, contentVerifier, GetPriceRef
-from webApp_utility import save_redirection, checkImageExist
+from webApp_utility import save_redirection, checkImageExist, is_blocked_route
 from webapp import ALLOWED_EXTENSION
 
 
@@ -57,6 +57,8 @@ def psits_merchandise_list():
 def psits_merchandise_product(uid):
     if 'username' not in session:
         save_redirection('psits_merchandise_product',uid)
+        if is_blocked_route('psits_merchandise'):
+            return redirect(url_for('maintenance_page'))
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
         product: Merchandise = SEARCHMerchandise(str(uid))[0]
@@ -137,6 +139,8 @@ def addMerch():
 @app.route("/PSITS@Merchandise")
 def psits_merchandise():
     save_redirection('psits_merchandise')
+    if is_blocked_route('psits_merchandise'):
+        return redirect(url_for('maintenance_page'))
     MERCH = GETAllMerchandise()
     events: list = GETAllEvent()
     # check if merch has photo
@@ -210,10 +214,13 @@ def remove_promo():
     return redirect(url_for('psits_merchandise_list'))
 
 
-@app.route("/PSITS/Orders/Receipt/<ref>", methods = ['GET'])
-def psits_receipt_generator(ref):
+@app.route("/PSITS/Orders/Receipt/<uid>", methods = ['GET'])
+def psits_receipt_generator(uid):
+    save_redirection('psits_receipt_generator', uid)
+    if is_blocked_route('psits_receipt_generator'):
+        return redirect(url_for('maintenance_page'))
     try:
-        order: MerchOrder = SEARCHMerchOrder(ref)[0]
+        order: MerchOrder = SEARCHMerchOrder(uid)[0]
         account: Account = getAccountByID(order.account_id)
         merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
         accountOrder: AccountOrders = AccountOrders(account, merch, order)
@@ -221,4 +228,4 @@ def psits_receipt_generator(ref):
         price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
     except:
         return redirect(url_for('cant_find_link'))
-    return render_template('app_templates_1_3/Receipt.html', title=f'Receipt {ref}', ORDER = accountOrder, ref = ref, total = total, price = price)
+    return render_template('app_templates_1_3/Receipt.html', title=f'Receipt {uid}', ORDER = accountOrder, ref = uid, total = total, price = price)

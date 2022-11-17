@@ -36,7 +36,7 @@ import routes.event_route
 import routes.order_route
 import routes.merchandise_route
 import routes.app_route_1_3
-from webApp_utility import save_redirection, checkImageExist
+from webApp_utility import save_redirection, checkImageExist, is_blocked_route
 
 """
       ____  ____ ___ _____ ____  
@@ -95,6 +95,8 @@ def landing_page():
                                    events=events,
                                    account_data=getAccountByID(session['username']))
         else:
+            if is_blocked_route('landing_page'):
+                return redirect(url_for('maintenance_page'))
             return render_template("Homepage.html",
                                    title="PSITS ANNOUNCEMENTS",
                                    ANNOUNCEMENTS=announcements,
@@ -103,6 +105,8 @@ def landing_page():
                                    admin="none",
                                    events=events,
                                    account_data=getAccountByID(session['username']))
+    if is_blocked_route('landing_page'):
+        return redirect(url_for('maintenance_page'))
     return render_template("Homepage.html",
                            title="PSITS ANNOUNCEMENTS",
                            ANNOUNCEMENTS=announcements,
@@ -114,6 +118,8 @@ def landing_page():
 def psits_faculty_members():
     if flask.request.method == 'GET':
         save_redirection('psits_faculty_members')
+        if is_blocked_route('psits_faculty_members'):
+            return redirect(url_for('maintenance_page'))
         if 'username' not in session:
             return render_template("Faculty.html",
                                    title="Faculty Members",
@@ -177,6 +183,8 @@ def psits_faculty_members():
 @app.route("/PSITS@AboutUs")
 def about_us():
     save_redirection('about_us')
+    if is_blocked_route('about_us'):
+        return redirect(url_for('maintenance_page'))
     officers = GETAllPSITSOfficer()
     officers = rankOfficers(officers)
     if "username" in session:
@@ -288,12 +296,12 @@ if __name__ == '__main__':
         databaseLog(f"Server Initialized, configured to run on {IPAddress}:{CONFIGURATION()['PORT']}")
         # use this if you are debugging the app
         if CONFIGURATION()['PRODUCTION'].lower() == 'false':
-            databaseLog(f"Server started on DEBUG mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
+            databaseLog(f"Server starting on DEBUG mode, will run on {IPAddress}:{CONFIGURATION()['PORT']}")
             app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
         elif CONFIGURATION()['PRODUCTION'].lower() == 'true':
             # Production
-            databaseLog(f"Server started on PRODUCTION mode, running on {IPAddress}:{CONFIGURATION()['PORT']}")
-            serve(app, host="0.0.0.0", port=5000)
+            databaseLog(f"Server starting on PRODUCTION mode, will run on {IPAddress}:{CONFIGURATION()['PORT']}")
+            serve(app, host="0.0.0.0", port=CONFIGURATION()['PORT'])
         else:
             databaseLog(f"Failed to start web app, check `::PRODUCTION` setting at configuration.psits_config")
 

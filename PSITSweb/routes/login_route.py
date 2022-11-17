@@ -4,11 +4,13 @@ from flask import session, redirect, url_for, render_template, request
 
 from Database import getAnnouncements, databaseLog, getAccountByID, GETAllEvent, getAccount
 from Util import hashData
-from webApp_utility import has_redirection, get_redirection, get_redirection_extra
+from webApp_utility import has_redirection, get_redirection, get_redirection_extra, is_blocked_route
 
 
 @app.route("/PSITS@Login")
 def login_page():
+    if is_blocked_route('landing_page'):
+        return redirect(url_for('maintenance_page'))
     if 'username' in session:
         return redirect(url_for("landing_page"))
     return render_template("Login.html",
@@ -30,6 +32,8 @@ def logout():
 # Entry point
 @app.route("/PSITSLogin", methods=['POST'])
 def login():
+    if is_blocked_route('landing_page'):
+        return redirect(url_for('maintenance_page'))
     account_id: str = request.form['id_number']
     password: str = request.form['password']
     account = getAccount(int(account_id), hashData(password))

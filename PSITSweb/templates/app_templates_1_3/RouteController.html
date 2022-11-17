@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .form-container{
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        display: inline-block;
+        border: 5px dotted black;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .form-container h1{
+        text-align: center;
+    }
+
+    .form-container form label{
+        padding-left: 10px;
+    }
+</style>
+<br />
+<button class="backButton" onclick="location.href='/'">Back</button>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="form-container">
+    <h1>WebApp Routes</h1>
+    <p style="color: green; white-space: pre-line;">Note: Unchecking routes will 
+        redirect users to maintenance page</p>
+    <form action="/PSITS@Routes" method="POST">
+        <br>
+        <input type="checkbox" name="merch_route" {{merch_route}}><label>Merch Route</label>
+        <br>
+        <input type="checkbox" name="announcement_route" {{announcement_route}}><label>Announcement Route</label>
+        <br>
+        <input type="checkbox" name="about_page" {{about_page}}><label>About-Us Route</label>
+        <br>
+        <input type="checkbox" name="faculty_route" {{faculty_route}}><label>Faculty Route</label>
+        <br>
+        <input type="checkbox" name="receipt_route" {{receipt_route}}><label>Receipt Route</label>
+        <br>
+        <br>
+        <div>
+            <input class="backButton" type="submit" value="Apply">
+        </div>
+    </form>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+    
+
+{% endblock %}

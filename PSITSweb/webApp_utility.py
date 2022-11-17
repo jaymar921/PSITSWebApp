@@ -3,6 +3,8 @@ import os
 
 from flask import session
 
+ROUTES_CONTROLLER: list = []
+
 def has_redirection() -> bool:
     if 'redirect' in session:
         if session['redirect'] != '':
@@ -29,3 +31,16 @@ def get_redirection_extra():
 
 def checkImageExist(name: str):
     return os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], name))
+
+
+def block_route(route):
+    ROUTES_CONTROLLER.append(route)
+
+
+def is_blocked_route(route):
+    return route in ROUTES_CONTROLLER
+
+
+def unblock_route(route):
+    if is_blocked_route(route):
+        ROUTES_CONTROLLER.remove(route)
