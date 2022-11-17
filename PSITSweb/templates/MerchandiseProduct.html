@@ -87,33 +87,42 @@
                 {% if cancel_days > 0 %}
                     <p style="color: blue;">You have {{cancel_days}} day{{'s' if cancel_days > 1 else ''}} to cancel this order</p>
                     <button class="normalButton" onclick="disable(this);location.href='/PSITS@RequestCancel/{{order_id}}'" type="reset">CANCEL</button>
+                    <button class="normalButton" onclick="disable(this);location.href='/PSITS/Orders/Receipt/{{order_id}}'" type="reset">RECEIPT</button>
                 {% else %}
                     <p style="color: red;">You can no longer cancel this order</p>
+                    <button class="normalButton" onclick="disable(this);location.href='/PSITS/Orders/Receipt/{{order_id}}'" type="reset">RECEIPT</button>
                 {% endif %}
             {% elif (status == "PAID") %}
                 <p>You already have paid this item, <br>please wait for announcements for claiming of item</p>
                 <p style="color: red;">You can no longer cancel this order</p>
+                <button class="normalButton" onclick="disable(this);location.href='/PSITS/Orders/Receipt/{{order_id}}'" type="reset">RECEIPT</button>
             {% else %}
                 {% if product.stock == 0 %}
                     <p style="color: red;">Out Of Stock</p>
                 {% else %}
                 <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
                 <select name="quantity" id="quantity" onchange="checkStockOverOrder()">
-                    {% if 'Ticket' in product.title or 'ticket' in product.title or 'shirt' in product.title or 'Shirt' in product.title or 'lanyard' in product.title or 'Lanyard' in product.title %}
+                    {% if 'Ticket' in product.title or 'ticket' in product.title or 'shirt' in product.title or 'Shirt' in product.title or 'lanyard' in product.title or 'Lanyard' in product.title or 'hood' in product.title or 'Hood' in product.title %}
                         <option value="1">1</option>
+                        <option value="2">2</option>
                     {% else %}
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
+                        <option value="5">6</option>
+                        <option value="5">7</option>
+                        <option value="5">8</option>
+                        <option value="5">9</option>
+                        <option value="5">10</option>
                     {% endif %}
                 </select><br />
                 <br />
                 <label for="additional_info">Additional Info</label><br />
-                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.."/></textarea>
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.." required></textarea>
                 <br >
-                <label for="promocode">Promo Code: </label><input type="text" name="promocode" id="promocode" placeholder="code here..." />
+                <label for="promocode">Promo Code: </label><input style="padding-left: 5px;" type="text" name="promocode" id="promocode" placeholder="Enter code here..." />
                 <br>
                 <br />
                 <button type="submit" class="normalButton" onclick="disable(this)" id="submitBTN">Order</button>
