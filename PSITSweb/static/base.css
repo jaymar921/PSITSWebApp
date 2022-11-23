@@ -1777,6 +1777,10 @@ word-wrap: break-word;
  .profile-bio span{
     white-space: pre-line;
  }
+
+ .blur-content{
+    filter: blur(2px);
+ }
   
   
 /*===========================================================================*/

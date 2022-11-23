@@ -1,8 +1,231 @@
 {% extends 'base.html' %}
 {% block content %}
+<script defer src="{{url_for('static', filename='transaction.js')}}"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<style>
+  .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: cornflowerblue transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading_box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: rgba(45, 204, 164, 0.6);
+    padding: 30px;
+    border-radius: 5px;
+  }
+
+  .handle-modal{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    top: 55%;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    z-index: 10;
+    border: 3px dotted black;
+  }
+
+  ._center{
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .autoWidth{
+      display: inline-block;
+      width: 300px;
+  }
+
+  .flex{
+    display: flex;
+  }
+
+  .search-container{
+    padding: 10px;
+    width: 400px;
+  }
+
+  .blur{
+    filter: blur(5px);
+  }
+
+  .information-message{
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+    width: auto;
+    padding: 20px;
+    background-color: lightyellow;
+    margin: 10px;
+    border-radius: 10px;
+    border: 5px solid darkgoldenrod;
+  }
+
+  .update-message{
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+    width: auto;
+    padding: 5px;
+    background-color: lightcyan;
+    margin: 10px;
+    border-radius: 10px;
+    border: 5px solid lightskyblue;
+    text-align: center;
+  }
+
+  .information-container label, input, textarea, select{
+    padding: 8px;
+  }
+
+  .information-container label{
+    display: inline-block;
+    width: 30%;
+  }
+
+  .information-container input, select{
+    width: 65%;
+  }
+
+  .information-container textarea{
+    background-color: aliceblue;
+    width: 100%;
+    resize: none;
+    border: 2px solid black;
+    border-radius: 10px;
+    height: 100px;
+  }
+
+  .small-mobile{
+    font-size: normal;
+  }
+
+  @media(max-width: 800px) {
+    .small-mobile{
+      font-size: x-small;
+    }
+  }
+
+</style>
+<div id="info_box" onclick="hide(this);" class="loading_box" style="display: none;position: fixed; z-index: 11;">
+  <div id="info_load" style="align-content: center; left:50%; transform: translateX(-50%); " class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  <h1 id="info_message" style="text-align: center;">Loading... </h1>
+  <p style="text-align: center; color:rgb(21, 84, 156);">.. Click to hide ..</p>
+</div>
+
+<div class="handle-modal flex hide" id="order-modal" style="display: none;">
+  <div class="reciept">
+    <div class=" autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px;">
+      <h1 style="text-align: center;">PSITS Receipt</h1>
+      <br />
+      <div id="qrcode" style="width: 275px; height: 275px;"></div>
+      <h3 id="fld_reference" style="text-align: center;"></h3>
+      <br />
+      <hr>
+      <br />
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Buyer: </label><a id="fld_buyer" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Product: </label><a id="fld_product" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;width:  50%;">Original-Price: </label><a id="fld_orig_price" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 50%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Discounted Price: </label><a id="fld_discount_price" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 51%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Purchase-Date: </label><a id="fld_p_date" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 57%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Quantity: </label><a id="fld_qty" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+      </div>
+      <br />
+      <hr>
+      <br />
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Total: </label><a id="fld_total" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+      </div>
+      <div style="display: flex;">
+          <label style="font-size: 15px;">Status: </label><a id="fld_status" style="color:red; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+      </div>
+      <br />
+      <hr>
+    </div>
+  </div>
+  <div class="form">
+    <p class="information-message">
+      For best searching result, it is highly recommended to enter the reference code since it is distinct.
+    </p>
+    <div class="search-container searchTable">
+      <input id="handle_search" style="width: 65%; border: 1px solid black; padding: 5px" type="text" name="search" placeholder=" REFERENCE CODE" value="">
+      <button type="button" onclick="search_individual_transaction(document.getElementById('handle_search').value,document.getElementById('secret_key').value)" class="normalButton"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+      <button type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>            
+    </div>
+    <div class="information-container">
+      <br>
+      <label>Customer:&nbsp;</label><input id="info_buyer" type="text" disabled/><br>
+      <label>Product:&nbsp;</label><input id="info_product" type="text" disabled/><br>
+      <label>Price:&nbsp;</label><input id="info_price" type="text" disabled/><br>
+      <label>Discounted Price:&nbsp;</label><input id="info_discounted_price" type="text" disabled/><br><br>
+      <label>Information:&nbsp;</label><br><textarea id="info_info" type="text" disabled></textarea><br>
+      <label>Quantity:&nbsp;</label><input id="info_quantity" onchange="updateReceiptEvent()" oninput="updateReceiptEvent()" type="number" disabled/><br>
+      <label>Status:&nbsp;</label>
+      <select id="info_status" value="NONE" onchange="updateReceiptEvent()" disabled>
+        <option value="NONE" selected disabled>-</option>
+        <option value="ORDERED">ORDERED</option>
+        <option value="PAID">PAID</option>
+        <option value="CLAIMED">CLAIMED</option>
+        <option value="CANCELLED">CANCELLED</option>
+      </select><br>
+      <br>
+      <button class="normalButton" style="display: flex;" onclick="updateOrder('{{key}}')">UPDATE ORDER</button><p class="update-message" id="updateMessage" style="display: none;">Success Update</p>
+    </div>
+  </div>
+</div>
+
 <br />
 <br />
 <br />
+<div id="transaction_ui">
 <button class="normalButton" onclick="home()">Back</button>
 
    
@@ -12,15 +235,17 @@
         <h1>Orders List</h1>
       </div>
       <div style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
-        <span style="color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
+        <span class="small-mobile" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
           ‣<a style="color: green;">'all'</a> - Search all orders
           ‣<a style="color: green;">'student: [ID/NAME]'</a> - Search all orders with specific student 
           ‣<a style="color: green;">'student: [ID/NAME] : [STATUS]'</a> - Search all orders with specific student and status
           ‣<a style="color: green;">'merch: [TITLE]'</a> - Search all orders with specific merchandise
           ‣<a style="color: green;">'merch: [TITLE] : [STATUS]'</a> - Search all orders with specific merchandise and status
+
+          <a style="color: rgb(161, 10, 116)"><b>When dealing with individual transactions, it is recommended to go to 'Handle Transaction' mode</b></a>
         </span>
       </div>
-
+ 
 
       <div class="warning">
         <center><h3 style="color:red;">Note: You cannot edit in mobile mode.</h3></center>
@@ -31,90 +256,108 @@
       
     
        <br />
-            <form action="" method="get">
+          
               
               <div class="searchTable">
                 <center>
-            <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}">
-            <button type="submit" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">Search</p></div></button>
-            <button type="button" onclick="loadCSVTemplate('orders',document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">CSV</p></div></button>
-            <button type="button" onclick="location.href='/PSITS@DataAnalytics'" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p>CHARTS</p></div></button>
-            </center>
-          </div>
-          </form>
+                  
+                  <button title="Generate a data from search, it downloads an excel file" type="button" onclick="loadCSVTemplate('orders',document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">&nbsp;CSV</p></div></button>
+                  <button title="Display the data analytics" type="button" onclick="location.href='/PSITS@DataAnalytics'" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fas fa-chart-bar"></i> <p class="hide">&nbsp;Charts</p></div></button>
+                  <button title="Transact one at a time" type="button" onclick="showModal()" class="normalButton hide"> <div class="flexer" style="display:flex;"><i class="fa-solid fa-scroll"></i><p class="hide">&nbsp;HANDLE</p></div></button>
+                  
+                  <br><br>
+                  <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}" required>
+                  <input id="secret_key" type="hidden" value="{{key}}">  
+                  <button title="Search by multiple transactions" type="button" onclick="search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value); return;" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">&nbsp;Search</p></div></button>
+                </center>
+              </div>
+         
        <br />
           <div class="tableTitle">
-            <h1 style="color: orange; font-size:120%;"> Orders: ₱{{'%0.2f'| format(reserve|float)}}  |  Total: ₱{{'%0.2f'| format(paid|float)}}/{{'%0.2f'| format(total|float)}}  </h1>
-          
+            <!--
+              Old JINJA TAGS, I REMOVED THIS BECAUSE THE USER KEEPS ON RELOADING THE WHOLE PAGE, IT IS INEFFICIENT
+            <h1 style="color: orange; font-size:120%;"> Orders: ₱ '%0.2f'| format(reserve|float)  |  Total: ₱ '%0.2f'| format(paid|float) / '%0.2f'| format(total|float)  </h1>
+            -->
+            <h1 style="color: orange; font-size:120%;"> Orders: ₱<a id="display_reserve"></a>  |  Total: ₱<a id="display_paid"></a> /<a id="display_total"></a>   </h1>
+
           </div>
           <br />
           
         <br>
         <div class="table">
+          <form id="form_body" method="post" action="">
           <table>
             <thead>
               <tr>
-                <th>REF #</th>
+                <th class="hide">REF #</th>
                 <th>NAME</th>
                 <th>PRODUCT</th>
-                <th>ADD INFO.</th>
+                <th class="hide">ADD INFO.</th>
                 <th class="hide">QUANTITY</th>
                 <th class="hide">AMOUNT</th>
                 <th>STATUS</th>
                 <th class="hide">ACTION</th>
               </tr>
             </thead>
-            <tbody>
-
-              {% for order in ORDERS %}
+            
+            <table>
+              <tbody id="table_body" name="table_body">
+              <!--
+              % for order in ORDERS %
               <form method="post" action="">
                 <tr>
-                  <input name="order_ref" id="{{order.order.uid}}idnum" type="text" value="{{order.reference}}" hidden>
-                  <td><input name="ref" id="{{order.order.uid}}ref" type="text" value="{{order.reference}}" disabled></td>
-                  <td><input name="name" id="{{order.order.uid}}name" type="text" value="{{order.account.lastname}}, {{order.account.firstname}}" disabled></td>
-                  <td><input name="prod" id="{{order.order.uid}}prod" type="text" value="{{order.merch.title}}" disabled></td>
-                  <td><p style="white-space: pre-line;" class="information">{{order.order.additional_info}}&#8203;</p></td>
-                  <td class="hide"><input name="qty" id="{{order.order.uid}}qty" type="text" value="{{order.order.quantity}}" disabled></td>
-                  <td class="hide"><input name="amt" id="{{order.order.uid}}amt" type="text" value="P{{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}}" disabled></td>
-                  {% if order.getStatus() == 'ORDERED' %}
+                  <input name="order_ref" id="{order.order.uid}idnum" type="text" value="{order.reference}" hidden>
+                  <td><input name="ref" id="{order.order.uid}ref" type="text" value="{order.reference}" disabled></td>
+                  <td><input name="name" id="{order.order.uid}name" type="text" value="{order.account.lastname}, {order.account.firstname}" disabled></td>
+                  <td><input name="prod" id="{order.order.uid}prod" type="text" value="{order.merch.title}" disabled></td>
+                  <td><p style="white-space: pre-line;" class="information">{order.order.additional_info}&#8203;</p></td>
+                  <td class="hide"><input name="qty" id="{order.order.uid}qty" type="text" value="{order.order.quantity}" disabled></td>
+                  <td class="hide"><input name="amt" id="{order.order.uid}amt" type="text" value="P{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}" disabled></td>
+                  % if order.getStatus() == 'ORDERED' %
                   <td>
-                    <select name="status" id="{{order.order.uid}}status" disabled>
+                    <select name="status" id="{order.order.uid}status" disabled>
                         <option value="ORDERED" selected>ORDERED</option>
                         <option value="PAID">PAID</option>
                         <option value="CANCELLED">CANCEL</option>
                       </select>
                   </td>
-                  {% elif order.getStatus() == 'PAID' %}
+                  % elif order.getStatus() == 'PAID' %
                   <td>
-                    <select name="status" id="{{order.order.uid}}status" disabled>
+                    <select name="status" id="{order.order.uid}status" disabled>
                       <option value="PAID" selected>PAID</option>
                       <option value="CLAIMED">CLAIMED</option>
                     </select>
                   </td>
-                  {% elif order.getStatus() == 'CANCELLED' %}
+                  % elif order.getStatus() == 'CANCELLED' %
                   <td>
                     <select name="status" disabled>
                       <option value="CANCELLED" selected>CANCELLED</option>
                     </select>
                   </td>
-                  {% else %}
+                  % else %
                   <td>
                     <select name="status" disabled>
                       <option value="CLAIMED" selected>CLAIMED</option>
                     </select>
                   </td>
-                  {% endif %}
-                  <td class="hide"><a id="{{order.order.uid}}edit" onclick="editOrderStatus({{order.order.uid}})">✎</a><button id="{{order.order.uid}}button" type="submit" hidden>💾</button> <a onclick="deleteOrder('{{order.order.uid}}')">❌</a></td>
+                  % endif %
+                  <td class="hide"><a id="{order.order.uid}edit" onclick="editOrderStatus({order.order.uid})">✎</a><button id="{order.order.uid}button" type="submit" hidden>💾</button> <a onclick="deleteOrder('{order.order.uid}')">❌</a></td>
                 </tr>
               </form>
-              {% endfor %}
-
-
+              % endfor %
+              
+            -->
+              
             </tbody>
+            
           </table>
+          </form>
         </div>
         <br/ >
-        <p style="text-align: center; color: red;">Only the top 100 in the list are displayed</p>
+        <!--
+          <p style="text-align: center; color: red;">Only the top 100 in the list are displayed</p>
+        -->
+        <p style="text-align: center; color: cyan;">All orders will be listed</p>
       <br>
       <br>
       <br>
@@ -127,98 +370,5 @@
  
   <br /><br /><br /><br /><br /><br />
 <br /><br /><br /><br /><br /><br />
-
-<!-- 
-  <div>
-    <div class="information_container">
-
-      <div class="information_content">
-        <h1>Orders List</h1>
-      </div>
-
-        <div class="information_menu">
-        <form action="" method="get">
-          <div class="menu_item">
-            <button type="reset" onclick="home()">PSITS</button>
-            <button type="submit">Search</button>
-            <input id="search_student" style="width: 40ch;" type="text" name="search" placeholder="SEARCH REF # | STATUS">
-          </div>
-        </form>
-
-        </div>
-        <br>
-        <div class="information_content">
-          <div class="menu_item">
-            <h1 style="color: aqua;"> Orders: ₱{{'%0.2f'| format(reserve|float)}}  |  Total: ₱{{'%0.2f'| format(paid|float)}}/{{'%0.2f'| format(total|float)}}  </h1>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>REF #</th>
-                <th>NAME</th>
-                <th>PRODUCT</th>
-                <th>QUANTITY</th>
-                <th>AMOUNT</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {% for order in ORDERS %}
-              <form method="post" action="">
-                <tr>
-                  <input name="order_ref" id="{{order.order.uid}}idnum" type="text" value="{{order.reference}}" hidden>
-                  <td><input name="ref" id="{{order.order.uid}}ref" type="text" value="{{order.reference}}" disabled></td>
-                  <td><input name="name" id="{{order.order.uid}}name" type="text" value="{{order.account.lastname}}, {{order.account.firstname}}" disabled></td>
-                  <td><input name="prod" id="{{order.order.uid}}prod" type="text" value="{{order.merch.title}}" disabled></td>
-                  <td><input name="qty" id="{{order.order.uid}}qty" type="text" value="{{order.order.quantity}}" disabled></td>
-                  <td><input name="amt" id="{{order.order.uid}}amt" type="text" value="P{{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}}" disabled></td>
-                  {% if order.getStatus() == 'ORDERED' %}
-                  <td>
-                    <select name="status" id="{{order.order.uid}}status" disabled>
-                        <option value="ORDERED" selected>ORDERED</option>
-                        <option value="PAID">PAID</option>
-                        <option value="CANCELLED">CANCEL</option>
-                      </select>
-                  </td>
-                  {% elif order.getStatus() == 'PAID' %}
-                  <td>
-                    <select name="status" id="{{order.order.uid}}status" disabled>
-                      <option value="PAID" selected>PAID</option>
-                      <option value="CLAIMED">CLAIMED</option>
-                    </select>
-                  </td>
-                  {% elif order.getStatus() == 'CANCELLED' %}
-                  <td>
-                    <select name="status" disabled>
-                      <option value="CANCELLED" selected>CANCELLED</option>
-                    </select>
-                  </td>
-                  {% else %}
-                  <td>
-                    <select name="status" disabled>
-                      <option value="CLAIMED" selected>CLAIMED</option>
-                    </select>
-                  </td>
-                  {% endif %}
-                  <td><a id="{{order.order.uid}}edit" onclick="editOrderStatus({{order.order.uid}})">✎</a><button id="{{order.order.uid}}button" type="submit" hidden>💾</button> <a onclick="deleteOrder('{{order.order.uid}}')">❌</a></td>
-                </tr>
-              </form>
-              {% endfor %}
-
-
-            </tbody>
-          </table>
-        </div>
-
-      <br>
-      <br>
-      <br>
-      <br>
-      <p style="text-align: center; color: white;">Only the top 100 in the list are displayed</p>
-
-    </div>
-
-  </div> --> 
+</div>
 {% endblock %}

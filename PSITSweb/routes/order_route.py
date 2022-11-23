@@ -11,7 +11,7 @@ from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATE
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO
-from Util import GetReference, isAdmin, PriceParseRef, deprecated
+from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData
 from webApp_utility import checkImageExist
 
 
@@ -49,29 +49,31 @@ def psits_merchandise_orders_list():
     if 'username' not in session:
         return redirect(url_for('cant_find_link'))
     if isAdmin(session['username']):
-        if flask.request.method == 'POST':
-            ORDER_ID = request.form['order_ref']
+        # if flask.request.method == 'POST':
+            
+            # # print(request.get_json())
+            # ORDER_ID = request.form['order_ref']
 
-            # GET THE MATCHING ORDER
-            ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
+            # # GET THE MATCHING ORDER
+            # ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
 
-            # SET THE ORDER STATUS
-            ORDER.setStatus(request.form['status'])
-            # Update database
-            UPDATEMerchOrder(ORDER)
+            # # SET THE ORDER STATUS
+            # ORDER.setStatus(request.form['status'])
+            # # Update database
+            # UPDATEMerchOrder(ORDER)
 
-            # Grab the necessary info of the USER
-            merch_order = SEARCHMerchOrder(ORDER_ID)[0]
-            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-            account: Account = getAccountByID(merch_order.account_id)
-            account_order: AccountOrders = AccountOrders(account, merch, merch_order)
-            # Email the USER if paid
-            if ORDER.getStatus() == ORDER_STATUS.PAID.value:
-                pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
-                                account_order.account.email, messages.product_paid(account_order)))
-            elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
-                pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
-                                messages.product_cancel(account_order)))
+            # # Grab the necessary info of the USER
+            # merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+            # merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+            # account: Account = getAccountByID(merch_order.account_id)
+            # account_order: AccountOrders = AccountOrders(account, merch, merch_order)
+            # # Email the USER if paid
+            # if ORDER.getStatus() == ORDER_STATUS.PAID.value:
+            #     pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
+            #                     account_order.account.email, messages.product_paid(account_order)))
+            # elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+            #     pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
+            #                     messages.product_cancel(account_order)))
 
         search: str = flask.request.values.get('search')
         if search is None:
@@ -80,45 +82,22 @@ def psits_merchandise_orders_list():
         if search == 'ALL':
             search = search.lower()
 
-        merch_orders = SEARCHMerchOrder(search)
-
-        ORDERS: list = []
-
-        ORDERS_TALLY: float = 0
-        TOTAL_TALLY: float = 0
-        PAID_TALLY: float = 0
-
-        counter: int = 0
-
-        for order in merch_orders:
-            counter += 1
-            if counter == 100:
-                break
-            merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
-            account: Account = getAccountByID(order.account_id)
-            account_order: AccountOrders = AccountOrders(account, merch, order)
-            account_order.reference = GetReference(account_order.order.reference)
-            ORDERS.append(account_order)
-
-            if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
-                ORDERS_TALLY += (account_order.getTotal() * account_order.order.quantity)
-            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-                PAID_TALLY += (account_order.getTotal() * account_order.order.quantity)
-
-            if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-                TOTAL_TALLY += (account_order.getTotal() * account_order.order.quantity)
-
         return render_template('MerchOrdersList.html',
                                logout='block',
                                login='none',
                                account_data=getAccountByID(session['username']),
                                admin='block',
                                title='PSITS ORDERS',
-                               reserve=ORDERS_TALLY,
-                               total=TOTAL_TALLY,
-                               paid=PAID_TALLY,
-                               ORDERS=ORDERS, search=search)
+        #                       reserve=ORDERS_TALLY,
+        #                       total=TOTAL_TALLY,
+        #                       paid=PAID_TALLY,
+        #                       ORDERS=ORDERS, 
+                               search=search,
+                               key="API_SECRET-"+hashData(str((int(session['username'])*250))))
     return redirect(url_for('cant_find_link'))
+
+
+
 
 
 @app.route("/PSITS@Order", methods=['POST'])
@@ -139,8 +118,6 @@ def psits_order_product():
             PRICE: int = int(merch.price)
             DISCOUNT: float = float(merch.discount)
 
-            print(promocode)
-            
 
             DISCOUNTED_PRICE: float = PRICE - (PRICE* (DISCOUNT/100))
 
@@ -179,6 +156,9 @@ def psits_order_product():
 
             # Send email to user
             pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder, promo)))
+
+            # Log the order
+            databaseLog(f"Order [{str(order)}] was created")
 
     else:
         return redirect(url_for('login_page'))

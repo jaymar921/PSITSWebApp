@@ -2,7 +2,9 @@ import hashlib
 import warnings
 import re, random
 import os
-
+import json
+from decimal import Decimal
+from datetime import datetime
 
 
 ALLOWED_EXTENSIONS = set(['docx', 'pdf', 'doc', 'xls', 'txt'])
@@ -12,9 +14,8 @@ def hashData(data: str) -> str:
     result = hashlib.md5(data.encode()).hexdigest()
     return str(result)
 
-
-def isAdmin(uid) -> bool:
-    admins: dict = {
+def admins():
+    return {
         'ABEJAR': '19889781',
         'RIBO': '19895283',
         'COLONIA': '20220885',
@@ -35,8 +36,17 @@ def isAdmin(uid) -> bool:
         'SIR DD': '613000',
         'RACUYA': '19845262'
     }
-    for key, value in admins.items():
+
+def isAdmin(uid) -> bool:
+    for key, value in admins().items():
         if str(value).__eq__(str(uid)):
+            return True
+    return False
+
+
+def ifKeyPermitted(api_key) -> bool:
+    for key, value in admins().items():
+        if str("API_SECRET-"+hashData(str((int(value)*250)))).strip().__eq__(str(api_key).strip()):
             return True
     return False
 
@@ -201,3 +211,20 @@ def CONFIGURATION_DISPLAY()-> dict:
         
         for line in lines:
             print(line.strip())
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # 👇️ if passed in object is instance of Decimal
+        # convert it to a string
+        if isinstance(obj, Decimal):
+            return str(obj)
+        # 👇️ otherwise use the default behavior
+        return json.JSONEncoder.default(self, obj)
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)

@@ -1,0 +1,151 @@
+from __main__ import app
+import datetime
+
+import flask
+from flask import session, render_template, redirect, url_for, request, jsonify
+import json
+
+import messages
+from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, \
+    CREATEMerchOrder, databaseLog, DELETEMerchOrder, SEARCHMerchOrderTABLE, getOrderAccount, getEvent, createOrder, \
+    updateOrder, getOrderById, getAllOrders, DeductPromoSlot, GetPromo
+from EmailAPI import pushEmail
+from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
+    OrderAccount, PROMO
+from Util import GetReference, isAdmin, PriceParseRef, deprecated, ifKeyPermitted
+from webApp_utility import checkImageExist
+
+
+@app.route("/PSITS/api/transactions/<search>", methods=['GET'])
+def api_transactions_get(search):
+    
+    request_key = request.args.get('key')
+    
+    if not request_key:
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+
+    if search is None:
+        search = 'all'
+    if search == 'ALL':
+        search = search.lower()
+    merch_orders = SEARCHMerchOrder(search)
+    ORDERS: list = []
+    ORDERS_TALLY: float = 0
+    TOTAL_TALLY: float = 0
+    PAID_TALLY: float = 0
+    #counter: int = 0
+    for order in merch_orders:
+        #counter += 1
+        #if counter == 100:
+        #    break
+        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+        account: Account = getAccountByID(order.account_id)
+        account_order: AccountOrders = AccountOrders(account, merch, order)
+        account_order.reference = GetReference(account_order.order.reference)
+        ORDERS.append(account_order)
+        if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
+            ORDERS_TALLY += (account_order.getTotal() * account_order.order.quantity)
+        elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
+            PAID_TALLY += (account_order.getTotal() * account_order.order.quantity)
+        if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
+            TOTAL_TALLY += (account_order.getTotal() * account_order.order.quantity)
+    
+    ORDERS_JSON: list = []
+    for ORDER_DATA in ORDERS:
+        ORDERS_JSON.append(ORDER_DATA.toJSON())
+    response_data: dict = {
+        'reserve': ORDERS_TALLY,
+        'total': TOTAL_TALLY,
+        'paid': PAID_TALLY,
+        'ORDERS': ORDERS_JSON,
+        'search': search,
+        'status': 200
+    }
+
+    response = app.response_class(
+        response=json.dumps(response_data, indent=4, sort_keys=False, default=str),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route("/PSITS/api/transactions", methods=['PUT'])
+def api_transactions_update():
+    
+    
+    request_key = request.args.get('key')
+    if not request_key:
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+    
+    try:
+        ORDER_ID = request.get_json()['reference']
+    except:
+        return {
+            "status": 500,
+            "message": f"There was an error on the server side on updating the order."
+        }
+    if not ORDER_ID:
+        return {
+            "status": 404,
+            "message": f"EMPTY REFERENCE"
+        }
+
+    # GET THE MATCHING ORDER
+    ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
+    if not ORDER:
+        return {
+            "status": 404,
+            "message": f"ORDER NOT FOUND"
+        }
+    # SET THE ORDER STATUS
+    ORDER.setStatus(request.get_json()['stat'])
+
+    # Setting other attributes
+    try:
+        if request.get_json()['info']:
+            ORDER.additional_info = request.get_json()['info']
+        if request.get_json()['qty']:
+            ORDER.quantity = request.get_json()['qty']
+    except:
+        pass
+
+    # Update database
+    UPDATEMerchOrder(ORDER)
+
+    # Grab the necessary info of the USER
+    merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+    merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+    account: Account = getAccountByID(merch_order.account_id)
+    account_order: AccountOrders = AccountOrders(account, merch, merch_order)
+    # Email the USER if paid
+    if ORDER.getStatus() == ORDER_STATUS.PAID.value:
+        pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
+                        account_order.account.email, messages.product_paid(account_order)))
+    elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+        pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
+                        messages.product_cancel(account_order)))
+
+    
+    return {
+            "status": 201 ,
+            "message": "RECORD UPDATED"
+        }
+    

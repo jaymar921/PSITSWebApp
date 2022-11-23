@@ -228,4 +228,4 @@ def psits_receipt_generator(uid):
         price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
     except:
         return redirect(url_for('cant_find_link'))
-    return render_template('app_templates_1_3/Receipt.html', title=f'Receipt {uid}', ORDER = accountOrder, ref = uid, total = total, price = price)
+    return render_template('app_templates_1_3/Receipt.html', login='none', logout='none', title=f'Receipt {uid}', ORDER = accountOrder, ref = uid, total = total, price = price)
