@@ -177,3 +177,15 @@ def maintenance_after_redirect():
             elif REDIRECTION != '':
                 return redirect(url_for(REDIRECTION))
     return render_template('app_templates_1_3/Maintenance.html')
+
+
+#         PROFILE FEATURE
+@app.route("/PSITS/Profile")
+def profile_page():
+    if 'username' not in session:
+        save_redirection('profile_page')
+        return redirect(url_for('login_page'))
+    
+    account: Account = Database.getAccountByID(session['username'])
+
+    return render_template('app_templates_1_3/profile.html', account_data=account, isAdmin=isAdmin(session['username']), logout='block', login='none', title=f'{account.lastname} | Profile')

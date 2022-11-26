@@ -7,6 +7,9 @@ async function search_transaction(searchData, key){
     let info_box = document.getElementById('info_box');
     let info_msg = document.getElementById('info_message');
 
+    info_msg.innerHTML = "Loading...";
+    document.getElementById('info_load').style.display = 'block';
+
     info_box.style.display = "block";
     
     let data;
@@ -40,9 +43,9 @@ async function search_transaction(searchData, key){
     }else{
 
         // display the necessary data
-        document.getElementById('display_reserve').innerHTML = data.reserve.toFixed(2);
-        document.getElementById('display_paid').innerHTML = data.paid.toFixed(2);
-        document.getElementById('display_total').innerHTML = data.total.toFixed(2);
+        document.getElementById('display_reserve').innerHTML = formatToCurrency(data.reserve);
+        document.getElementById('display_paid').innerHTML = `₱${formatToCurrency(data.paid)}`;
+        document.getElementById('display_total').innerHTML = `₱${formatToCurrency(data.total)}`;
         document.getElementById('search_student').value = searchData;
         
         if(data.ORDERS.length > 0){
@@ -56,6 +59,8 @@ async function search_transaction(searchData, key){
         };
     }
 
+    let count = 1;
+
     for(const order of data.ORDERS){
 
         let form_body = document.createElement('form');
@@ -64,22 +69,28 @@ async function search_transaction(searchData, key){
 
         let table_row = document.createElement("tr");
 
-        // invisible name data
         let input_field = document.createElement('input');
         let table_col = document.createElement("td");
 
         input_field = document.createElement('input');
         input_field.setAttribute('id', order.order.uid+"idnum");
+        input_field.setAttribute('class','hide');
         input_field.name = 'order_ref';
         input_field.hidden = true;
         input_field.value = `${order.reference}`
 
         table_row.appendChild(input_field);
 
+        // number
+        let num = document.createElement('p');
+        num.innerHTML = count++;
+        table_col.appendChild(num);
+        table_row.appendChild(table_col);
+
         // ref
         table_col = document.createElement("td");
         input_field = document.createElement('input');
-        input_field.setAttribute('class', 'hide');
+        table_col.setAttribute('class', 'hide');
         input_field.setAttribute('id', order.order.uid+"ref");
         input_field.disabled = true;
         input_field.value = order.reference
@@ -109,10 +120,10 @@ async function search_transaction(searchData, key){
 
         // add info
         table_col = document.createElement("td");
+        table_col.setAttribute('class', 'information hide');
         input_field = document.createElement('p');
-        input_field.setAttribute('style', 'white-space: pre-line');
-        input_field.setAttribute('class', 'information hide');
-        input_field.innerHTML = `${order.order.additional_info}&#8203;&nbsp;`
+        input_field.setAttribute('style', 'white-space: pre-line; padding: 5px; font-size: 70%;');
+        input_field.innerHTML = `${order.order.additional_info}`
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -202,10 +213,20 @@ async function search_transaction(searchData, key){
         button_save.hidden = true;
         button_save.innerHTML = '💾';
         button_save.type = "button";
+
+        let button_delete= document.createElement('button');
+        button_delete.setAttribute('id', order.order.uid+"delete");
+        button_delete.setAttribute('class', 'normalButton hide')
+        button_delete.setAttribute('onclick',`deleteModal('${order.reference}','${key}');return;`)
+        button_delete.innerHTML = '❌';
+        button_delete.type = "button";
         
 
         table_col.appendChild(button_edit);
         table_col.appendChild(button_save);
+        table_row.appendChild(table_col);
+        table_col = document.createElement("td");
+        table_col.appendChild(button_delete);
         table_row.appendChild(table_col);
         
         //
@@ -222,6 +243,9 @@ async function search_transaction(searchData, key){
 async function search_individual_transaction(searchData, key){
     let info_box = document.getElementById('info_box');
     let info_msg = document.getElementById('info_message');
+
+    info_msg.innerHTML = "Loading...";
+    document.getElementById('info_load').style.display = 'block';
 
     info_box.style.display = "block";
 
@@ -392,6 +416,53 @@ async function updateOrder(key){
     document.getElementById('updateMessage').style.display = 'flex';
 
     search_individual_transaction(reference_code, key);
+}
+
+function deleteModal(reference, key){
+    document.getElementById('transaction_ui').classList.add('blur');
+    document.getElementById('delmodalkey').value = key;
+    document.getElementById('delmodalref').value = reference;
+    document.getElementById('deleteModalInfo').innerHTML = `DELETE ${reference}?`;
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+async function delete_transaction(){
+    let key = document.getElementById('delmodalkey').value;
+    let reference = document.getElementById('delmodalref').value;
+    let password = document.getElementById('delmodalpass').value;
+    let errMsg = document.getElementById('delModalInfoMsg');
+    let user = document.getElementById('userid').value;
+    
+    try{
+        let response = await fetch(`/PSITS/api/transactions/${reference}?key=${key}`, {
+            method: "DELETE",
+            body: JSON.stringify({
+                password: `${password}`,
+                userid: user
+            }),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        });
+        
+        let data = await response.json();
+
+        if(data.status === 200){
+            searchString = document.getElementById('search_student').value;
+            hide(document.getElementById('deleteModal'));
+            document.getElementById('transaction_ui').classList.remove('blur');
+            document.getElementById('delmodalpass').value = '';
+            search_transaction(searchString, key);
+        }else if(data.status === 403){
+            errMsg.innerHTML = data.message;
+        }
+        
+    }catch(e){
+        errMsg.innerHTML = e;
+    }
+        
+}
+
+function formatToCurrency(amount){
+    return (amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
 }
 
 search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value);

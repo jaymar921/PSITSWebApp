@@ -119,13 +119,19 @@
                     {% endif %}
                 </select><br />
                 <br />
-                <label for="additional_info">Additional Info</label><br />
-                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.." required></textarea>
+                <label for="additional_info">Additional Info (Enter only applicable)</label><br />
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc..">
+{% if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() %}
+Size: 
+Color: 
+Type: 
+{% endif %}
+                </textarea>
                 <br >
                 <label for="promocode">Promo Code: </label><input style="padding-left: 5px;" type="text" name="promocode" id="promocode" placeholder="Enter code here..." />
                 <br>
                 <br />
-                <button type="submit" class="normalButton" id="submitBTN">Order</button>
+                <button type="submit" class="normalButton" onclick="disable(this)" id="submitBTN">Order</button>
                 <button type="reset" class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
                 {% endif %}
             {% endif %}

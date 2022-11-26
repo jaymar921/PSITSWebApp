@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .profile-container{
+        position: relative;
+        top: 0;
+        width: auto;
+        height: 70vh;
+    }
+
+    .profile-Card{
+        position: relative;
+        top:50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 300px;
+        text-align: left;
+        border: 2px solid black;
+        border-radius: 20px;
+        background-color: white;
+    }
+
+    .flex{
+        display: flex;
+        padding: 10px;
+    }
+    .profile-fields input{
+        width: 185px;
+        display:inline-block;
+    }
+    .profile-fields label{
+        text-align: left;
+        width: 100px;
+        display:inline-block;
+    }
+    .profile-fields{
+        padding: 3px;
+    }
+    .profile-section{
+        width: auto;
+    }
+</style>
+
+<br />
+<button class="backButton" onclick="location.href='/'">Back</button>
+<br /><br />
+<div class="profile-container">
+    <div class="profile-Card">
+        <div>
+            <div class="profile-section" style=" padding: 20px;" class="imgage">
+                <img style="position: relative;left: 50%; transform: translateX(-50%);" src="https://via.placeholder.com/150x150"><br>
+                <button style="position: relative;left: 50%; transform: translateX(-50%);" class="normalButton">UPLOAD</button>
+            </div>
+            <div class="profile-section">
+                <div class="profile-fields"><label>ID Number </label><input type="text" value="{{account_data.uid}}" disabled/></div>
+                <div class="profile-fields"><label>RFID </label><input type="text" value="{{account_data.rfid}}"/></div>
+                <div class="profile-fields"><label>FullName </label><input type="text" value="{{account_data.lastname}}, {{account_data.firstname}}"/></div>
+                <div class="profile-fields"><label>Course </label><input type="text" value="{{account_data.course}}"/></div>
+                <div class="profile-fields"><label>Year </label><input type="text" value="{{account_data.year}}"/></div>
+                <br>
+                <button style="position: relative;left: 50%; transform: translateX(-50%);" class="normalButton">UPDATE</button>
+                <br><br>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+{% endblock %}

@@ -44,7 +44,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    background-color: rgba(45, 204, 164, 0.6);
+    background-color: rgba(45, 204, 164, 0.8);
     padding: 30px;
     border-radius: 5px;
   }
@@ -143,11 +143,42 @@
     }
   }
 
+  .deleteModal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 300px;
+    height: 290px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 10px;
+    padding: 20px;
+    z-index: 12;
+  }
+
 </style>
 <div id="info_box" onclick="hide(this);" class="loading_box" style="display: none;position: fixed; z-index: 11;">
   <div id="info_load" style="align-content: center; left:50%; transform: translateX(-50%); " class="lds-ring"><div></div><div></div><div></div><div></div></div>
   <h1 id="info_message" style="text-align: center;">Loading... </h1>
   <p style="text-align: center; color:rgb(21, 84, 156);">.. Click to hide ..</p>
+</div>
+
+<div id="deleteModal" class="deleteModal" style="display: none;">
+  <div style="text-align: center;">
+    <h3 id="deleteModalInfo"></h3>
+    <br>
+    <p>Admin ID</p>
+    <input style="text-align: center;" type="text" id="userid" value="{{account_data.uid}}">
+    <p>Password</p>
+    <input style="text-align: center;" type="password" id="delmodalpass" placeholder="confirmation password"><br><br>
+    <input type="password" id="delmodalkey" hidden>
+    <input type="password" id="delmodalref" hidden>
+    <button class="backButton" id="deleteModalBtn" onclick="delete_transaction();">DELETE</button><button class="backButton" onclick="hide(document.getElementById('deleteModal'));document.getElementById('transaction_ui').classList.remove('blur');">CANCEL</button>
+    <br><br>
+    <p style="color: red;" id="delModalInfoMsg"></p>
+  </div>
 </div>
 
 <div class="handle-modal flex hide" id="order-modal" style="display: none;">
@@ -235,7 +266,7 @@
         <h1>Orders List</h1>
       </div>
       <div style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
-        <span class="small-mobile" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
+        <span class="small-mobile hide" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
           ‣<a style="color: green;">'all'</a> - Search all orders
           ‣<a style="color: green;">'student: [ID/NAME]'</a> - Search all orders with specific student 
           ‣<a style="color: green;">'student: [ID/NAME] : [STATUS]'</a> - Search all orders with specific student and status
@@ -278,8 +309,10 @@
               Old JINJA TAGS, I REMOVED THIS BECAUSE THE USER KEEPS ON RELOADING THE WHOLE PAGE, IT IS INEFFICIENT
             <h1 style="color: orange; font-size:120%;"> Orders: ₱ '%0.2f'| format(reserve|float)  |  Total: ₱ '%0.2f'| format(paid|float) / '%0.2f'| format(total|float)  </h1>
             -->
-            <h1 style="color: orange; font-size:120%;"> Orders: ₱<a id="display_reserve"></a>  |  Total: ₱<a id="display_paid"></a> /<a id="display_total"></a>   </h1>
-
+            <div>
+              <h1 style="color: orange; font-size:120%;">Orders: ₱<a id="display_reserve"></a></h1>
+              <h1 style="color: orange; font-size:100%;">Total: <a title="cash on hand" style="color: rgb(39, 210, 223); font-size:100%;" id="display_paid"></a> / <a title="overall total when all orders are paid"  style="color: green; font-size:100%;" id="display_total"></a></h1>
+            </div>
           </div>
           <br />
           
@@ -289,6 +322,7 @@
           <table>
             <thead>
               <tr>
+                <th> #</th>
                 <th class="hide">REF #</th>
                 <th>NAME</th>
                 <th>PRODUCT</th>
@@ -299,57 +333,9 @@
                 <th class="hide">ACTION</th>
               </tr>
             </thead>
-            
-            <table>
-              <tbody id="table_body" name="table_body">
-              <!--
-              % for order in ORDERS %
-              <form method="post" action="">
-                <tr>
-                  <input name="order_ref" id="{order.order.uid}idnum" type="text" value="{order.reference}" hidden>
-                  <td><input name="ref" id="{order.order.uid}ref" type="text" value="{order.reference}" disabled></td>
-                  <td><input name="name" id="{order.order.uid}name" type="text" value="{order.account.lastname}, {order.account.firstname}" disabled></td>
-                  <td><input name="prod" id="{order.order.uid}prod" type="text" value="{order.merch.title}" disabled></td>
-                  <td><p style="white-space: pre-line;" class="information">{order.order.additional_info}&#8203;</p></td>
-                  <td class="hide"><input name="qty" id="{order.order.uid}qty" type="text" value="{order.order.quantity}" disabled></td>
-                  <td class="hide"><input name="amt" id="{order.order.uid}amt" type="text" value="P{'%0.2f'| format((order.getTotal() * order.order.quantity)|float)}" disabled></td>
-                  % if order.getStatus() == 'ORDERED' %
-                  <td>
-                    <select name="status" id="{order.order.uid}status" disabled>
-                        <option value="ORDERED" selected>ORDERED</option>
-                        <option value="PAID">PAID</option>
-                        <option value="CANCELLED">CANCEL</option>
-                      </select>
-                  </td>
-                  % elif order.getStatus() == 'PAID' %
-                  <td>
-                    <select name="status" id="{order.order.uid}status" disabled>
-                      <option value="PAID" selected>PAID</option>
-                      <option value="CLAIMED">CLAIMED</option>
-                    </select>
-                  </td>
-                  % elif order.getStatus() == 'CANCELLED' %
-                  <td>
-                    <select name="status" disabled>
-                      <option value="CANCELLED" selected>CANCELLED</option>
-                    </select>
-                  </td>
-                  % else %
-                  <td>
-                    <select name="status" disabled>
-                      <option value="CLAIMED" selected>CLAIMED</option>
-                    </select>
-                  </td>
-                  % endif %
-                  <td class="hide"><a id="{order.order.uid}edit" onclick="editOrderStatus({order.order.uid})">✎</a><button id="{order.order.uid}button" type="submit" hidden>💾</button> <a onclick="deleteOrder('{order.order.uid}')">❌</a></td>
-                </tr>
-              </form>
-              % endfor %
-              
-            -->
-              
+            <tbody id="table_body" name="table_body">
+
             </tbody>
-            
           </table>
           </form>
         </div>
@@ -357,7 +343,7 @@
         <!--
           <p style="text-align: center; color: red;">Only the top 100 in the list are displayed</p>
         -->
-        <p style="text-align: center; color: cyan;">All orders will be listed</p>
+        <p style="text-align: center; color: rgb(9, 107, 107); font-weight: 500;">All orders will be listed</p>
       <br>
       <br>
       <br>

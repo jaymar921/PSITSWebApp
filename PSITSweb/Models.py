@@ -1,7 +1,7 @@
 from warnings import warn
 from Util import GetPriceRef
 
-from Util import deprecated, DecimalEncoder, DateTimeEncoder
+from Util import deprecated, DecimalEncoder, DateTimeEncoder, GetReference
 from enum import Enum
 import json
 
@@ -120,12 +120,12 @@ class Merchandise:
         data: dict = {
             'uid' : self.uid,
             'title' : self.title,
-            'info' : self.info,
+            #'info' : self.info,
             'price' : self.price,
             'discount' : self.discount,
-            'stock' : self.stock,
-            'image_file' : self.image_file,
-            'image_file_extras' : self.image_file_extras,
+            #'stock' : self.stock,
+            #'image_file' : self.image_file,
+            #'image_file_extras' : self.image_file_extras,
         }
         return data
         #return json.dumps(data, indent=4, sort_keys=False, default=str)
@@ -146,7 +146,7 @@ class MerchOrder:
         return self.status
 
     def __str__(self):
-        return f"Order {self.uid} - {self.account_id} -> INFO: [{self.additional_info}]"
+        return f"REF: {GetReference(self.reference)} - {self.account_id} -> INFO: [{self.additional_info}]"
 
     def setStatus(self, status: str):
         if status == 'ORDERED':

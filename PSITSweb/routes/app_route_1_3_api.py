@@ -6,13 +6,11 @@ from flask import session, render_template, redirect, url_for, request, jsonify
 import json
 
 import messages
-from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, \
-    CREATEMerchOrder, databaseLog, DELETEMerchOrder, SEARCHMerchOrderTABLE, getOrderAccount, getEvent, createOrder, \
-    updateOrder, getOrderById, getAllOrders, DeductPromoSlot, GetPromo
+from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO
-from Util import GetReference, isAdmin, PriceParseRef, deprecated, ifKeyPermitted
+from Util import GetReference, isAdmin, PriceParseRef, deprecated, ifKeyPermitted, hashData
 from webApp_utility import checkImageExist
 
 
@@ -131,7 +129,7 @@ def api_transactions_update():
     UPDATEMerchOrder(ORDER)
 
     # Grab the necessary info of the USER
-    merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+    merch_order = SEARCHMerchOrder(ORDER.reference)[0]
     merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
     account: Account = getAccountByID(merch_order.account_id)
     account_order: AccountOrders = AccountOrders(account, merch, merch_order)
@@ -147,5 +145,79 @@ def api_transactions_update():
     return {
             "status": 201 ,
             "message": "RECORD UPDATED"
+        }
+    
+
+@app.route("/PSITS/api/transactions/<ref>", methods=['DELETE'])
+def api_transactions_delete(ref):
+    request_key = request.args.get('key')
+    if not request_key:
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+    
+   
+    ORDER_ID = ref
+
+    if not ref:
+        return {
+            "status": 404,
+            "message": f"REFERENCE EMPTY"
+        }
+
+    # get the password
+    try:
+        PASSWORD = request.get_json()['password']
+        USERID = request.get_json()['userid']
+        ACCOUNT: Account = getAccount(USERID, f"{hashData(PASSWORD)}")
+        if ACCOUNT.uid is None:
+            ACCOUNT_ATTEMPT:Account = getAccountByID(USERID)
+            if ACCOUNT_ATTEMPT.uid is not None:
+                return {
+                    "status": 403,
+                    "message": f"ACCESS DENIED: ACCOUNT INVALID PASSWORD"
+                }
+            return {
+                "status": 403,
+                "message": f"ACCESS DENIED: ACCOUNT NOT FOUND"
+            }
+        if not isAdmin(ACCOUNT.uid):
+            return {
+                "status": 403,
+                "message": f"ACCESS DENIED: NO ADMIN CREDENTIAL"
+            }
+    except:
+        return {
+            "status": 500,
+            "message": f"There was an error on the server side on updating the order."
+        }
+    if not ORDER_ID:
+        return {
+            "status": 404,
+            "message": f"EMPTY PASSWORD"
+        }
+    
+
+    # GET THE MATCHING ORDER
+    ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
+    if not ORDER:
+        return {
+            "status": 404,
+            "message": f"ORDER NOT FOUND"
+        }
+    # DELETE THE ORDER
+
+    DELETEMerchOrder(ORDER.uid)
+
+    return {
+            "status": 200 ,
+            "message": "RECORD DELETED"
         }
     

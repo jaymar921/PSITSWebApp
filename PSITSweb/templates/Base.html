@@ -67,6 +67,7 @@
             <h1 class="headerLong">Philippine Society of Information Technology Students</h1>
             <h1 class="headerShort">PSITS</h1>
         </div>
+        
         <input type="checkbox" id="click">
         <label for="click" class="menu-btn">
         <i class="fas fa-bars"></i>
@@ -74,7 +75,7 @@
         <ul>
             {% if account_data != null %}
     
-            <li><p><i class="fa-solid fa-circle-user"></i> {{account_data.lastname | upper }} | </p></li>
+            <li onclick="location.href='/PSITS/Profile'" style="cursor: pointer;"><p><i class="fa-solid fa-circle-user"></i> {{account_data.lastname | upper }} | </p></li>
             {% endif %}
            <li><a href="{{url_for('landing_page')}}">HOME</a></li>
            <li><a href="{{url_for('about_us')}}">ABOUT US</a></li>
