@@ -1,12 +1,13 @@
 from __main__ import app
 import datetime
+import os
 
 import flask
 from flask import session, render_template, redirect, url_for, request, jsonify
 import json
 
 import messages
-from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder
+from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO
@@ -219,5 +220,48 @@ def api_transactions_delete(ref):
     return {
             "status": 200 ,
             "message": "RECORD DELETED"
+        }
+
+@app.route("/PSITS/api/accounts", methods=['POST'])
+def api_account_update():
+    
+    try:
+        student_id = request.form['stud_id']
+        rfid = request.form['rfid']
+        lname = request.form['lname']
+        fname = request.form['fname']
+        course = request.form['course']
+        year = request.form['year']
+
+        student_data: Account = getAccountByID(student_id)
+
+        student_data.rfid = rfid
+        student_data.lastname = lname
+        student_data.firstname = fname
+        student_data.course = course
+        student_data.year = year
+
+        updateAccount(student_data)
+        # SAVE IMAGE
+        if 'image' in request.files:
+            file = request.files['image']
+            if file is not None:
+                if file.filename != '':
+                    ext = file.filename.split(".")[1]
+
+                    file.filename = "user" + str(student_id) + "." + ext
+                    path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                    file.save(path)
+                    file.close()
+        databaseLog(f"Profile [{student_data.firstname} {student_data.lastname}] was updated")
+
+    except:
+        return {
+            "status": 500,
+            "message": "Invalid data format received"
+        }
+    return {
+            "status": 200,
+            "message": "ACCOUNT UPDATED"
         }
     

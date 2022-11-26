@@ -83,7 +83,6 @@ def landing_page():
         for i in range(0, 10):
             announcements.append(temp[i])
         temp.clear()
-
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("Homepage.html",

@@ -27,6 +27,7 @@ class Account:
         self.course = course
         self.year = year
         self.email = email
+        self.img = ''
     
     def toJSON(self):
         data: dict = {

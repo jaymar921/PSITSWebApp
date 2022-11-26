@@ -27,6 +27,18 @@
    {% endblock %}
 </head>
 
+<style>
+  .profile-pic{
+    position: relative; 
+    width: 32px; 
+    height: 32px; 
+    border: 2px solid white;
+    border-radius: 180px;
+    margin: 0;
+    transform: translateY(-15%);
+  }
+</style>
+
 <body onload="anchorLinks();">
       
         <!-- The Modal -->
@@ -75,7 +87,13 @@
         <ul>
             {% if account_data != null %}
     
-            <li onclick="location.href='/PSITS/Profile'" style="cursor: pointer;"><p><i class="fa-solid fa-circle-user"></i> {{account_data.lastname | upper }} | </p></li>
+            <li onclick="location.href='/PSITS/Profile'" style="cursor: pointer;">
+              {% if account_data.img == ''%}
+                <p><i class="fa-solid fa-circle-user"></i> {{account_data.lastname | upper }}</p></li>
+              {% else %}
+                <img title="{{account_data.lastname}} profile" class="profile-pic" src="{{ url_for('download_file', filename=account_data.img) }}">
+              {% endif %}
+              
             {% endif %}
            <li><a href="{{url_for('landing_page')}}">HOME</a></li>
            <li><a href="{{url_for('about_us')}}">ABOUT US</a></li>

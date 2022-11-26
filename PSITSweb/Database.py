@@ -1,9 +1,9 @@
 import datetime
-
 from mysql import connector
 from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS, PROMO
 import TestApplication
 from Util import deprecated, CONFIGURATION
+import os
 
 DATABASE_NAME = CONFIGURATION()['DATABASE_NAME']
 USERNAME = CONFIGURATION()['USERNAME']
@@ -268,6 +268,7 @@ def getAccount(uid: int, password: str) -> Account:
             data[0]['year'],
             data[0]['email']
         )
+        account.img = getImage("user" + str(account.uid))
         return account
     return Account(None, None, None, None, None, None, None)
 
@@ -291,6 +292,7 @@ def getAllAccounts(search: str) -> list:
             acc['year'],
             acc['email']
         )
+        account.img = getImage("user" + str(account.uid))
         accounts.append(account)
     return accounts
 
@@ -318,6 +320,7 @@ def getAccountsByRFID(search) -> list:
             acc['year'],
             acc['email']
         )
+        account.img = getImage("user" + str(account.uid))
         accounts.append(account)
     return accounts
 
@@ -348,6 +351,7 @@ def getAccountByID(uid: int) -> Account:
             data[0]['year'],
             data[0]['email']
         )
+        account.img = getImage("user" + str(account.uid))
         return account
     return Account(None, None, None, None, None, None, None)
 
@@ -995,3 +999,15 @@ def GetPromo(code: str):
         if str(promo.code) == code:
             return promo
     return None
+
+def getImage(image: str):
+    if checkImageExist(image + ".png"):
+        return image + ".png"
+    if checkImageExist(image + ".jpg"):
+        return image + ".jpg"
+    if checkImageExist(image + ".jpeg"):
+        return image + ".jpeg"
+    return ""
+
+def checkImageExist(name: str):
+    return os.path.isfile(os.path.join(CONFIGURATION()['SERVER_FILES_PATH'], name))

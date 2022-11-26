@@ -26,9 +26,13 @@
         display: flex;
         padding: 10px;
     }
-    .profile-fields input{
+    .profile-fields input, select{
         width: 185px;
         display:inline-block;
+        border: 0px;
+        border-bottom: 1px solid #c0c0c0;
+        padding: 5px;
+        font-size: 100%;
     }
     .profile-fields label{
         text-align: left;
@@ -41,8 +45,27 @@
     .profile-section{
         width: auto;
     }
-</style>
 
+    #display-image{
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border: 1px solid black;
+        background-position: center;
+        background-size: cover;
+        left: 50%; 
+        transform: translateX(-50%);
+        {% if account_data.img == ''%}
+        background-image: url('https://via.placeholder.com/150x150');
+        {% else %}
+        background-image: url('{{ url_for('download_file', filename=account_data.img) }}');
+        {% endif %}
+    }
+
+    .center{
+        text-align: center;
+    }
+</style>
 <br />
 <button class="backButton" onclick="location.href='/'">Back</button>
 <br /><br />
@@ -50,22 +73,76 @@
     <div class="profile-Card">
         <div>
             <div class="profile-section" style=" padding: 20px;" class="imgage">
-                <img style="position: relative;left: 50%; transform: translateX(-50%);" src="https://via.placeholder.com/150x150"><br>
-                <button style="position: relative;left: 50%; transform: translateX(-50%);" class="normalButton">UPLOAD</button>
+                
+                <input type="file" id="image-input" accept="image/jpeg, image/png, image/jpg" hidden>
+                <br>
+                <div style="text-align: center; width: 100%; cursor: pointer;">
+                    <label for="image-input"><div id="display-image"></div></label>
+                </div>
             </div>
             <div class="profile-section">
-                <div class="profile-fields"><label>ID Number </label><input type="text" value="{{account_data.uid}}" disabled/></div>
-                <div class="profile-fields"><label>RFID </label><input type="text" value="{{account_data.rfid}}"/></div>
-                <div class="profile-fields"><label>FullName </label><input type="text" value="{{account_data.lastname}}, {{account_data.firstname}}"/></div>
-                <div class="profile-fields"><label>Course </label><input type="text" value="{{account_data.course}}"/></div>
-                <div class="profile-fields"><label>Year </label><input type="text" value="{{account_data.year}}"/></div>
+                <div class="profile-fields"><label>ID Number </label><input type="text" id="idnum" value="{{account_data.uid}}" disabled/></div>
+                <div class="profile-fields"><label>RFID </label><input type="text" id="rfid" value="{{account_data.rfid}}"/></div>
+                <div class="profile-fields"><label>Lastname </label><input type="text" id="lname" value="{{account_data.lastname}}"/></div>
+                <div class="profile-fields"><label>Firstname </label><input type="text" id="fname" value="{{account_data.firstname}}"/></div>
+                <div class="profile-fields"><label>Course </label>
+                    <select class="center" value="{{account_data.course}}" id="course">
+                        <option value="BSIT">BSIT</option>
+                        <option value="BSCS">BSCS</option>
+                    </select>
+                </div>
+                <div class="profile-fields"><label>Year </label>
+                    <select class="center" id="year" value="{{account_data.year}}">
+                        <option value="1"{% if account_data.year==1 %} selected="selected"{% endif %}>1st Year</option>
+                        <option value="2"{% if account_data.year==2 %} selected="selected"{% endif %}>2nd Year</option>
+                        <option value="3"{% if account_data.year==3 %} selected="selected"{% endif %}>3rd Year</option>
+                        <option value="4"{% if account_data.year==4 %} selected="selected"{% endif %}>4th Year</option>
+                        <option value="5"{% if account_data.year==5 %} selected="selected"{% endif %}>Alumni</option>
+                    </select>
+                </div>
                 <br>
-                <button style="position: relative;left: 50%; transform: translateX(-50%);" class="normalButton">UPDATE</button>
+                <button style="position: relative;left: 50%; transform: translateX(-50%);" onclick="updateProfile()" class="normalButton">UPDATE</button>
                 <br><br>
+                <div style="text-align: center;"><p id="update-info" style="color: green;"></p></div>
+                <br>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const image_input = document.querySelector("#image-input");
+    image_input.addEventListener("change", function() {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+        const uploaded_image = reader.result;
+        document.querySelector("#display-image").style.backgroundImage = `url(${uploaded_image})`;
+    });
+    reader.readAsDataURL(this.files[0]);
+    });
+</script>
+<script>
+    async function updateProfile(){
+
+        let data = new FormData();
+
+        data.append('stud_id', document.getElementById('idnum').value);
+        data.append('rfid', document.getElementById('rfid').value);
+        data.append('lname', document.getElementById('lname').value);
+        data.append('fname', document.getElementById('fname').value);
+        data.append('course', document.getElementById('course').value);
+        data.append('year', document.getElementById('year').value);
+        data.append('image', document.getElementById('image-input').files[0]);
+
+        let response = await fetch('/PSITS/api/accounts', {
+            method: 'POST',
+            body: data
+        });
+
+        let response_data = await response.json();
+        document.getElementById('update-info').innerHTML = response_data.message;
+
+    }
+</script>
 <br />
 
 {% endblock %}
