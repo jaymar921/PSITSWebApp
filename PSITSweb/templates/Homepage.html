@@ -135,6 +135,11 @@
     <hr>
     
     <div class="events">
+        <div style="text-align: center;">
+            <button class="normalButton" onclick="community_page()"><i class="fa-solid fa-earth-americas"></i> PSITS Community</button>
+        </div>
+        <br>
+        <br>
         <h1>Links</h1>
         <div style="display: flex; padding: 5px;">
             <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for("static",filename="images/uc.png")}}">
@@ -153,9 +158,9 @@
             <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://www.facebook.com/PSITS.UCmain" target="_blank">PSITS - UC MAIN</a></h3>
         </div>
         <br>
+        <br>
         <h1>Upcoming Events</h1>
 
-   
             <button class="normalButton" style="display: {{admin}};" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
         
             <br />
@@ -170,7 +175,11 @@
         <br>
     </div> 
   
-
+    <script>
+        function community_page(){
+            location.href = '{{url_for("community_page")}}';
+        }
+    </script>
 
 
 </div>

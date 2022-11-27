@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .community-container{
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .user{
+        width: 150px;
+        height: 250px;
+        background-color: beige;
+        padding: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
+        -moz-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.425);
+        box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.35);
+    }
+    .profile-image{
+        position: relative;
+        border-radius: 180px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 64px;
+        height: 64px;
+        overflow: hidden;
+    }
+
+    .info{
+        text-align: center;
+    }
+
+    .info h5{
+        font-size: 18px;
+    }
+    .info h6{
+        font-size: 16px;
+    }
+
+    .info p{
+        color: coral;
+        font-weight: 300;
+        font-size: 15px;
+    }
+
+    .info .add_info{
+        color: purple;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .profile-section{
+        position: relative; 
+        display: flex; 
+        left: 50%; 
+        transform: translateX(-50%); 
+        width: 500px; 
+        margin: 5px; 
+    }
+
+    .border-cool{
+        border: 3px solid rgb(220, 243, 17);
+    }
+
+    .border-gradient {
+        border: 3px solid;
+        border-image-slice: 1;
+        border-width: 2px;
+        border-radius: 10px;
+    }
+
+    .border-gradient-purple {
+        border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    }
+
+    .gradient-text{
+        background-image: linear-gradient(to right, #a0286e, #094eb6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @media only screen and (max-width: 500px){
+        .user{
+            width: 100px;
+            height: 200px;
+            background-color: beige;
+            padding: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.5);
+            -moz-box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.425);
+            box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.35);
+        }
+        .profile-image{
+            position: relative;
+            width: 64px;
+            height: 64px;
+            overflow: hidden;
+        }
+    
+        .info{
+            text-align: center;
+        }
+    
+        .info h5{
+            font-size: 12px;
+        }
+        .info h6{
+            font-size: 10px;
+        }
+    
+        .info p{
+            font-weight: 300;
+            font-size: 9px;
+        }
+        .profile-section{
+            position: relative; 
+            display: flex; 
+            width: 330px; 
+        }
+        .info .add_info{
+            font-size: 13px;
+        }
+    }
+</style>
+<br />
+<button class="backButton" onclick="location.href='/'">Back</button>
+<br /><br />
+<div class="community-container">
+    <h1 style="text-align: center; color:#074873; ">PSITS Community</h1> <br>
+        {% set count = namespace(value=0) %}
+
+        {% for user in community %}
+
+            
+
+            {% if count.value == 0 %}
+            <div class="profile-section">
+            {% endif %}
+
+            <div style="margin: 5px;">
+                {% if user.uid|string in devs %}
+                <div class="user border-gradient border-gradient-purple">
+                {% else %}
+                <div class="user">
+                {% endif %}
+                    <div class="profile">
+                        {% if user.img == '' %}
+                        <img class="profile-image" src="https://via.placeholder.com/64x64">  
+                        {% elif '19889781' in user.uid|string %}
+                        <img class="profile-image border-cool" src="{{ url_for('download_file', filename=user.img) }}">  
+                        {% else %}
+                        <img class="profile-image" src="{{ url_for('download_file', filename=user.img) }}">  
+                        {% endif %}
+                    </div>
+                    <div class="info">
+                        {% if '19889781' in user.uid|string %}
+                            <h5 class="gradient-text">{{user.lastname}}</h5>
+                            <h6 style="color: rgb(151, 11, 81);">{{user.firstname}}</h6>
+                        {% else %}
+                            <h5>{{user.lastname}}</h5>
+                            <h6>{{user.firstname}}</h6>
+                        {% endif %}
+                        <br>
+                        <p>{{user.course}} {{user.year}}</p>
+                        {% if user.uid|string in devs%}
+                        <p class="add_info">{{ devs[user.uid|string][0] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            {% set count.value = count.value + 1%}
+            {% if count.value >= 3 %}
+            {% set count.value = 0%}
+            </div>
+            {% endif %}
+        {% endfor %}
+    
+</div>
+<br />
+
+{% endblock %}

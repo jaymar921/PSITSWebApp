@@ -189,3 +189,40 @@ def profile_page():
     account: Account = Database.getAccountByID(session['username'])
 
     return render_template('app_templates_1_3/profile.html', account_data=account, isAdmin=isAdmin(session['username']), logout='block', login='none', title=f'{account.lastname} | Profile')
+
+@app.route("/PSITS/Community")
+def community_page():
+    if 'username' not in session:
+        save_redirection('profile_page')
+        return redirect(url_for('login_page'))
+    
+    account: Account = Database.getAccountByID(session['username'])
+
+    accounts: list = Database.getAllAccounts('all')
+
+    psits_devs: dict = {
+        '19889781': ['FullStack Developer'], # Jayharron
+        '613000': ['PSITS Adviser'], #Sir DD
+        '20220885': [''], # Jeshelle
+        '21471909': ['QA Tester'], # Pia
+        '19924414': ['Frontend Developer'], # Nath
+        '21435474': [''], # Aubrey
+        '19841998': [''], # Trish
+        '19895283': [''], # Kevin
+        '19871367': [''], # Belmonte
+        '19889898': [''], # Sierra
+        '19880152': [''], # Ducal
+        '21496369': [''], # Dex
+        '21540950': [''], # Paul
+        '21400973': [''], # Padolina
+        '19903483': [''], # Rey
+        '18725242': ['2021 President'], # Sir Roi
+        '19888957': ['Backend Developer'], # Harold
+        '19884253': [''], # Kaiser
+        '19845262': [''], # Kaye
+        '22597819': [''], # Laygan
+        '21502869': [''], # Sumotia
+        '19865369': ['2022 President'], # Amaya
+    }
+
+    return render_template('app_templates_1_3/community.html', account_data=account, logout='block', login='none', title='PSITS Community', community = accounts, devs=psits_devs)
