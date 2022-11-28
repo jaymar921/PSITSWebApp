@@ -21,12 +21,14 @@ def api_transactions_get(search):
     request_key = request.args.get('key')
     
     if not request_key:
+        databaseLog(f'API[GET] - Remote {request.remote_addr} - Tried to access Transactions ["{search}"] with no key')
         return {
             "status": 403,
             "message": "ACCESS DENIED: key must be provided at query string."
         }
 
     if not ifKeyPermitted(request_key):
+        databaseLog(f'API[GET] - Remote {request.remote_addr} - Tried to access Transactions ["{search}"] with invalid key')
         return {
             "status": 403,
             "message": f"ACCESS DENIED: invalid key -- {request_key}"
@@ -69,7 +71,7 @@ def api_transactions_get(search):
         'search': search,
         'status': 200
     }
-
+    databaseLog(f'API[GET] - Remote {request.remote_addr} - Permitted to access Transactions ["{search}"]')
     response = app.response_class(
         response=json.dumps(response_data, indent=4, sort_keys=False, default=str),
         status=200,
@@ -83,12 +85,14 @@ def api_transactions_update():
     
     request_key = request.args.get('key')
     if not request_key:
+        databaseLog(f'API[PUT] - Remote {request.remote_addr} - Tried to access Update Transactions with no key')
         return {
             "status": 403,
             "message": "ACCESS DENIED: key must be provided at query string."
         }
 
     if not ifKeyPermitted(request_key):
+        databaseLog(f'API[PUT] - Remote {request.remote_addr} - Tried to access Update Transactions with invalid key')
         return {
             "status": 403,
             "message": f"ACCESS DENIED: invalid key -- {request_key}"
@@ -135,14 +139,14 @@ def api_transactions_update():
     account: Account = getAccountByID(merch_order.account_id)
     account_order: AccountOrders = AccountOrders(account, merch, merch_order)
     # Email the USER if paid
-    if ORDER.getStatus() == ORDER_STATUS.PAID.value:
-        pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
-                        account_order.account.email, messages.product_paid(account_order)))
-    elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
-        pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
-                        messages.product_cancel(account_order)))
+    #if ORDER.getStatus() == ORDER_STATUS.PAID.value:
+    #    pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
+    #                    account_order.account.email, messages.product_paid(account_order)))
+    #elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+    #    pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
+    #                    messages.product_cancel(account_order)))
 
-    
+    databaseLog(f'API[PUT] - Remote {request.remote_addr} - Updated Transaction record [{merch_order.reference}]')
     return {
             "status": 201 ,
             "message": "RECORD UPDATED"
@@ -153,12 +157,14 @@ def api_transactions_update():
 def api_transactions_delete(ref):
     request_key = request.args.get('key')
     if not request_key:
+        databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}] with no key')
         return {
             "status": 403,
             "message": "ACCESS DENIED: key must be provided at query string."
         }
 
     if not ifKeyPermitted(request_key):
+        databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}] with invalid key')
         return {
             "status": 403,
             "message": f"ACCESS DENIED: invalid key -- {request_key}"
@@ -181,15 +187,18 @@ def api_transactions_delete(ref):
         if ACCOUNT.uid is None:
             ACCOUNT_ATTEMPT:Account = getAccountByID(USERID)
             if ACCOUNT_ATTEMPT.uid is not None:
+                databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}] with invalid Admin account password')
                 return {
                     "status": 403,
                     "message": f"ACCESS DENIED: ACCOUNT INVALID PASSWORD"
                 }
+            databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}] with invalid Admin account')
             return {
                 "status": 403,
                 "message": f"ACCESS DENIED: ACCOUNT NOT FOUND"
             }
         if not isAdmin(ACCOUNT.uid):
+            databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}] with invalid Admin account')
             return {
                 "status": 403,
                 "message": f"ACCESS DENIED: NO ADMIN CREDENTIAL"
@@ -209,6 +218,7 @@ def api_transactions_delete(ref):
     # GET THE MATCHING ORDER
     ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
     if not ORDER:
+        databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Tried to access Delete Transactions [{ref}]: Reference code not found')
         return {
             "status": 404,
             "message": f"ORDER NOT FOUND"
@@ -216,7 +226,7 @@ def api_transactions_delete(ref):
     # DELETE THE ORDER
 
     DELETEMerchOrder(ORDER.uid)
-
+    databaseLog(f'API[DELETE] - Remote {request.remote_addr} - Permitted to delete Transaction Ref: [{ref}]')
     return {
             "status": 200 ,
             "message": "RECORD DELETED"

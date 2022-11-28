@@ -120,24 +120,43 @@
                 </select><br />
                 <br />
                 <label for="additional_info">Additional Info (Enter only applicable)</label><br />
-                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc..">
-{% if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() %}
-Size: 
-Color: 
-Type: 
-{% endif %}
-                </textarea>
+                {% if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() %}
+                <label for="sizes">Size:&nbsp;&nbsp;&nbsp;</label><select id="sizes" onchange="updateInformation()">
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                    <option value="18">20</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select><br>
+                <label for="colors">Color:&nbsp;&nbsp;&nbsp;</label><input id="colors" type="text" oninput="updateInformation()" placeholder="Enter color [if applicable]"><br>
+                <label for="types">Type:&nbsp;&nbsp;&nbsp;</label><input id="types" type="text" oninput="updateInformation()"  placeholder="Enter type [if applicable]">
+                {% endif %}
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.." {{ 'hidden' if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() }}></textarea>
                 <br >
                 <label for="promocode">Promo Code: </label><input style="padding-left: 5px;" type="text" name="promocode" id="promocode" placeholder="Enter code here..." />
                 <br>
                 <br />
-                <button type="submit" class="normalButton" onclick="disable(this)" id="submitBTN">Order</button>
+                <button type="submit" class="normalButton" onclick="updateInformation();disable(this)" id="submitBTN">Order</button>
                 <button type="reset" class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
                 {% endif %}
             {% endif %}
         </form>
         
+        <script>
+            'use strict';
 
+            function updateInformation(){
+                document.getElementById('additional_info').innerHTML= 
+                `Size: ${document.getElementById('sizes').value}
+                Color: ${document.getElementById('colors').value}
+                Type: ${document.getElementById('types').value}
+                `;
+            }
+        </script>
     </div>
 
 </div>

@@ -61,7 +61,15 @@ def psits_merchandise_product(uid):
             return redirect(url_for('maintenance_page'))
         return redirect(url_for('login_page'))
     if flask.request.method == 'GET':
-        product: Merchandise = SEARCHMerchandise(str(uid))[0]
+        try:
+            product: Merchandise = SEARCHMerchandise(str(uid))[0]
+        except: 
+            return redirect(url_for('cant_find_link'))
+
+        # log account looking at product
+        user: Account = getAccountByID(session['username'])
+        databaseLog(f'User [{user.uid} ({user.lastname})] is viewing [{product.title}]')
+
         stat = "NONE"
         cancel_days = 0
         order_id = ''

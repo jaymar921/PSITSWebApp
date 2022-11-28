@@ -155,7 +155,7 @@ def psits_order_product():
             )
 
             # Send email to user
-            pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder, promo)))
+            # pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder, promo)))
 
             # Log the order
             databaseLog(f"Order [{str(order)}] was created")
@@ -200,12 +200,12 @@ def psits_order_remove_request(ref):
                 continue
             ORDER_TO_CANCEL: MerchOrder = ORDER
             # Grab the necessary info of the USER
-            merch_order: MerchOrder = SEARCHMerchOrderTABLE(ORDER_TO_CANCEL.uid)[0]
-            merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-            account: Account = getAccountByID(merch_order.account_id)
-            account_order: AccountOrders = AccountOrders(account,merch,merch_order)
+            # merch_order: MerchOrder = SEARCHMerchOrderTABLE(ORDER_TO_CANCEL.uid)[0]
+            # merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+            # account: Account = getAccountByID(merch_order.account_id)
+            # account_order: AccountOrders = AccountOrders(account,merch,merch_order)
             # Email the USER if paid
-            pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
+            # pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
             databaseLog(f"User [{session['username']}] has cancelled an order -> id[{ref}]")
             ORDER_TO_CANCEL.setStatus('CANCELLED')
