@@ -34,15 +34,18 @@
     }
 
     .info h5{
+        margin: 0;
         font-size: 18px;
     }
     .info h6{
+        margin: 0;
         font-size: 16px;
     }
 
     .info p{
-        color: coral;
-        font-weight: 300;
+        color: rgb(19, 0, 104);
+        margin: 0;
+        font-weight: 800;
         font-size: 15px;
     }
 
@@ -61,8 +64,12 @@
         margin: 5px; 
     }
 
-    .border-cool{
-        border: 3px solid purple;
+    .border-cool-orange{
+        border: 3px solid rgb(252, 122, 1);
+    }
+
+    .border-cool-red{
+        border: 3px solid rgb(122, 3, 3);
     }
 
     .border-gradient {
@@ -98,6 +105,80 @@
         z-index: -1;
         border-radius: 10px;
       }
+    
+      .border-gradient-orange {
+        position: relative;
+        border: 5px solid transparent;
+        background: #f3e3c0;
+        background-clip: padding-box;
+        
+        border-radius: 10px;
+      }
+      
+      .border-gradient-orange ::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background: linear-gradient(to bottom, #ffee07, #d4550b);
+        z-index: -1;
+        border-radius: 10px;
+      }
+
+      .border-gradient-red {
+        position: relative;
+          border: 5px solid transparent;
+        background: #e7caca;
+        background-clip: padding-box;
+        
+        border-radius: 10px;
+      }
+      
+      .border-gradient-red ::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background: linear-gradient(to bottom, #e74863, #eb2424);
+        z-index: -1;
+        border-radius: 10px;
+      }
+
+      .border-gradient-green {
+        position: relative;
+          border: 5px solid transparent;
+        background: #9ff0aa;
+        background-clip: padding-box;
+        
+        border-radius: 10px;
+      }
+      
+      .border-gradient-green ::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background: linear-gradient(to top, #5ce957, #039116);
+        z-index: -1;
+        border-radius: 10px;
+      }
+
+      .shimmer {
+        color: black;
+        -webkit-mask: linear-gradient(-60deg,#000 30%,#0005,#000 40%) right/500% 100%;
+        background-repeat: no-repeat;
+        animation: shimmer 2.5s infinite;
+      }
+      
+      @keyframes shimmer {
+        100% {-webkit-mask-position:left}
+      }
 
     @media only screen and (max-width: 576px){
         .user{
@@ -111,7 +192,7 @@
             box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.35);
         }
 
-        .border-gradient-purple {
+        .border-gradient-purple{
             position: relative;
               border: 5px solid transparent;
             background: #f2f2f2;
@@ -119,6 +200,25 @@
             
             border-radius: 10px;
           }
+
+        .border-gradient-orange, .border-gradient-red{
+            position: relative;
+            border: 5px solid transparent;
+            background: #f3e3c0;
+            background-clip: padding-box;
+            
+            border-radius: 10px;
+        }
+
+        .border-gradient-green{
+            position: relative;
+            border: 5px solid transparent;
+            background: #9ff0aa;
+            background-clip: padding-box;
+            
+            border-radius: 10px;
+        }
+        
         .profile-image{
             position: relative;
             width: 64px;
@@ -166,17 +266,17 @@
 
                 <div style="margin: 5px;">
                     {% if user.uid|string in devs %}
-                    <div class="user border-gradient-purple">
+                    <div class="user {{devs[user.uid|string][1]}}" title="{{user.firstname}} {{user.lastname}}">
                     {% else %}
-                    <div class="user">
+                    <div class="user" title="{{user.firstname}} {{user.lastname}}">
                     {% endif %}
                         <div class="profile">
                             {% if user.img == '' %}
-                            <img class="profile-image" src="https://via.placeholder.com/64x64">  
-                            {% elif '19889781' in user.uid|string %}
-                            <img class="profile-image border-cool" src="{{ url_for('download_file', filename=user.img) }}">  
+                            <img class="profile-image" loading="lazy" src="https://via.placeholder.com/64x64">  
+                            {% elif user.uid|string in devs %}
+                            <img class="profile-image {{devs[user.uid|string][2]}}" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
                             {% else %}
-                            <img class="profile-image" src="{{ url_for('download_file', filename=user.img) }}">  
+                            <img class="profile-image" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
                             {% endif %}
                         </div>
                         <div class="info">
@@ -192,6 +292,14 @@
                             {% if user.uid|string in devs%}
                             <p class="add_info">{{ devs[user.uid|string][0] }}</p>
                             {% endif %}
+                            {% if user.uid|string in devs %}
+                                {% for icons in devs[user.uid|string][3]['icons']%}
+                                    {% for key in icons %}
+                                    <i onclick="location.href='{{icons[key]}}'" title="{{icons[key]}}" style="cursor: pointer;" class="{{key}}"></i>&nbsp;
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+                            
                         </div>
                     </div>
                 </div>

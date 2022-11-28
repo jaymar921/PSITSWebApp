@@ -101,7 +101,7 @@
                     <p style="color: red;">Out Of Stock</p>
                 {% else %}
                 <label for="quantity"><i class="fa-solid fa-hashtag"></i> Quantity: </label>
-                <select name="quantity" id="quantity" onchange="checkStockOverOrder()">
+                <select name="quantity" id="quantity" onchange="checkStockOverOrder();quantityChanged();updateInformation('{{product.title.lower()}}');">
                     {% if 'Ticket' in product.title or 'ticket' in product.title or 'shirt' in product.title or 'Shirt' in product.title or 'lanyard' in product.title or 'Lanyard' in product.title or 'hood' in product.title or 'Hood' in product.title %}
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -121,7 +121,7 @@
                 <br />
                 <label for="additional_info">Additional Info (Enter only applicable)</label><br />
                 {% if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() %}
-                <label for="sizes">Size:&nbsp;&nbsp;&nbsp;</label><select id="sizes" onchange="updateInformation()">
+                <label for="sizes">Size:&nbsp;&nbsp;&nbsp;</label><select id="sizes" onchange="updateInformation('{{product.title.lower()}}')">
                     <option value="14">14</option>
                     <option value="16">16</option>
                     <option value="18">18</option>
@@ -132,15 +132,34 @@
                     <option value="XL">XL</option>
                     <option value="XXL">XXL</option>
                 </select><br>
-                <label for="colors">Color:&nbsp;&nbsp;&nbsp;</label><input id="colors" type="text" oninput="updateInformation()" placeholder="Enter color [if applicable]"><br>
-                <label for="types">Type:&nbsp;&nbsp;&nbsp;</label><input id="types" type="text" oninput="updateInformation()"  placeholder="Enter type [if applicable]">
+                <label for="colors">Color:&nbsp;&nbsp;&nbsp;</label><input id="colors" type="text" oninput="updateInformation('{{product.title.lower()}}')" placeholder="Enter color [if applicable]"><br>
+                <label for="types">Type:&nbsp;&nbsp;&nbsp;</label><input id="types" type="text" oninput="updateInformation('{{product.title.lower()}}')"  placeholder="Enter type [if applicable]">
                 {% endif %}
-                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.." {{ 'hidden' if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() }}></textarea>
+                <br>
+                {% if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() %}
+                <div id="option2">
+                    <label for="sizes1" id="l_sizes1">Size:&nbsp;&nbsp;&nbsp;</label><select id="sizes1" onchange="updateInformation('{{product.title.lower()}}')">
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="18">20</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="XXXL">XXXL</option>
+                    </select><br>
+                    <label for="colors1" id="l_colors1">Color:&nbsp;&nbsp;&nbsp;</label><input id="colors1" type="text" oninput="updateInformation('{{product.title.lower()}}')" placeholder="Enter color [if applicable]"><br>
+                    <label for="types1" id="l_types1" >Type:&nbsp;&nbsp;&nbsp;</label><input id="types1" type="text" oninput="updateInformation('{{product.title.lower()}}')"  placeholder="Enter type [if applicable]">
+                </div>
+                {% endif %}
+                <textarea name="additional_info" id="additional_info" type="text" placeholder="Size,color,etc.." oninput="updateInformation('{{product.title.lower()}}')" {{ 'hidden' if 'shirt' in product.title.lower() or 'hood' in product.title.lower() or 'jacket' in product.title.lower() }}></textarea>
                 <br >
-                <label for="promocode">Promo Code: </label><input style="padding-left: 5px;" type="text" name="promocode" id="promocode" placeholder="Enter code here..." />
+                <label for="promocode">Promo Code: </label><input style="padding-left: 5px;" type="text" name="promocode" id="promocode" oninput="updateInformation('{{product.title.lower()}}')" placeholder="Enter code here..." />
                 <br>
                 <br />
-                <button type="submit" class="normalButton" onclick="updateInformation();disable(this)" id="submitBTN">Order</button>
+                <button type="submit" class="normalButton" onclick="updateInformation('{{product.title.lower()}}');disable(this)" id="submitBTN">Order</button>
                 <button type="reset" class="normalButton" onclick="merchandise()"><a href="{{url_for('psits_merchandise')}}">Cancel</a></button>
                 {% endif %}
             {% endif %}
@@ -149,13 +168,45 @@
         <script>
             'use strict';
 
-            function updateInformation(){
-                document.getElementById('additional_info').innerHTML= 
-                `Size: ${document.getElementById('sizes').value}
-                Color: ${document.getElementById('colors').value}
-                Type: ${document.getElementById('types').value}
-                `;
+            function updateInformation(merchandise){
+                if(document.getElementById('quantity').value === '1' && (merchandise.includes('shirt') || merchandise.includes('hood'))){
+                    document.getElementById('additional_info').innerHTML= 
+                    `Size: ${document.getElementById('sizes').value}
+                    Color: ${document.getElementById('colors').value}
+                    Type: ${document.getElementById('types').value}
+                    Promocode: ${document.getElementById('promocode').value}
+                    `;
+                }else if(document.getElementById('quantity').value === '2' && (merchandise.includes('shirt') || merchandise.includes('hood'))){
+                    document.getElementById('additional_info').innerHTML= 
+                    `Size: ${document.getElementById('sizes').value}
+                    Color: ${document.getElementById('colors').value}
+                    Type: ${document.getElementById('types').value}
+                    Size: ${document.getElementById('sizes1').value}
+                    Color: ${document.getElementById('colors1').value}
+                    Type: ${document.getElementById('types1').value}
+                    Promocode: ${document.getElementById('promocode').value}
+                    `;
+                }else{
+                    
+                }
+
+                
             }
+
+            function quantityChanged(){
+                if(document.getElementById('quantity').value === '2'){
+                    hideElements('block');
+                }else{
+                    hideElements('none');
+                }
+            }
+
+            function hideElements(display){
+                try{
+                    document.getElementById('option2').style.display = display;
+                }catch(e){}
+            }
+            hideElements('none');
         </script>
     </div>
 

@@ -195,30 +195,30 @@ def community_page():
     accounts: list = Database.getAllAccounts('all')
 
     psits_devs: dict = {
-        '19889781': ['FullStack Developer'], # Jayharron
-        '613000': ['PSITS Adviser'], #Sir DD
-        '20220885': [''], # Jeshelle
-        '21471909': ['QA Tester'], # Pia
-        '19924414': ['Frontend Developer'], # Nath
-        '21435474': [''], # Aubrey
-        '19841998': [''], # Trish
-        '19895283': [''], # Kevin
-        '19871367': [''], # Belmonte
-        '19889898': [''], # Sierra
-        '19880152': [''], # Ducal
-        '21496369': [''], # Dex
-        '21540950': [''], # Paul
-        '21400973': [''], # Padolina
-        '19903483': [''], # Rey
-        '18725242': ['2021 President'], # Sir Roi
-        '19888957': ['Backend Developer'], # Harold
-        '19884253': [''], # Kaiser
-        '19845262': [''], # Kaye
-        '22597819': [''], # Laygan
-        '21502869': [''], # Sumotia
-        '19865369': ['2022 President'], # Amaya
+        # ID : ['MOTTO','USER CSS', 'BORDER CSS', {'ICON':['css': 'link']}]
+        '19889781': ['FullStack Developer','border-gradient-orange shimmer','border-cool-orange',{'icons':[{'fa-brands fa-github':'https://github.com/jaymar921','fa-brands fa-youtube':'https://www.youtube.com/@jaymar921','fa-solid fa-book':'https://jaymar921.github.io/jayharronabejar/'}]}], # Jayharron
+        '613000': ['PSITS Adviser','border-gradient-purple shimmer','',{'icons':[{'fa-brands fa-github':'https://github.com/dennisdurano'}]}], #Sir DD
+        '20220885': ['3rd Year Rep.','border-gradient-purple','',{}], # Jeshelle
+        '21471909': ['QA Tester','border-gradient-red shimmer','border-cool-red',{'icons':[{'fa-brands fa-github':'https://github.com/MikaPikaChu921'}]}], # Pia
+        '19924414': ['Frontend Developer','border-gradient-green shimmer','',{'icons':[{'fa-brands fa-github':'https://github.com/natnat1432'}]}], # Nath
+        '21435474': ['Asst. Treasurer','border-gradient-purple','',{}], # Aubrey
+        '19841998': ['Treasurer','border-gradient-purple','',{'icons':[{'fa-brands fa-github':'https://github.com/takiii20'}]}], # Trish
+        '19895283': ['PIO','border-gradient-purple','',{}], # Kevin
+        '19871367': ['Auditor','border-gradient-purple','',{}], # Belmonte
+        '19889898': ['Secretary','border-gradient-purple','',{}], # Sierra
+        '19880152': ['4th Year Rep.','border-gradientpurple','',{}], # Ducal
+        '21496369': ['Volunteer','border-gradient-purple','',{}], # Dex
+        '21540950': ['Volunteer','border-gradient-purple','',{}], # Paul
+        '21400973': ['Volunteer','border-gradient-purple','',{}], # Padolina
+        '19903483': ['Volunteer','border-gradient-purple','',{'icons':[{'fa-brands fa-github':'https://github.com/TheOriginalReben'}]}], # Rey
+        '18725242': ['2021 President','border-gradient-purple','',{}], # Sir Roi
+        '19888957': ['Backend Developer','border-gradient-green shimmer','',{'icons':[{'fa-brands fa-github':'https://github.com/ha-rold1999'}]}], # Harold
+        '19884253': ['Volunteer','border-gradient-purple','',{}], # Kaiser
+        '19845262': ['PRO','border-gradient-purple','',{}], # Kaye
+        '22597819': ['1st Year Rep.','border-gradient-purple','',{}], # Laygan
+        '21502869': ['Volunteer','border-gradient-purple','',{}], # Sumotia
+        '19865369': ['2022 President','border-gradient-purple','',{}], # Amaya
     }
-
     if 'username' not in session:
         return render_template('app_templates_1_3/community.html', logout='none', login='block', title='PSITS Community', community = accounts, devs=psits_devs)
     

@@ -11,8 +11,7 @@ from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATE
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO
-from Util import GetReference, isAdmin, PriceParseRef, deprecated, ifKeyPermitted, hashData
-from webApp_utility import checkImageExist
+from Util import GetReference, isAdmin, ifKeyPermitted, hashData
 
 
 @app.route("/PSITS/api/transactions/<search>", methods=['GET'])
@@ -263,7 +262,7 @@ def api_account_update():
                     path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                     file.save(path)
                     file.close()
-        databaseLog(f"Profile [{student_data.firstname} {student_data.lastname}] was updated")
+        databaseLog(f"API[PUT] Profile [{student_data.firstname} {student_data.lastname}] was updated")
 
     except:
         return {
