@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 <style>
     .community-container{
@@ -61,7 +62,7 @@
     }
 
     .border-cool{
-        border: 3px solid rgb(220, 243, 17);
+        border: 3px solid purple;
     }
 
     .border-gradient {
@@ -71,20 +72,37 @@
         border-radius: 10px;
     }
 
-    .border-gradient-purple {
-        border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
-    }
-
     .gradient-text{
         background-image: linear-gradient(to right, #a0286e, #094eb6);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
-    @media only screen and (max-width: 500px){
+    .border-gradient-purple {
+        position: relative;
+          border: 5px solid transparent;
+        background: #f2f2f2;
+        background-clip: padding-box;
+        
+        border-radius: 10px;
+      }
+      
+      .border-gradient-purple ::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background: linear-gradient(to left, #743ad5, #d53a9d);
+        z-index: -1;
+        border-radius: 10px;
+      }
+
+    @media only screen and (max-width: 576px){
         .user{
             width: 100px;
-            height: 200px;
+            height: 230px;
             background-color: beige;
             padding: 10px;
             border-radius: 10px;
@@ -92,6 +110,15 @@
             -moz-box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.425);
             box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.35);
         }
+
+        .border-gradient-purple {
+            position: relative;
+              border: 5px solid transparent;
+            background: #f2f2f2;
+            background-clip: padding-box;
+            
+            border-radius: 10px;
+          }
         .profile-image{
             position: relative;
             width: 64px;
@@ -120,7 +147,7 @@
             width: 330px; 
         }
         .info .add_info{
-            font-size: 13px;
+            font-size: 12px;
         }
     }
 </style>
@@ -131,53 +158,49 @@
     <h1 style="text-align: center; color:#074873; ">PSITS Community</h1> <br>
         {% set count = namespace(value=0) %}
 
+    <div class="row community-container">
         {% for user in community %}
 
-            
+            <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4">
+                
 
-            {% if count.value == 0 %}
-            <div class="profile-section">
-            {% endif %}
-
-            <div style="margin: 5px;">
-                {% if user.uid|string in devs %}
-                <div class="user border-gradient border-gradient-purple">
-                {% else %}
-                <div class="user">
-                {% endif %}
-                    <div class="profile">
-                        {% if user.img == '' %}
-                        <img class="profile-image" src="https://via.placeholder.com/64x64">  
-                        {% elif '19889781' in user.uid|string %}
-                        <img class="profile-image border-cool" src="{{ url_for('download_file', filename=user.img) }}">  
-                        {% else %}
-                        <img class="profile-image" src="{{ url_for('download_file', filename=user.img) }}">  
-                        {% endif %}
-                    </div>
-                    <div class="info">
-                        {% if '19889781' in user.uid|string %}
-                            <h5 class="gradient-text">{{user.lastname}}</h5>
-                            <h6 style="color: rgb(151, 11, 81);">{{user.firstname}}</h6>
-                        {% else %}
-                            <h5>{{user.lastname}}</h5>
-                            <h6>{{user.firstname}}</h6>
-                        {% endif %}
-                        <br>
-                        <p>{{user.course}} {{user.year}}</p>
-                        {% if user.uid|string in devs%}
-                        <p class="add_info">{{ devs[user.uid|string][0] }}</p>
-                        {% endif %}
+                <div style="margin: 5px;">
+                    {% if user.uid|string in devs %}
+                    <div class="user border-gradient-purple">
+                    {% else %}
+                    <div class="user">
+                    {% endif %}
+                        <div class="profile">
+                            {% if user.img == '' %}
+                            <img class="profile-image" src="https://via.placeholder.com/64x64">  
+                            {% elif '19889781' in user.uid|string %}
+                            <img class="profile-image border-cool" src="{{ url_for('download_file', filename=user.img) }}">  
+                            {% else %}
+                            <img class="profile-image" src="{{ url_for('download_file', filename=user.img) }}">  
+                            {% endif %}
+                        </div>
+                        <div class="info">
+                            {% if '19889781' in user.uid|string %}
+                                <h5 class="gradient-text">{{user.lastname}}</h5>
+                                <h6 style="color: rgb(151, 11, 81);">{{user.firstname}}</h6>
+                            {% else %}
+                                <h5>{{user.lastname}}</h5>
+                                <h6>{{user.firstname}}</h6>
+                            {% endif %}
+                            <br>
+                            <p>{{user.course}} {{user.year}}</p>
+                            {% if user.uid|string in devs%}
+                            <p class="add_info">{{ devs[user.uid|string][0] }}</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            {% set count.value = count.value + 1%}
-            {% if count.value >= 3 %}
-            {% set count.value = 0%}
+                
             </div>
-            {% endif %}
         {% endfor %}
+    </div>
     
 </div>
 <br />

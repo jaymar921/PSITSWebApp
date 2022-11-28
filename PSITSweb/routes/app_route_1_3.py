@@ -192,12 +192,6 @@ def profile_page():
 
 @app.route("/PSITS/Community")
 def community_page():
-    if 'username' not in session:
-        save_redirection('profile_page')
-        return redirect(url_for('login_page'))
-    
-    account: Account = Database.getAccountByID(session['username'])
-
     accounts: list = Database.getAllAccounts('all')
 
     psits_devs: dict = {
@@ -225,4 +219,8 @@ def community_page():
         '19865369': ['2022 President'], # Amaya
     }
 
+    if 'username' not in session:
+        return render_template('app_templates_1_3/community.html', logout='none', login='block', title='PSITS Community', community = accounts, devs=psits_devs)
+    
+    account: Account = Database.getAccountByID(session['username'])
     return render_template('app_templates_1_3/community.html', account_data=account, logout='block', login='none', title='PSITS Community', community = accounts, devs=psits_devs)
