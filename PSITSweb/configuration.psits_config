@@ -21,7 +21,7 @@ Setting up database connection
 If the server is hosted publicly, then :PRODUCTION should be set 
 to True, if you are debugging then set it to False
 
-::PRODUCTION = True
+::PRODUCTION = False
 ::PORT = 5000
 ::APP_HOST = 0.0.0.0
 ::SERVER_FILES_PATH = C:\SERVER_FILES\

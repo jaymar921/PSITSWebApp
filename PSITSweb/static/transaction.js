@@ -190,7 +190,7 @@ async function search_transaction(searchData, key){
         table_col = document.createElement("td");
         table_col.setAttribute('class', 'hide');
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"qty");
+        input_field.setAttribute('id', order.order.uid+"amt");
         input_field.disabled = true;
         input_field.value = `₱${(order.getTotal * order.order.quantity).toFixed(2)}`;
 

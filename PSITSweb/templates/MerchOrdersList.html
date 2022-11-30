@@ -60,6 +60,7 @@
     border-radius: 10px;
     z-index: 10;
     border: 3px dotted black;
+    font-size: 15px;
   }
 
   ._center{
@@ -72,6 +73,9 @@
   .autoWidth{
       display: inline-block;
       width: 300px;
+      border: 2px solid gray; 
+      padding: 10px; 
+      margin: 10px;
   }
 
   .flex{
@@ -79,8 +83,15 @@
   }
 
   .search-container{
+    display: flex;
     padding: 10px;
     width: 400px;
+  }
+
+  .search-container .inputFld{
+    width: auto;
+    border: 1px solid black; 
+    padding: 5px
   }
 
   .blur{
@@ -113,6 +124,7 @@
   }
 
   .information-container label, input, textarea, select{
+    font-size: 15px;
     padding: 8px;
   }
 
@@ -144,6 +156,10 @@
     }
   }
 
+  .camera{
+    width:500px;
+  }
+
   .deleteModal{
     position: fixed;
     top: 50%;
@@ -158,6 +174,97 @@
     padding: 20px;
     z-index: 12;
   }
+
+  .qr_code{
+    width: 275px; 
+    height: 275px;
+  }
+
+  .showOnDesktop{
+    display: block;
+  }
+
+  .showOnMobile{
+    display: none;
+  }
+
+  @media(max-width: 500px) {
+    .handle-modal{
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      top: 55%;
+      padding: 0px;
+      background-color: white;
+      border-radius: 10px;
+      z-index: 10;
+      border: 3px dotted black;
+      font-size: 8px;
+    }
+    .autoWidth{
+      display: inline-block;
+      width: 150px;
+      border: 2px solid gray; 
+      padding: 5px; 
+      margin: 5px;
+    }
+    .search-container{
+      display: block;
+      padding: 10px;
+      width: 150px;
+    }
+    .search-container .inputFld{
+      width: 100%;
+      border: 1px solid black; 
+      font-size: 10px;
+    }
+    .normalButton{
+      font-size: 8px;
+    }
+
+    .showOnDesktop{
+      display: none;
+    }
+  
+    .showOnMobile{
+      display: block;
+    }
+
+    .qr_code{
+      width: 130px; 
+      height: 130px;
+      object-fit: cover;
+      overflow: hidden;
+    }
+
+    .information-container label, input, textarea, select{
+      padding: 2px;
+      font-size: 8px;
+    }
+  
+    .information-container label{
+      display: inline-block;
+      width: 35%;
+    }
+  
+    .information-container input, select{
+      width: 55%;
+    }
+    .information-container textarea{
+      background-color: aliceblue;
+      width: 90%;
+      resize: none;
+      border: 2px solid black;
+      border-radius: 10px;
+      height: 30px;
+    }
+
+    .camera{
+      width:230px;
+    }
+
+  }
+
 
 </style>
 <div id="info_box" onclick="hide(this);" class="loading_box" style="display: none;position: fixed; z-index: 11;">
@@ -197,7 +304,7 @@
     </style>
     <div class="row">
       <div class="col">
-        <div style="width:500px;" id="reader"></div>
+        <div class="camera" id="reader"></div>
       </div>
     </div>
     <button title="close" type="button" onclick="closeScanner()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button> 
@@ -231,40 +338,40 @@
 
 <div class="handle-modal flex hide" id="order-modal" style="display: none;">
   <div class="reciept">
-    <div class=" autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px;">
+    <div class=" autoWidth">
       <h1 style="text-align: center;">PSITS Receipt</h1>
       <br />
-      <div id="qrcode" style="width: 275px; height: 275px;"></div>
+      <div id="qrcode" class="qr_code"></div>
       <h3 id="fld_reference" style="text-align: center;"></h3>
       <br />
       <hr>
       <br />
       <div style="display: flex;">
-          <label style="font-size: 15px;">Buyer: </label><a id="fld_buyer" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+          <label>Buyer: </label><a id="fld_buyer" style="color:dodgerblue; padding-left: 5px; text-align: right; width: 100%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;">Product: </label><a id="fld_product" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+          <label>Product: </label><a id="fld_product" style="color:dodgerblue;  padding-left: 5px; text-align: right; width: 100%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;width:  50%;">Original-Price: </label><a id="fld_orig_price" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 50%;"></a>
+          <label style="width:  50%;">Original-Price: </label><a id="fld_orig_price" style="color:dodgerblue; padding-left: 5px; text-align: right; width: 50%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;">Discounted Price: </label><a id="fld_discount_price" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 51%;"></a>
+          <label >Discounted Price: </label><a id="fld_discount_price" style="color:dodgerblue; padding-left: 5px; text-align: right; width: 51%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;">Purchase-Date: </label><a id="fld_p_date" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 57%;"></a>
+          <label >Purchase-Date: </label><a id="fld_p_date" style="color:dodgerblue; padding-left: 5px; text-align: right; width: 57%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;">Quantity: </label><a id="fld_qty" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+          <label >Quantity: </label><a id="fld_qty" style="color:dodgerblue;  padding-left: 5px; text-align: right; width: 100%;"></a>
       </div>
       <br />
       <hr>
       <br />
       <div style="display: flex;">
-          <label style="font-size: 15px;">Total: </label><a id="fld_total" style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+          <label >Total: </label><a id="fld_total" style="color:dodgerblue;  padding-left: 5px; text-align: right; width: 100%;"></a>
       </div>
       <div style="display: flex;">
-          <label style="font-size: 15px;">Status: </label><a id="fld_status" style="color:red; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;"></a>
+          <label >Status: </label><a id="fld_status" style="color:red;  padding-left: 5px; text-align: right; width: 100%;"></a>
       </div>
       <br />
       <hr>
@@ -274,11 +381,18 @@
     <p class="information-message">
       For best searching result, it is highly recommended to enter the reference code since it is distinct.
     </p>
-    <div class="search-container searchTable">
-      <input id="handle_search" style="width: 55%; border: 1px solid black; padding: 5px" type="text" name="search" placeholder=" REFERENCE CODE" value="">
+    <div class="search-container">
+      <input id="handle_search" class="inputFld" type="text" name="search" placeholder=" REFERENCE CODE" value="">
+      <div class="showOnDesktop">
+        <button title="search reference code" type="button" onclick="search_individual_transaction(document.getElementById('handle_search').value,document.getElementById('secret_key').value)" class="normalButton"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+        <button title="scan qr code" type="button" onclick="document.getElementById('qr-modal').style.display = 'flex';runScanner();" class="normalButton"><i class="fa-solid fa-qrcode"></i></button>
+        <button title="close" type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>     
+      </div>
+    </div>
+    <div class="showOnMobile">
       <button title="search reference code" type="button" onclick="search_individual_transaction(document.getElementById('handle_search').value,document.getElementById('secret_key').value)" class="normalButton"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
       <button title="scan qr code" type="button" onclick="document.getElementById('qr-modal').style.display = 'flex';runScanner();" class="normalButton"><i class="fa-solid fa-qrcode"></i></button>
-      <button title="close" type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>            
+      <button title="close" type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>     
     </div>
     <div class="information-container">
       <br>
@@ -343,7 +457,7 @@
                   
                   <button title="Generate a data from search, it downloads an excel file" type="button" onclick="loadCSVTemplate('orders',document.getElementById('search_student').value)" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-file-export"></i> <p class="hide">&nbsp;CSV</p></div></button>
                   <button title="Display the data analytics" type="button" onclick="location.href='/PSITS@DataAnalytics'" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fas fa-chart-bar"></i> <p class="hide">&nbsp;Charts</p></div></button>
-                  <button title="Transact one at a time" type="button" onclick="showModal()" class="normalButton hide"> <div class="flexer" style="display:flex;"><i class="fa-solid fa-scroll"></i><p class="hide">&nbsp;HANDLE</p></div></button>
+                  <button title="Transact one at a time" type="button" onclick="showModal()" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-solid fa-scroll"></i><p class="hide">&nbsp;HANDLE</p></div></button>
                   
                   <br><br>
                   <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}" required>
