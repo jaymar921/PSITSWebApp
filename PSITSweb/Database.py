@@ -2,14 +2,22 @@ import datetime
 from mysql import connector
 from Models import Announcement, Account, Events, OrderAccount, Order, Event, Merchandise, MerchOrder, PSITSOfficer, FacultyMember, ORDER_STATUS, PROMO
 import TestApplication
-from Util import deprecated, CONFIGURATION
+from Util import deprecated, CONFIGURATION, admins, hashData
 import os
+import requests
+import json
 
 DATABASE_NAME = CONFIGURATION()['DATABASE_NAME']
 USERNAME = CONFIGURATION()['USERNAME']
 PASSWORD = CONFIGURATION()['PASSWORD']
 HOST = CONFIGURATION()['DATABASE_HOST']
 
+# PSITS Version 1.3, API_HOOK FEATURE
+API_LINK: str = CONFIGURATION()['API_LINK'] if (
+    'true' in CONFIGURATION()['API_ALLOW_HOOK'].lower()) else ''
+API_KEY: str = str("API_SECRET-"+hashData(str((int(admins()['API_SECRET'])*250))))
+print(f'API KEY GENERATED, DO NOT SHARE')
+print(f'API_KEY: {API_KEY}')
 """
     PSITS version 1.0
     
@@ -257,6 +265,24 @@ def getAccount(uid: int, password: str) -> Account:
         """
     query: str = "SELECT * FROM `accounts` where idno=%s and password=%s"
     data: dict = executeQueryReturnParam(query, (uid, password))
+    if len(data) > 0:
+        account = Account(
+            data[0]['idno'],
+            data[0]['rfid'],
+            data[0]['firstname'],
+            data[0]['lastname'],
+            data[0]['course'],
+            data[0]['year'],
+            data[0]['email']
+        )
+        account.img = getImage("user" + str(account.uid))
+        return account
+    return Account(None, None, None, None, None, None, None)
+
+def getAccountWithPassword(uid: int) -> Account:
+    # API
+    query: str = f"SELECT * FROM `accounts` where idno = {uid}"
+    data: dict = executeQueryReturn(query)
 
     if len(data) > 0:
         account = Account(
@@ -269,6 +295,7 @@ def getAccount(uid: int, password: str) -> Account:
             data[0]['email']
         )
         account.img = getImage("user" + str(account.uid))
+        account.password = data[0]['password']
         return account
     return Account(None, None, None, None, None, None, None)
 
@@ -1011,3 +1038,26 @@ def getImage(image: str):
 
 def checkImageExist(name: str):
     return os.path.isfile(os.path.join(CONFIGURATION()['SERVER_FILES_PATH'], name))
+
+def API_TARGET(uri):
+    # uri = "https://api.stackexchange.com/2.0/users?   order=desc&sort=reputation&inname=fuchida&site=stackoverflow"
+    try:
+        uResponse = requests.get(f'{uri}?key={API_KEY}')
+    except requests.ConnectionError:
+       return "Connection Error"  
+    Jresponse = uResponse.text
+    data = json.loads(Jresponse)
+
+
+    return data
+
+# import threading
+# import time
+# def worker(argument):
+#     time.sleep(5)
+#     API_TARGET('http://localhost:5000/PSITS/api/accounts_p/19889781')
+#     return
+
+
+# t = threading.Thread(target=worker, args=['hello'])
+# t.start()

@@ -21,8 +21,13 @@ Setting up database connection
 If the server is hosted publicly, then :PRODUCTION should be set 
 to True, if you are debugging then set it to False
 
-::PRODUCTION = False
+::PRODUCTION = True
 ::PORT = 5000
 ::APP_HOST = 0.0.0.0
 ::SERVER_FILES_PATH = C:\SERVER_FILES\
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+Custom API Hook
+If a server is hosted publicly, you can hook the api from that address,
+NOTE if API_ALLOW_HOOK is set to True, the Database connection is disregarded
+::API_ALLOW_HOOK = False
+::API_LINK = localhost

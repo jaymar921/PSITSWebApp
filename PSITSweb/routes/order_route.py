@@ -11,8 +11,12 @@ from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATE
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO
-from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData
+from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData, CONFIGURATION
 from webApp_utility import checkImageExist
+
+
+API_LINK: str = CONFIGURATION()['API_LINK'] if (
+    'true' in CONFIGURATION()['API_ALLOW_HOOK'].lower()) else ''
 
 
 @app.route("/PSITS@MyOrderList", methods=['GET'])
@@ -50,30 +54,30 @@ def psits_merchandise_orders_list():
         return redirect(url_for('cant_find_link'))
     if isAdmin(session['username']):
         # if flask.request.method == 'POST':
-            
-            # # print(request.get_json())
-            # ORDER_ID = request.form['order_ref']
 
-            # # GET THE MATCHING ORDER
-            # ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
+        # # print(request.get_json())
+        # ORDER_ID = request.form['order_ref']
 
-            # # SET THE ORDER STATUS
-            # ORDER.setStatus(request.form['status'])
-            # # Update database
-            # UPDATEMerchOrder(ORDER)
+        # # GET THE MATCHING ORDER
+        # ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
 
-            # # Grab the necessary info of the USER
-            # merch_order = SEARCHMerchOrder(ORDER_ID)[0]
-            # merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
-            # account: Account = getAccountByID(merch_order.account_id)
-            # account_order: AccountOrders = AccountOrders(account, merch, merch_order)
-            # # Email the USER if paid
-            # if ORDER.getStatus() == ORDER_STATUS.PAID.value:
-            #     pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
-            #                     account_order.account.email, messages.product_paid(account_order)))
-            # elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
-            #     pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
-            #                     messages.product_cancel(account_order)))
+        # # SET THE ORDER STATUS
+        # ORDER.setStatus(request.form['status'])
+        # # Update database
+        # UPDATEMerchOrder(ORDER)
+
+        # # Grab the necessary info of the USER
+        # merch_order = SEARCHMerchOrder(ORDER_ID)[0]
+        # merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
+        # account: Account = getAccountByID(merch_order.account_id)
+        # account_order: AccountOrders = AccountOrders(account, merch, merch_order)
+        # # Email the USER if paid
+        # if ORDER.getStatus() == ORDER_STATUS.PAID.value:
+        #     pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
+        #                     account_order.account.email, messages.product_paid(account_order)))
+        # elif ORDER.getStatus() == ORDER_STATUS.CANCELLED.value:
+        #     pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
+        #                     messages.product_cancel(account_order)))
 
         search: str = flask.request.values.get('search')
         if search is None:
@@ -81,23 +85,24 @@ def psits_merchandise_orders_list():
 
         if search == 'ALL':
             search = search.lower()
-
+        print(API_LINK)
         return render_template('MerchOrdersList.html',
                                logout='block',
                                login='none',
-                               account_data=getAccountByID(session['username']),
+                               account_data=getAccountByID(
+                                   session['username']),
                                admin='block',
                                title='PSITS ORDERS',
-        #                       reserve=ORDERS_TALLY,
-        #                       total=TOTAL_TALLY,
-        #                       paid=PAID_TALLY,
-        #                       ORDERS=ORDERS, 
+                               #                       reserve=ORDERS_TALLY,
+                               #                       total=TOTAL_TALLY,
+                               #                       paid=PAID_TALLY,
+                               #                       ORDERS=ORDERS,
                                search=search,
-                               key="API_SECRET-"+hashData(str((int(session['username'])*250))))
+                               key="API_SECRET-" + \
+                                   hashData(
+                                       str((int(session['username'])*250))),
+                               api_link=API_LINK)
     return redirect(url_for('cant_find_link'))
-
-
-
 
 
 @app.route("/PSITS@Order", methods=['POST'])
@@ -118,8 +123,7 @@ def psits_order_product():
             PRICE: int = int(merch.price)
             DISCOUNT: float = float(merch.discount)
 
-
-            DISCOUNTED_PRICE: float = PRICE - (PRICE* (DISCOUNT/100))
+            DISCOUNTED_PRICE: float = PRICE - (PRICE * (DISCOUNT/100))
 
             # get the promo
             promo: PROMO = GetPromo(promocode)
@@ -129,7 +133,8 @@ def psits_order_product():
                     # calculate the percentage
                     total = PRICE * int(quantity)
                     percentage = promo.discount/total
-                    DISCOUNTED_PRICE = DISCOUNTED_PRICE - (DISCOUNTED_PRICE * percentage)
+                    DISCOUNTED_PRICE = DISCOUNTED_PRICE - \
+                        (DISCOUNTED_PRICE * percentage)
                     DeductPromoSlot(promo.code)
 
             # Generate a reference Code
@@ -162,7 +167,7 @@ def psits_order_product():
 
     else:
         return redirect(url_for('login_page'))
-    return redirect(url_for("psits_merchandise_product",uid=merch_uid))
+    return redirect(url_for("psits_merchandise_product", uid=merch_uid))
 
 
 @deprecated("Order form is deprecated")
@@ -207,7 +212,8 @@ def psits_order_remove_request(ref):
             # Email the USER if paid
             # pushEmail(Email("PSITS Order cancellation ", account_order.account.email, messages.product_cancel(account_order)))
 
-            databaseLog(f"User [{session['username']}] has cancelled an order -> id[{ref}]")
+            databaseLog(
+                f"User [{session['username']}] has cancelled an order -> id[{ref}]")
             ORDER_TO_CANCEL.setStatus('CANCELLED')
             UPDATEMerchOrder(ORDER_TO_CANCEL)
             break
@@ -284,8 +290,10 @@ def order_handler():
     event_uid = session['order_message']
     status = request.form['status']
     if status == 'NOT-RESERVED':
-        createOrder(OrderAccount(None, event_uid, session['username'], 'RESERVED', 0, ''))
-        databaseLog(f"Order request | Account ID [{session['username']}] - status: RESERVATION")
+        createOrder(OrderAccount(None, event_uid,
+                    session['username'], 'RESERVED', 0, ''))
+        databaseLog(
+            f"Order request | Account ID [{session['username']}] - status: RESERVATION")
     elif status == 'ORDER':
         order = getOrderAccount(event_uid, session['username'])
         order.status = 'ORDERED'
@@ -298,7 +306,8 @@ def order_handler():
                        f"{'s' if int(order_account.quantity) > 1 else ''} which totals to " \
                        f"P{int(order_account.quantity) * int(event.amount)}, if you have time, you can" \
                        f" visit the PSITS office at 5th floor UC Main bldg. located near room 539 for the payment."
-        pushEmail(Email("PSITS - " + event.title, getAccountByID(order.account_uid).email, user_message))
+        pushEmail(Email("PSITS - " + event.title,
+                  getAccountByID(order.account_uid).email, user_message))
         databaseLog(f"Order request | Account ID [{session['username']}] - status: ORDERED "
                     f"{request.form['quantity']} {event.item}{'s' if int(order_account.quantity) > 1 else ''}")
     return redirect(url_for('landing_page'))
@@ -337,7 +346,8 @@ def psits_orders_list():
     if request.method == 'GET':
 
         return render_template("OrderList.html", logout='block', login='none',
-                               account_data=getAccountByID(session['username']),
+                               account_data=getAccountByID(
+                                   session['username']),
                                admin='block', title='PSITS ORDERS LIST', orders=orders, total=total,
                                reserve=ordered, paid=paid)
     else:

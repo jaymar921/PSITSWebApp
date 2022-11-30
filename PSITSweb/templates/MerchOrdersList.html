@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<script defer src="{{url_for('static', filename='transaction.js')}}"></script>
+<script defer src="{{url_for('static', filename='transaction.js')}}">
+</script>
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <style>
   .lds-ring {
@@ -181,6 +182,53 @@
   </div>
 </div>
 
+<div  class="handle-modal flex hide" id="qr-modal" style="display: none; z-index: 999;">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="{{url_for('static', filename='html5-qrcode.js')}}"></script>
+  <style>
+      .result{
+        background-color: green;
+        color:#fff;
+        padding:20px;
+      }
+      .row{
+        display:flex;
+      }
+    </style>
+    <div class="row">
+      <div class="col">
+        <div style="width:500px;" id="reader"></div>
+      </div>
+    </div>
+    <button title="close" type="button" onclick="closeScanner()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button> 
+    <script type="text/javascript">
+    let oldQr = '';
+    function onScanSuccess(qrCodeMessage) {
+      
+      if(oldQr === qrCodeMessage)
+        return;
+      search_individual_transaction(qrCodeMessage,document.getElementById('secret_key').value);
+      oldQr = qrCodeMessage;
+      closeScanner();
+    }
+    function onScanError(errorMessage) {
+      //handle scan error
+    }
+    var html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 1, qrbox: 250 });
+    
+    function closeScanner(){
+      try{
+        document.getElementById('qr-modal').style.display = 'none';
+        html5QrcodeScanner.clear()
+      }catch(e){}
+    }
+    function runScanner(){
+      html5QrcodeScanner.render(onScanSuccess, onScanError);
+    }
+  </script>
+</div>
+
 <div class="handle-modal flex hide" id="order-modal" style="display: none;">
   <div class="reciept">
     <div class=" autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px;">
@@ -227,9 +275,10 @@
       For best searching result, it is highly recommended to enter the reference code since it is distinct.
     </p>
     <div class="search-container searchTable">
-      <input id="handle_search" style="width: 65%; border: 1px solid black; padding: 5px" type="text" name="search" placeholder=" REFERENCE CODE" value="">
-      <button type="button" onclick="search_individual_transaction(document.getElementById('handle_search').value,document.getElementById('secret_key').value)" class="normalButton"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
-      <button type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>            
+      <input id="handle_search" style="width: 55%; border: 1px solid black; padding: 5px" type="text" name="search" placeholder=" REFERENCE CODE" value="">
+      <button title="search reference code" type="button" onclick="search_individual_transaction(document.getElementById('handle_search').value,document.getElementById('secret_key').value)" class="normalButton"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+      <button title="scan qr code" type="button" onclick="document.getElementById('qr-modal').style.display = 'flex';runScanner();" class="normalButton"><i class="fa-solid fa-qrcode"></i></button>
+      <button title="close" type="button" onclick="hideModal()" class="normalButton"><i class="fa fa-times" aria-hidden="true"></i></button>            
     </div>
     <div class="information-container">
       <br>
@@ -348,12 +397,12 @@
       <br>
       <br>
       <br>
- 
-  
-
-  
-
- 
+        <script>
+          function loadAPI(){
+            setAPI_LINK('{{api_link}}');
+            search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value);
+          }
+        </script>
   <br /><br /><br /><br /><br /><br />
 <br /><br /><br /><br /><br /><br />
 </div>

@@ -28,6 +28,7 @@ class Account:
         self.year = year
         self.email = email
         self.img = ''
+        self.password = ''
     
     def toJSON(self):
         data: dict = {
@@ -38,6 +39,7 @@ class Account:
             'course' : self.course,
             'year' : self.year,
             'email' : self.email,
+            'password': self.password
         }
         return data
         #return json.dumps(data, indent=4, sort_keys=False, default=str)
@@ -217,12 +219,22 @@ class AccountOrders():
 
     def toJSON(self):
         data: dict = {
-            'account' : self.account.toJSON(),
-            'merch' : self.merch.toJSON(),
-            'order' : self.order.toJSON(),
+            'account' : {
+                'account_id': self.account.uid,
+                'fullname': f'{self.account.firstname} {self.account.lastname}',
+                'course': f'{self.account.course}',
+                'year': self.account.year,
+            },
+            'merch' : {'uid':self.merch.uid},
+            'order' : {
+                'uid':self.order.uid,
+                'order_date': f'{self.order.order_date}',
+                'quantity': self.order.quantity,
+                'additional_info': self.order.additional_info
+            },
             'reference' : self.reference,
             'getTotal': self.getTotal(),
-            'getStatus': self.getStatus()
+            'getStatus': self.getStatus() 
         }
         #return json.dumps(data,  indent=4, sort_keys=False, default=str)
         return data

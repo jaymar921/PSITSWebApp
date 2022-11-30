@@ -169,6 +169,27 @@
         border-radius: 10px;
       }
 
+      .border-gradient-gray {
+        position: relative;
+          border: 5px solid transparent;
+        background: #9ff0aa;
+        background-clip: padding-box;
+        
+        border-radius: 10px;
+      }
+      
+      .border-gradient-gray ::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background: linear-gradient(to bottom, #e6e6e6, #818181);
+        z-index: -1;
+        border-radius: 10px;
+      }
+
       .shimmer {
         color: black;
         -webkit-mask: linear-gradient(-60deg,#000 30%,#0005,#000 40%) right/500% 100%;

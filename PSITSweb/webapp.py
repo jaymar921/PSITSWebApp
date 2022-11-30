@@ -6,6 +6,7 @@ import pandas as pd
 
 import flask
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask_cors import CORS
 
 from Database import getAnnouncements, getAccountByID,\
     databaseInit, databaseLog, GETAllEvent, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
@@ -27,6 +28,7 @@ RUNNING = False
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'PSITS2022BYABEJAR'
+CORS(app)
 import routes.login_route
 import routes.app_route_1_2
 import webApp_utility
@@ -297,11 +299,12 @@ if __name__ == '__main__':
         # use this if you are debugging the app
         if CONFIGURATION()['PRODUCTION'].lower() == 'false':
             databaseLog(f"Server starting on DEBUG mode, will run on {IPAddress}:{CONFIGURATION()['PORT']}")
+            # app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True, ssl_context=('cert.pem', 'key.pem'))
             app.run(host=CONFIGURATION()['APP_HOST'], port=CONFIGURATION()['PORT'], debug=True)
         elif CONFIGURATION()['PRODUCTION'].lower() == 'true':
             # Production
             databaseLog(f"Server starting on PRODUCTION mode, will run on {IPAddress}:{CONFIGURATION()['PORT']}")
-            serve(app, host="0.0.0.0", port=CONFIGURATION()['PORT'])
+            serve(app, host="0.0.0.0", port=CONFIGURATION()['PORT'], url_scheme='https')
         else:
             databaseLog(f"Failed to start web app, check `::PRODUCTION` setting at configuration.psits_config")
 

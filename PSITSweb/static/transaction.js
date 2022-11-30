@@ -2,6 +2,12 @@
 /*
     Sending GET request to API
 */
+let api_link = '';
+
+function setAPI_LINK(link){
+    api_link = link;
+}
+
 async function search_transaction(searchData, key){
 
     let info_box = document.getElementById('info_box');
@@ -15,12 +21,12 @@ async function search_transaction(searchData, key){
     let data;
     try{
         // searching transactions, must have a key for authentication
-        const response = await fetch(`/PSITS/api/transactions/${new String(searchData)}?key=${key}`,{
+        const response = await fetch(`${api_link}/PSITS/api/transactions/${new String(searchData)}?key=${key}`,{
             headers: {
-                Authorization: key
-            }
+                Authorization: key,
+            },
         })
-
+        console.log(response)
         data = await response.json()
     }catch(e){
         info_box.style.display = "none";
@@ -61,7 +67,48 @@ async function search_transaction(searchData, key){
 
     let count = 1;
 
+    /*
+        ORDER = {
+            'reserve': Number,
+            'total': Number,
+            'paid': Number,
+            'ORDERS': [
+                {
+                    'account': {
+                        'account_id': Number,
+                        'fullname': String,
+                        'course': String,
+                        'year': Number
+                    },
+                    'merch': {
+                        'uid': Number
+                    },
+                    'order': {
+                        'uid': Number,
+                        'order_date': Date,
+                        'quantity': Number,
+                        'additional_info': String
+                    },
+                    'reference': String,
+                    'getTotal': Number,
+                    'getStatus': String
+                }
+            ],
+            'merchandise': [
+                {
+                    'uid': Number,
+                    'title': String,
+                    'price': Number,
+                    'discount': Number
+                },
+            ],
+            'search': String,
+            'status': Number
+        }
+    */
+
     for(const order of data.ORDERS){
+        let merchandise = data.merchandise.find((item) => order.merch.uid === item.uid);
 
         let form_body = document.createElement('form');
         form_body.method = 'POST';
@@ -103,7 +150,7 @@ async function search_transaction(searchData, key){
         input_field = document.createElement('input');
         input_field.setAttribute('id', order.order.uid+"name");
         input_field.disabled = true;
-        input_field.value = `${order.account.firstname} ${order.account.lastname}`
+        input_field.value = `${order.account.fullname}`
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -113,7 +160,7 @@ async function search_transaction(searchData, key){
         input_field = document.createElement('input');
         input_field.setAttribute('id', order.order.uid+"prod");
         input_field.disabled = true;
-        input_field.value = `${order.merch.title}`
+        input_field.value = `${merchandise.title}`
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -244,6 +291,8 @@ async function search_individual_transaction(searchData, key){
     let info_box = document.getElementById('info_box');
     let info_msg = document.getElementById('info_message');
 
+    document.getElementById('handle_search').value = searchData;
+
     info_msg.innerHTML = "Loading...";
     document.getElementById('info_load').style.display = 'block';
 
@@ -256,7 +305,7 @@ async function search_individual_transaction(searchData, key){
     
     try{
         // searching transactions, must have a key for authentication
-        const response = await fetch(`/PSITS/api/transactions/${new String(searchData)}?key=${key}`);
+        const response = await fetch(`${api_link}/PSITS/api/transactions/${new String(searchData)}?key=${key}`);
 
         data = await response.json();
     }catch(e){
@@ -274,6 +323,7 @@ async function search_individual_transaction(searchData, key){
         document.getElementById("qrcode").innerHTML = '';
         if(data.ORDERS.length > 0){
             let single_order = data.ORDERS[0];
+            let merchandise = data.merchandise.find((item) => single_order.merch.uid === item.uid);
 
             new QRCode(document.getElementById("qrcode"), {
                 text: single_order.reference,
@@ -286,14 +336,14 @@ async function search_individual_transaction(searchData, key){
 
             
             updateReceipt(
-                name=`${single_order.account.firstname} ${single_order.account.lastname}`,
-                product=`${single_order.merch.title}`,
-                price=`${single_order.merch.price}`,
+                name=`${single_order.account.fullname}`,
+                product=`${merchandise.title}`,
+                price=`${merchandise.price}`,
                 discounted_price=`${(single_order.getTotal)}`,
                 date=`${single_order.order.order_date}`,
                 quantity=`${single_order.order.quantity}`,
                 total=`${(single_order.getTotal * single_order.order.quantity)}`,
-                status=`${single_order.order.status}`,
+                status=`${single_order.getStatus}`,
                 info=`${single_order.order.additional_info}`,
                 ref=`${single_order.reference}`
             )
@@ -350,7 +400,7 @@ function editOrderStatus(uid){
 }
 
 async function update_transaction(ref, button_id, key){
-    await fetch(`/PSITS/api/transactions?key=${key}`, {
+    await fetch(`${api_link}/PSITS/api/transactions?key=${key}`, {
     method: "PUT",
     body: JSON.stringify({
         reference: ref,
@@ -397,7 +447,7 @@ async function updateOrder(key){
     if(!reference_code)
         return;
     try{
-        const response = await fetch(`/PSITS/api/transactions?key=${key}`, {
+        const response = await fetch(`${api_link}/PSITS/api/transactions?key=${key}`, {
             method: "PUT",
             body: JSON.stringify({
                 reference: reference_code,
@@ -434,7 +484,7 @@ async function delete_transaction(){
     let user = document.getElementById('userid').value;
     
     try{
-        let response = await fetch(`/PSITS/api/transactions/${reference}?key=${key}`, {
+        let response = await fetch(`${api_link}/PSITS/api/transactions/${reference}?key=${key}`, {
             method: "DELETE",
             body: JSON.stringify({
                 password: `${password}`,
@@ -465,4 +515,6 @@ function formatToCurrency(amount){
     return (amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
 }
 
-search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value);
+try{
+    loadAPI();
+}catch(e){}

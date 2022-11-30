@@ -16,6 +16,7 @@ def hashData(data: str) -> str:
 
 def admins():
     return {
+        'API_SECRET':'15187968798223',
         'ABEJAR': '19889781',
         'RIBO': '19895283',
         'COLONIA': '20220885',
@@ -228,3 +229,29 @@ class DateTimeEncoder(json.JSONEncoder):
             return o.isoformat()
 
         return json.JSONEncoder.default(self, o)
+
+def saveToFile(filename, data):
+    with open(filename, "a+") as f:
+        f.write(data)
+
+def loadFileToDict(filename)->dict:
+    configuration_map = {}
+    with open(filename, "r") as config:
+        lines = config.readlines()
+        settings = []
+    for line in lines:
+        if '::' in line:
+            settings.append(line.strip())
+        for setting in settings:
+            try:
+                option = setting.split(' = ')[1]
+                if '_' == option:
+                    option = ''
+                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","")] = option
+            except Exception as e:
+                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","").strip()] = ''
+    return configuration_map
+
+# saveToFile('jaymar.txt','::admin = 1\n')
+# saveToFile('jaymar.txt','::2nd = 2\n')
+# print(loadFileToDict('jaymar.txt'))
