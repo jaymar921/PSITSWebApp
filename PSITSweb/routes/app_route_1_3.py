@@ -223,7 +223,7 @@ def community_page():
         '19895283': ['PIO', 'border-gradient-purple', '', {}],  # Kevin
         '19871367': ['Auditor', 'border-gradient-purple', '', {}],  # Belmonte
         '19889898': ['Secretary', 'border-gradient-purple', '', {}],  # Sierra
-        '19880152': ['4th Year Rep.', 'border-gradientpurple', '', {}],  # Ducal
+        '19880152': ['4th Year Rep.', 'border-gradient-purple', '', {}],  # Ducal
         '21496369': ['Volunteer', 'border-gradient-purple', '', {}],  # Dex
         '21540950': ['Volunteer', 'border-gradient-purple', '', {}],  # Paul
         # Padolina
