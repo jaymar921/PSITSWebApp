@@ -164,6 +164,7 @@ def psits_order_product():
 
             # Log the order
             databaseLog(f"Order [{str(order)}] was created")
+            return redirect(url_for("psits_receipt_generator", uid=GetReference(REF_CODE)))
 
     else:
         return redirect(url_for('login_page'))

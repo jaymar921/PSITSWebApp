@@ -15,10 +15,10 @@
         <br />
         <thead>
             <tr>
-            <th></th>
-            <th>Item</th>
+            <th>Image</th>
+            <th class="hide">Item</th>
             <th class="hide">Additional Info</th>
-            <th>Date</th>
+            <th class="hide">Date</th>
             <th class="hide">Quantity</th>
             <th>Status</th>
             <th class="hide">Total</th>
@@ -39,9 +39,9 @@
                     src="{{ url_for('download_file', filename=order.merch.image_file) }}">
                 {% endif %}
                 </td>
-                <td>{{order.merch.title}}</td>
+                <td class="hide">{{order.merch.title}}</td>
                 <td class="order_info hide">{{order.order.additional_info}}</td>
-                <td>{{order.order.order_date}}</td>
+                <td class="hide">{{order.order.order_date}}</td>
                 
                 <td class="hide">{{order.order.quantity}}</td>
                 {% if order.getStatus() =='ORDERED'%}

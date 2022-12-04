@@ -265,6 +265,19 @@
 
   }
 
+  .dropdown{
+    display: inline-block;
+    cursor: help;
+    
+  }
+  .dropdown .dropdown-content{
+    display: none;
+    transition: all 4s;
+  }
+  .dropdown:hover .dropdown-content{
+    display: inline-block;
+  }
+
 
 </style>
 <div id="info_box" onclick="hide(this);" class="loading_box" style="display: none;position: fixed; z-index: 11;">
@@ -472,9 +485,21 @@
               Old JINJA TAGS, I REMOVED THIS BECAUSE THE USER KEEPS ON RELOADING THE WHOLE PAGE, IT IS INEFFICIENT
             <h1 style="color: orange; font-size:120%;"> Orders: ₱ '%0.2f'| format(reserve|float)  |  Total: ₱ '%0.2f'| format(paid|float) / '%0.2f'| format(total|float)  </h1>
             -->
-            <div>
-              <h1 style="color: orange; font-size:120%;">Orders: ₱<a id="display_reserve"></a></h1>
-              <h1 style="color: orange; font-size:100%;">Total: <a title="cash on hand" style="color: rgb(39, 210, 223); font-size:100%;" id="display_paid"></a> / <a title="overall total when all orders are paid"  style="color: green; font-size:100%;" id="display_total"></a></h1>
+            <div style="position: relative;width: 90%; left: 50%; transform: translateX(-50%);">
+              <hr><br>
+              <h1 style="color: orange; font-size:100%;">Orders: ₱<a title="accounts receivable" style="color: rgb(184, 28, 106);" id="display_reserve"></a></h1><br>
+              <h1 style="color: orange; font-size:100%;">Paid: <a title="cash on hand" style="color: rgb(39, 210, 223); font-size:100%;" id="display_paid"></a></h1><br>
+              <h1 style="color: orange; font-size:100%;">Total: <a title="overall total when all orders are paid"  style="color: green; font-size:100%;" id="display_total"></a></h1>
+              <br>
+              <hr>
+              
+              <div class="dropdown">
+                <p>Filters: </p>
+                <div class="dropdown-content">
+                  <span title="This only scans order's additional info if it contains 'Size: #'" id="filter-message" style="white-space: pre-line; justify-content: left;"></span>
+                </div>
+              </div>
+              <hr>
             </div>
           </div>
           <br />

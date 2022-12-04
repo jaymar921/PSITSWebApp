@@ -40,7 +40,7 @@
 <br />
 <br />
 <br />
-<div class="_center autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px;">
+<div class="_center autoWidth" style="border: 2px solid gray; padding: 10px; margin: 10px; background-color:white;">
     <h1 style="text-align: center;">PSITS Receipt</h1>
     <br />
     <div id="qrcode"></div>
@@ -76,6 +76,13 @@
     <div style="display: flex;">
         <label style="font-size: 15px;">Quantity: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.order.quantity}}</a>
     </div>
+    <div style="display: flex;">
+        {% if promocode_valid %}
+        <label style="font-size: 15px;">Promocode: </label><a title="VALID PROMOCODE" style="color:green; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{promocode}}</a>
+        {% else %}
+        <label style="font-size: 15px;">Promocode: </label><a title="INVALID PROMOCODE" style="color:red; font-size: 15px; padding-left: 5px; text-align: right; width: 100%; text-decoration: line-through;">{{promocode}}</a>
+        {% endif %}
+    </div>
     <br />
     <hr>
     <br />
@@ -83,10 +90,15 @@
         <label style="font-size: 15px;">Total: </label><a style="color:dodgerblue; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">₱{{total}}</a>
     </div>
     <div style="display: flex;">
-        <label style="font-size: 15px;">Status: </label><a style="color:red; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.order.status}}</a>
+        <label style="font-size: 15px;">Status: </label><a style="color:orange; font-size: 15px; padding-left: 5px; text-align: right; width: 100%;">{{ORDER.order.status}}</a>
     </div>
     <br />
     <hr>
+    {% if ORDER.order.status|lower() == 'ordered' %}
+    <p style="font-size: 10px;">Please proceed to the PSITS UC MAIN office located at the 5th floor near room 539 for payment. We also accept GCash payment.</p>
+    {% elif ORDER.order.status|lower() == 'paid' %}
+    <p style="font-size: 10px;">We will announce for the schedule of claiming at the PSITS FB Page and Announcements. Do not lose this receipt.</p>
+    {% endif %}
 </div>
 
 {% endblock %}

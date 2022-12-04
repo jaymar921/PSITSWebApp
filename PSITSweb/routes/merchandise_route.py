@@ -8,7 +8,7 @@ from flask import session, redirect, url_for, render_template, request, jsonify
 
 from Database import SEARCHMerchandise, getAccountByID, UPDATEMerchandise, databaseLog, \
     SEARCHMerchOrder, CREATEMerchandise, GETAllMerchandise, GETAllEvent, DELETEMerchandise, AddPromo, GetAllPromo, DeletePromo
-from Models import Merchandise, ORDER_STATUS, STATIC_DATA, MerchOrder, AccountOrders, Account
+from Models import Merchandise, ORDER_STATUS, STATIC_DATA, MerchOrder, AccountOrders, Account, PROMO
 from Util import isAdmin, GetReference, contentVerifier, GetPriceRef
 from webApp_utility import save_redirection, checkImageExist, is_blocked_route
 from webapp import ALLOWED_EXTENSION
@@ -234,6 +234,34 @@ def psits_receipt_generator(uid):
         accountOrder: AccountOrders = AccountOrders(account, merch, order)
         total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
         price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
+        
+        
+        _addInfo = order.additional_info.split(' ')
+        promocode: str = ''
+        try:
+            stop = False
+            for fragment in _addInfo:
+                if 'promocode' in fragment.lower():
+                    stop = True
+                    continue
+                if stop:
+                    promocode = fragment
+                    break
+        except: pass
     except:
         return redirect(url_for('cant_find_link'))
-    return render_template('app_templates_1_3/Receipt.html', login='none', logout='none', title=f'Receipt {uid}', ORDER = accountOrder, ref = uid, total = total, price = price)
+    
+    promo_valid = False
+    for promo in GetAllPromo():
+        if promocode in promo.code:
+            promo_valid = True
+    return render_template('app_templates_1_3/Receipt.html', 
+    login='none', 
+    logout='none', 
+    title=f'Receipt {uid}', 
+    ORDER = accountOrder, 
+    ref = uid, 
+    total = total, 
+    price = price,
+    promocode=promocode,
+    promocode_valid=promo_valid)

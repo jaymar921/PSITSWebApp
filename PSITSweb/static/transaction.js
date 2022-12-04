@@ -9,7 +9,7 @@ function setAPI_LINK(link){
 }
 
 async function search_transaction(searchData, key){
-
+    clearMap();
     let info_box = document.getElementById('info_box');
     let info_msg = document.getElementById('info_message');
 
@@ -26,7 +26,6 @@ async function search_transaction(searchData, key){
                 Authorization: key,
             },
         })
-        console.log(response)
         data = await response.json()
     }catch(e){
         info_box.style.display = "none";
@@ -110,6 +109,8 @@ async function search_transaction(searchData, key){
     for(const order of data.ORDERS){
         let merchandise = data.merchandise.find((item) => order.merch.uid === item.uid);
 
+        const {order:_order, account, reference, getTotal, getStatus} = order;
+
         let form_body = document.createElement('form');
         form_body.method = 'POST';
         form_body.action = '';
@@ -120,11 +121,11 @@ async function search_transaction(searchData, key){
         let table_col = document.createElement("td");
 
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"idnum");
+        input_field.setAttribute('id', _order.uid+"idnum");
         input_field.setAttribute('class','hide');
         input_field.name = 'order_ref';
         input_field.hidden = true;
-        input_field.value = `${order.reference}`
+        input_field.value = `${reference}`
 
         table_row.appendChild(input_field);
 
@@ -138,9 +139,9 @@ async function search_transaction(searchData, key){
         table_col = document.createElement("td");
         input_field = document.createElement('input');
         table_col.setAttribute('class', 'hide');
-        input_field.setAttribute('id', order.order.uid+"ref");
+        input_field.setAttribute('id', _order.uid+"ref");
         input_field.disabled = true;
-        input_field.value = order.reference
+        input_field.value = reference
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -148,9 +149,9 @@ async function search_transaction(searchData, key){
         // name
         table_col = document.createElement("td");
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"name");
+        input_field.setAttribute('id', _order.uid+"name");
         input_field.disabled = true;
-        input_field.value = `${order.account.fullname}`
+        input_field.value = `${account.fullname}`
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -158,7 +159,7 @@ async function search_transaction(searchData, key){
         // prod
         table_col = document.createElement("td");
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"prod");
+        input_field.setAttribute('id', _order.uid+"prod");
         input_field.disabled = true;
         input_field.value = `${merchandise.title}`
 
@@ -170,7 +171,10 @@ async function search_transaction(searchData, key){
         table_col.setAttribute('class', 'information hide');
         input_field = document.createElement('p');
         input_field.setAttribute('style', 'white-space: pre-line; padding: 5px; font-size: 70%;');
-        input_field.innerHTML = `${order.order.additional_info}`
+        input_field.innerHTML = `${_order.additional_info}`
+        // filter the sizes
+        if(getStatus !== 'CANCELLED')
+            filterSizesFromInfo(_order.additional_info)
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -179,9 +183,9 @@ async function search_transaction(searchData, key){
         table_col = document.createElement("td");
         table_col.setAttribute('class', 'hide');
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"qty");
+        input_field.setAttribute('id', _order.uid+"qty");
         input_field.disabled = true;
-        input_field.value = `${order.order.quantity}`;
+        input_field.value = `${_order.quantity}`;
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -190,9 +194,9 @@ async function search_transaction(searchData, key){
         table_col = document.createElement("td");
         table_col.setAttribute('class', 'hide');
         input_field = document.createElement('input');
-        input_field.setAttribute('id', order.order.uid+"amt");
+        input_field.setAttribute('id', _order.uid+"amt");
         input_field.disabled = true;
-        input_field.value = `₱${(order.getTotal * order.order.quantity).toFixed(2)}`;
+        input_field.value = `₱${(getTotal * _order.quantity).toFixed(2)}`;
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -202,7 +206,7 @@ async function search_transaction(searchData, key){
 
         let selection = document.createElement('select');
         selection.name ='status'
-        selection.setAttribute('id', order.order.uid+"status");
+        selection.setAttribute('id', _order.uid+"status");
         selection.setAttribute('style', "width: 100%");
         selection.disabled = true;
 
@@ -222,16 +226,16 @@ async function search_transaction(searchData, key){
         option_claimed.value = 'CLAIMED';
         option_claimed.innerHTML = 'CLAIMED';
         
-        if(order.getStatus === 'ORDERED'){
+        if(getStatus === 'ORDERED'){
             option_ordered.selected = true;
             selection.options.add(option_ordered);
             selection.options.add(option_paid);
             selection.options.add(option_cancelled);
-        }else if(order.getStatus === 'PAID'){
+        }else if(getStatus === 'PAID'){
             option_paid.selected = true;
             selection.options.add(option_paid);
             selection.options.add(option_claimed);
-        }else if(order.getStatus === 'CANCELLED'){
+        }else if(getStatus === 'CANCELLED'){
             option_cancelled.selected = true;
             selection.options.add(option_cancelled);
         }else{
@@ -248,23 +252,23 @@ async function search_transaction(searchData, key){
         table_col = document.createElement("td");
         table_col.setAttribute('class', 'hide');
         let button_edit = document.createElement('a');
-        button_edit.setAttribute('id', order.order.uid+"edit");
+        button_edit.setAttribute('id', _order.uid+"edit");
         button_edit.setAttribute('class', 'normalButton')
-        button_edit.setAttribute('onclick',`editOrderStatus(${order.order.uid});return;`)
+        button_edit.setAttribute('onclick',`editOrderStatus(${_order.uid});return;`)
         button_edit.innerHTML = '✎';
 
         let button_save = document.createElement('button');
-        button_save.setAttribute('id', order.order.uid+"button");
+        button_save.setAttribute('id', _order.uid+"button");
         button_save.setAttribute('class', 'normalButton')
-        button_save.setAttribute('onclick',`update_transaction('${order.reference}','${order.order.uid+"status"}','${key}');return;`)
+        button_save.setAttribute('onclick',`update_transaction('${reference}','${_order.uid+"status"}','${key}');return;`)
         button_save.hidden = true;
         button_save.innerHTML = '💾';
         button_save.type = "button";
 
         let button_delete= document.createElement('button');
-        button_delete.setAttribute('id', order.order.uid+"delete");
+        button_delete.setAttribute('id', _order.uid+"delete");
         button_delete.setAttribute('class', 'normalButton hide')
-        button_delete.setAttribute('onclick',`deleteModal('${order.reference}','${key}');return;`)
+        button_delete.setAttribute('onclick',`deleteModal('${reference}','${key}');return;`)
         button_delete.innerHTML = '❌';
         button_delete.type = "button";
         
@@ -282,9 +286,10 @@ async function search_transaction(searchData, key){
         // append all the row data into the table body
         table_body.appendChild(table_row)
         
+        
     }
-
-    
+    //
+    displayFilteredSizesFromInfo();
 }
 
 async function search_individual_transaction(searchData, key){
@@ -514,6 +519,82 @@ async function delete_transaction(){
 function formatToCurrency(amount){
     return (amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
 }
+
+
+
+// filtering
+let output_map = new Map();
+
+function clearMap(){
+    output_map.clear();
+    output_map.set('14', 0);
+    output_map.set('16', 0);
+    output_map.set('18', 0);
+    output_map.set('20', 0);
+    output_map.set('S', 0);
+    output_map.set('M', 0);
+    output_map.set('L', 0);
+    output_map.set('XL', 0);
+    output_map.set('XXL', 0);
+    output_map.set('XXXL', 0);
+}
+
+function filterSizesFromInfo(info){
+    let fragments = info.split(/[ \n,\r]/);
+    for(let index = 0; index < fragments.length; index++){
+        if(fragments[index].toLowerCase().includes('size:')){
+            // add to map
+            let key = fragments[index+1]
+            if(typeof key === 'undefined')
+                continue;
+            if (key === '')
+                continue;
+            if (key.toLowerCase().includes('color'))
+                continue;
+            if (key.toLowerCase() === 'large' || key.toLowerCase() === 'l')
+                key = 'L';
+            else if (key.toLowerCase() === 'medium' || key.toLowerCase() === 'm')
+                key = 'M';
+            else if (key.toLowerCase() === 'small' || key.toLowerCase() === 's')
+                key = 'S';
+            else if (key.toLowerCase() === 'xl')
+                key = 'XL';
+            else if (key.toLowerCase() === 'xxl')
+                key = 'XXL';
+            else if (key.toLowerCase() === 'xxxl')
+                key = 'XXXL';
+            if(output_map.has(key)){
+                output_map.set(key,output_map.get(key)+1)
+            }else output_map.set(key, 1);
+        }
+    }
+}
+
+function displayFilteredSizesFromInfo(){
+    const info_box = document.getElementById('filter-message');
+    let message ='';
+    let quantity = 0;
+    console.log(output_map)
+    message =
+    `14 - ${output_map.get('14')}
+    16 - ${output_map.get('16')}
+    18 - ${output_map.get('18')}
+    20 - ${output_map.get('20')}
+    S - ${output_map.get('S')}
+    M - ${output_map.get('M')}
+    L - ${output_map.get('L')}
+    XL - ${output_map.get('XL')}
+    XXL - ${output_map.get('XXL')}
+    XXXL - ${output_map.get('XXXL')}
+    `
+    output_map.forEach((value, key) => {
+        
+        quantity += value;
+    });
+    message += `\nQTY - ${quantity}   `;
+    info_box.innerHTML = message;
+}
+
 
 try{
     loadAPI();

@@ -10,14 +10,17 @@
         height: auto;
     }
     .user{
-        width: 150px;
-        height: 250px;
-        background-color: beige;
-        padding: 10px;
-        border-radius: 10px;
-        -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
-        -moz-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.425);
-        box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.35);
+      position: relative;
+      width: 150px;
+      height: 250px;
+      background-color: beige;
+      padding: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
+      -moz-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.425);
+      box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.35);
+      left: 50%;
+      transform: translateX(-50%);
     }
     .profile-image{
         position: relative;
@@ -101,7 +104,7 @@
         bottom: -5px;
         left: -5px;
         right: -5px;
-        background: linear-gradient(to left, #743ad5, #d53a9d);
+        background: linear-gradient(to left, #9158f5, #d65faa);
         z-index: -1;
         border-radius: 10px;
       }
@@ -201,76 +204,7 @@
         100% {-webkit-mask-position:left}
       }
 
-    @media only screen and (max-width: 576px){
-        .user{
-            width: 100px;
-            height: 230px;
-            background-color: beige;
-            padding: 10px;
-            border-radius: 10px;
-            -webkit-box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.5);
-            -moz-box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.425);
-            box-shadow: -2px -1px 15px 2px rgba(0,0,0,0.35);
-        }
-
-        .border-gradient-purple{
-            position: relative;
-              border: 5px solid transparent;
-            background: #f2f2f2;
-            background-clip: padding-box;
-            
-            border-radius: 10px;
-          }
-
-        .border-gradient-orange, .border-gradient-red{
-            position: relative;
-            border: 5px solid transparent;
-            background: #f3e3c0;
-            background-clip: padding-box;
-            
-            border-radius: 10px;
-        }
-
-        .border-gradient-green{
-            position: relative;
-            border: 5px solid transparent;
-            background: #9ff0aa;
-            background-clip: padding-box;
-            
-            border-radius: 10px;
-        }
-        
-        .profile-image{
-            position: relative;
-            width: 64px;
-            height: 64px;
-            overflow: hidden;
-        }
     
-        .info{
-            text-align: center;
-        }
-    
-        .info h5{
-            font-size: 12px;
-        }
-        .info h6{
-            font-size: 10px;
-        }
-    
-        .info p{
-            font-weight: 300;
-            font-size: 9px;
-        }
-        .profile-section{
-            position: relative; 
-            display: flex; 
-            width: 330px; 
-        }
-        .info .add_info{
-            font-size: 12px;
-        }
-    }
 </style>
 <br />
 <button class="backButton" onclick="location.href='/'">Back</button>
@@ -279,13 +213,13 @@
     <h1 style="text-align: center; color:#074873; ">PSITS Community</h1> <br>
         {% set count = namespace(value=0) %}
 
-    <div class="row community-container">
+    <div class="row community-container" style="margin: auto;">
         {% for user in community %}
 
-            <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4">
+            <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-6">
                 
 
-                <div style="margin: 5px;">
+                <div style="margin: 5px">
                     {% if user.uid|string in devs %}
                     <div class="user {{devs[user.uid|string][1]}}" title="{{user.firstname}} {{user.lastname}}">
                     {% else %}
