@@ -96,6 +96,7 @@
     <hr>
     {% if ORDER.order.status|lower() == 'ordered' %}
     <p style="font-size: 10px;">Please proceed to the PSITS UC MAIN office located at the 5th floor near room 539 for payment. We also accept GCash payment.</p>
+    <br><button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="location.href='/PSITS/GCashPayment/{{ref}}'">Pay GCASH</button><br>
     {% elif ORDER.order.status|lower() == 'paid' %}
     <p style="font-size: 10px;">We will announce for the schedule of claiming at the PSITS FB Page and Announcements. Do not lose this receipt.</p>
     {% endif %}

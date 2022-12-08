@@ -42,7 +42,7 @@ def login():
         databaseLog(f"Account [{account.lastname}, {account.firstname} - ID: {account.uid}] has logged in")
         if has_redirection():
             REDIRECTION = get_redirection()
-            if 'psits_merchandise_product' in REDIRECTION or 'psits_receipt_generator' in REDIRECTION:
+            if 'psits_merchandise_product' in REDIRECTION or 'psits_receipt_generator' in REDIRECTION or 'gcash_payment' in REDIRECTION:
                 return redirect(url_for(REDIRECTION,uid=get_redirection_extra()))
             elif REDIRECTION != '':
                 return redirect(url_for(REDIRECTION))

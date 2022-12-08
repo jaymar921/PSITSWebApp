@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+<style>
+
+    ._center{
+        position: relative;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .autoWidth{
+        display: inline-block;
+        width: 350px;
+    }
+    .photo{
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 330px;
+        height: auto;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 140px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+      }
+      
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      #toCopy{
+        width: 100%;
+        text-align: center;
+        height: 20px;
+      }
+
+</style>
+<br />
+<button class="backButton" onclick="location.href='/PSITS@MyOrderList'">Back</button>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="_center autoWidth" style="border: 2px solid gray; padding: 10px; background-color:white;">
+    <h1 style="text-align: center;">Pay Via GCash</h1><br>
+    <p>Step 1: <strong>Click the QR Code below to download</strong></p>
+    <a href="{{ url_for('static', filename='images/gcashqr-trisha.png')}}" download><img title="Click to download" class="photo" src="{{ url_for('static', filename='images/gcashqr-trisha.png')}}"></a><br>
+    <p>Step 2: <strong>Copy the info below</strong></p><br>
+    <input type="text" id="toCopy" value="{{orderData.fullname}}, {{orderData.reference}}"><br><br>
+    <button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="copyToClipboard()">Click to Copy</button><br><br>
+    <p>Step 3: <strong>Open GCASH, Upload the QR Code, enter the amount and paste the copied text into the message area</strong></p><br>
+    <button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="location.href='gcash://com.mynt.gcash/app/006300120000'">Open GCash</button>
+</div>
+<script>
+    "use strict";
+    function copyToClipboard() {
+        // Copy the text inside the text field
+        let copyText = document.getElementById('toCopy')
+
+        copyText.select();
+        //copyText.setSelectionRange(0, 99999); // For mobile devices
+        document.execCommand(`copy`);
+        
+      }
+</script>
+{% endblock %}

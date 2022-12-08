@@ -265,3 +265,15 @@ def psits_receipt_generator(uid):
     price = price,
     promocode=promocode,
     promocode_valid=promo_valid)
+
+@app.route("/PSITS/GCashPayment/<uid>")
+def gcash_payment(uid):
+    if 'username' not in session:
+        save_redirection('gcash_payment',uid)
+        return redirect(url_for('login_page'))
+    account_data=getAccountByID(session['username'])
+    orderData = {
+        "fullname": f'{account_data.firstname} {account_data.lastname}',
+        "reference": uid
+    }
+    return render_template('app_templates_1_3/gcashpayment.html', login='none', logout='block', account_data=account_data, title='GCash Payment', orderData=orderData)

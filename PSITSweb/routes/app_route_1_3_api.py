@@ -1,19 +1,52 @@
 from __main__ import app
-import datetime
 import os
 
-import flask
-from flask import session, render_template, redirect, url_for, request, jsonify
+from flask import request
 import json
+import threading, time
 
-import messages
+
 from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
     ,getAllAccounts, getAccountWithPassword
 from EmailAPI import pushEmail
-from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
-    OrderAccount, PROMO
+from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS
 from Util import GetReference, isAdmin, ifKeyPermitted, hashData
 
+# GLOBALS
+merch_orders: list = [] # SEARCHMerchOrder('all')
+ALL_MERCHANDISE: list = []
+ACCOUNT_ORDERS: list = []
+
+def updateMerch(updated_list, updated_merchandise):
+    global merch_orders
+    global ALL_MERCHANDISE
+    global ACCOUNT_ORDERS
+    merch_orders = updated_list
+    ALL_MERCHANDISE = updated_merchandise
+    ACCOUNT_ORDERS = updateAccountOrders()
+    
+def updateAccountOrders():
+    data: list = []
+    for merch_order in merch_orders:
+        merch: Merchandise
+        for m in ALL_MERCHANDISE:
+            if m.uid == merch_order.merchandise_id:
+                merch = m
+        account: Account = getAccountByID(merch_order.account_id)
+        account_order: AccountOrders = AccountOrders(account, merch, merch_order)
+        account_order.reference = GetReference(account_order.order.reference)
+        data.append(account_order)
+    return data
+
+
+# Run thread per 10s
+def merch_order_updater():
+    updateMerch(SEARCHMerchOrder('all'), GETAllMerchandise())
+    time.sleep(20)
+    merch_order_updater()
+
+merch_order_thread = threading.Thread(target=merch_order_updater)
+merch_order_thread.start()
 
 @app.route("/PSITS/api/transactions/<search>", methods=['GET'])
 def api_transactions_get(search):
@@ -40,30 +73,64 @@ def api_transactions_get(search):
         search = 'all'
     if search == 'ALL':
         search = search.lower()
-    merch_orders = SEARCHMerchOrder(search)
+    
     ORDERS: list = []
     ORDERS_TALLY: float = 0
     TOTAL_TALLY: float = 0
     PAID_TALLY: float = 0
     #counter: int = 0
-    for order in merch_orders:
-        #counter += 1
-        # if counter == 100:
-        #    break
-        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
-        account: Account = getAccountByID(order.account_id)
-        account_order: AccountOrders = AccountOrders(account, merch, order)
-        account_order.reference = GetReference(account_order.order.reference)
-        ORDERS.append(account_order)
-        if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
-            ORDERS_TALLY += (account_order.getTotal() *
-                             account_order.order.quantity)
-        elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-            PAID_TALLY += (account_order.getTotal() *
-                           account_order.order.quantity)
-        if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-            TOTAL_TALLY += (account_order.getTotal() *
+
+    # Prepare the searching
+    product_to_search = ''
+    status_to_search = ''
+    student_to_search = ''
+
+    if search.startswith('merch:'):
+        item_to_search_in_merch = search.split(":")
+
+        if len(item_to_search_in_merch) > 1: # Product
+            product_to_search = item_to_search_in_merch[1].lower()
+            if len(item_to_search_in_merch)>2: # STATUS
+                status_to_search = item_to_search_in_merch[2].lower()
+    if search.startswith('student:'):
+        item_to_search_in_student = search.split(":")
+        if len(item_to_search_in_student) > 1: # ID/LNAME/FNAME
+            student_to_search = item_to_search_in_student[1].lower()
+    
+    for a in ACCOUNT_ORDERS:
+        account_order: AccountOrders = a
+
+        # Do the search
+        if product_to_search != '':
+            if product_to_search.strip() not in account_order.merch.title.lower():
+                continue
+        if status_to_search != '':
+            if status_to_search.strip() not in account_order.getStatus().lower():
+                continue
+        if student_to_search != '':
+            found_name: bool = False
+            found_id: bool = False
+            if student_to_search.strip() in str(account_order.account.uid):
+                found_id = True
+            if student_to_search.strip() in account_order.account.lastname.lower() or student_to_search.strip() in account_order.account.firstname.lower():
+                found_name = True
+            if not found_name and not found_id:
+                continue
+        reference_found: bool = False
+        if search == account_order.reference:
+            reference_found = True
+        
+        if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
+            ORDERS.append(account_order)
+            if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
+                ORDERS_TALLY += (account_order.getTotal() *
+                                account_order.order.quantity)
+            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
+                PAID_TALLY += (account_order.getTotal() *
                             account_order.order.quantity)
+            if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
+                TOTAL_TALLY += (account_order.getTotal() *
+                                account_order.order.quantity)
 
     ORDERS_JSON: list = []
     for ORDER_DATA in ORDERS:
