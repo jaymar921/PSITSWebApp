@@ -2,10 +2,16 @@ from __main__ import app
 
 from flask import session, redirect, url_for, render_template, request
 
-from Database import getAnnouncements, databaseLog, getAccountByID, GETAllEvent, getAccount
+from Database import getAnnouncements, databaseLog, getAccountByID, getAccount
+import Database
 from Util import hashData
+import EmailAPI
+import Models
 from webApp_utility import has_redirection, get_redirection, get_redirection_extra, is_blocked_route
+from Util import CONFIGURATION
+import socket
 
+keys: list = []
 
 @app.route("/PSITS@Login")
 def login_page():
@@ -64,6 +70,56 @@ def login():
                            message=message)
 
 
+@app.route('/PSITS/ResetPassword', methods=['GET', 'POST'])
+def reset_password_html():
+    if request.method.lower() == 'get':
+        return render_template('app_templates_1_3/password_reset.html', title='Password Reset', login='block', logout='none', message = '')
+    
+    # Get the USER ID
+    uid = request.form['id_number']
+
+    user = Database.getAccountByID(uid)
+
+    if user.uid is None:
+        return render_template('app_templates_1_3/password_reset.html', title='Password Reset', login='block', logout='none', message = 'Account not found')
+    global keys
+    key: str = hashData(f'@password_reset{uid}')
+    keys.append(key)
+
+    hostname = socket.gethostname()
+    IPAddress = socket.gethostbyname(hostname)
+
+    EmailAPI.pushEmail(Models.Email(
+        'Password Reset', 
+        user.email, 
+        f'''
+        
+            Hello {user.firstname} {user.lastname}, 
+            you have requested a password reset, 
+            click this link: {IPAddress}:{CONFIGURATION()['PORT']}/PSITS/ResetPassword/{user.uid}/{key} 
+
+            If you have not requested this. Just ignore this email.
+        
+        '''
+        ))
+
+    return render_template('app_templates_1_3/password_reset.html', title='Password Reset', login='block', logout='none', message = f'An Email was sent to {user.email}')
 
 
+@app.route('/PSITS/ResetPassword/<uid>/<key>')
+def reset_password_email_click(uid, key):
+    # The the user account
+    user = Database.getAccountByID(uid)
+    
+    Database.databaseLog(f"[{user.lastname}] requested for a password reset. An email was sent to the user.")
+    Database.ResetPassword(user.uid, hashData('@password_reset'))
+    global keys
 
+    if key not in keys:
+        return redirect(url_for('cant_find_link'))
+
+    if user.uid is not None:
+        session['username'] = user.uid
+        databaseLog(f"Account [{user.lastname}, {user.firstname} - ID: {user.uid}] has logged in from password reset")
+        return redirect(url_for('reset_account_password',uid=user.uid))
+    return redirect(url_for('login_page'))

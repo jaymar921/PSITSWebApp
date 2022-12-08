@@ -36,12 +36,18 @@
             <div class="registerSection">
                 <p>Don’t have an account yet? </p><a onclick="register()">Register</a>
             </div>
+        </div>
+        <div class="form_field">
 
+            <div class="registerSection">
+                <p>Forgot password? </p><a onclick="resetPassword()">Reset Password</a>
+            </div>
         </div>
 
     </form>
 </div>
 <script>
+    'use strict';
     const togglePassword = document.querySelector("#togglePassword");
     const password = document.querySelector("#password");
 
@@ -53,5 +59,8 @@
         this.classList.toggle("fa-eye");
     });
 
+    function resetPassword(){
+        location.href = '/PSITS/ResetPassword';
+    }
 </script>
 {% endblock %}
