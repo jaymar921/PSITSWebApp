@@ -9,13 +9,17 @@ import threading, time
 from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
     ,getAllAccounts, getAccountWithPassword
 from EmailAPI import pushEmail
-from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS
+from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, AccountOrdersLW
 from Util import GetReference, isAdmin, ifKeyPermitted, hashData
 
 # GLOBALS
 merch_orders: list = [] # SEARCHMerchOrder('all')
 ALL_MERCHANDISE: list = []
 ACCOUNT_ORDERS: list = []
+
+# OPTIMIZE ACCOUNT ORDERS, SENDING THE WHOLE OBJECT COST A LOT
+# OF RESOURCES - JAYHARRON
+LIGHTWEIGHT_ACCOUNT_ORDERS: list = []
 
 def updateMerch(updated_list, updated_merchandise):
     global merch_orders
@@ -38,12 +42,56 @@ def updateAccountOrders():
         data.append(account_order)
     return data
 
+# My logic on saving resources
+def preloadAccountOrders_LightWeight():
+    # Make sure that the merch_order_updater was loaded
+    global ACCOUNT_ORDERS
+    for ACCOUNT_ORDER in ACCOUNT_ORDERS:
+        account_order: AccountOrders = ACCOUNT_ORDER
+        # parse the account orders into a lightweight version and pass it as an argument to the updateOrdersLW
+        updateAccountOrdersLightWeight(AccountOrdersLW.parse(account_order))
 
-# Run thread per 10s
+def updateAccountOrdersLightWeight(order_param: AccountOrdersLW):
+    global LIGHTWEIGHT_ACCOUNT_ORDERS
+    order_found: bool = False
+    # Check if the LIGHTWEIGHT_ACCOUNT_ORDERS already have the entry
+    # My goal is just to update it's contents and avoid
+    # Adding new entries
+    for order in LIGHTWEIGHT_ACCOUNT_ORDERS:
+        order: AccountOrdersLW = order
+        # Update the content of the light weight account orders
+        if str(order.ref_code) == str(order_param.ref_code):
+            order_found = True
+            # see if data is changed
+            if order.equals(order_param):
+                continue
+            # If data was changed, update the order quantity, status and info
+            order.quantity = order_param.quantity
+            order.status = order_param.status
+            order.info = order_param.info
+            print(f'Updated status \n{order.toJSON()}')
+            break
+    if not order_found:
+        LIGHTWEIGHT_ACCOUNT_ORDERS.append(order_param)
+
+def removeAccountOrderLightWeight(reference: str):
+    global LIGHTWEIGHT_ACCOUNT_ORDERS
+    found_order = None
+    for order in LIGHTWEIGHT_ACCOUNT_ORDERS:
+
+        if str(order.ref_code) == reference:
+            found_order = order
+
+    if found_order is not None:
+        print(f'REMOVED {reference}')
+        LIGHTWEIGHT_ACCOUNT_ORDERS.remove(found_order)
+
+# Run thread per 20s
 def merch_order_updater():
-    updateMerch(SEARCHMerchOrder('all'), GETAllMerchandise())
-    time.sleep(20)
-    merch_order_updater()
+    while True:
+        updateMerch(SEARCHMerchOrder('all'), GETAllMerchandise())
+        preloadAccountOrders_LightWeight()
+        time.sleep(20)
 
 merch_order_thread = threading.Thread(target=merch_order_updater)
 merch_order_thread.start()
@@ -85,67 +133,68 @@ def api_transactions_get(search):
     status_to_search = ''
     student_to_search = ''
 
-    if search.startswith('merch:'):
+    if search.lower().startswith('merch:'):
         item_to_search_in_merch = search.split(":")
 
         if len(item_to_search_in_merch) > 1: # Product
             product_to_search = item_to_search_in_merch[1].lower()
             if len(item_to_search_in_merch)>2: # STATUS
                 status_to_search = item_to_search_in_merch[2].lower()
-    if search.startswith('student:'):
+    if search.lower().startswith('student:'):
         item_to_search_in_student = search.split(":")
         if len(item_to_search_in_student) > 1: # ID/LNAME/FNAME
             student_to_search = item_to_search_in_student[1].lower()
+    if search.lower().startswith('all:'):
+        item_to_search_in_merch = search.split(":")
+        if len(item_to_search_in_merch) > 1: # STATUS
+            status_to_search = item_to_search_in_merch[1].lower()
     
-    for a in ACCOUNT_ORDERS:
-        account_order: AccountOrders = a
+    global LIGHTWEIGHT_ACCOUNT_ORDERS
+    for a in LIGHTWEIGHT_ACCOUNT_ORDERS:
+        account_order: AccountOrdersLW = a
 
         # Do the search
         if product_to_search != '':
-            if product_to_search.strip() not in account_order.merch.title.lower():
+            if product_to_search.strip() not in account_order.product.lower():
                 continue
         if status_to_search != '':
-            if status_to_search.strip() not in account_order.getStatus().lower():
+            if '!' in status_to_search.strip():
+                stat: str = status_to_search.replace('!','').strip()
+                if stat in account_order.status.lower():
+                    continue
+            elif status_to_search.strip() not in account_order.status.lower():
                 continue
         if student_to_search != '':
             found_name: bool = False
-            found_id: bool = False
-            if student_to_search.strip() in str(account_order.account.uid):
-                found_id = True
-            if student_to_search.strip() in account_order.account.lastname.lower() or student_to_search.strip() in account_order.account.firstname.lower():
+            if student_to_search.strip() in account_order.fullname.lower():
                 found_name = True
-            if not found_name and not found_id:
+            if not found_name:
                 continue
         reference_found: bool = False
-        if search == account_order.reference:
+        if search in account_order.ref_code:
             reference_found = True
         
         if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
             ORDERS.append(account_order)
-            if account_order.getStatus() == ORDER_STATUS.ORDERED.value:
-                ORDERS_TALLY += (account_order.getTotal() *
-                                account_order.order.quantity)
-            elif account_order.getStatus() != ORDER_STATUS.ORDERED.value and account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-                PAID_TALLY += (account_order.getTotal() *
-                            account_order.order.quantity)
-            if account_order.getStatus() != ORDER_STATUS.CANCELLED.value:
-                TOTAL_TALLY += (account_order.getTotal() *
-                                account_order.order.quantity)
+            if account_order.status == ORDER_STATUS.ORDERED.value:
+                ORDERS_TALLY += (account_order.discounted_price *
+                                account_order.quantity)
+            elif account_order.status != ORDER_STATUS.ORDERED.value and account_order.status != ORDER_STATUS.CANCELLED.value:
+                PAID_TALLY += (account_order.discounted_price *
+                            account_order.quantity)
+            if account_order.status != ORDER_STATUS.CANCELLED.value:
+                TOTAL_TALLY += (account_order.discounted_price *
+                                account_order.quantity)
 
     ORDERS_JSON: list = []
     for ORDER_DATA in ORDERS:
         ORDERS_JSON.append(ORDER_DATA.toJSON())
-
-    MERCH_JSON: list = []
-    for MERCHANDISE in GETAllMerchandise():
-        MERCH_JSON.append(MERCHANDISE.toJSON())
 
     response_data: dict = {
         'reserve': ORDERS_TALLY,
         'total': TOTAL_TALLY,
         'paid': PAID_TALLY,
         'ORDERS': ORDERS_JSON,
-        'merchandise': MERCH_JSON,
         'search': search,
         'status': 200
     }
@@ -202,7 +251,6 @@ def api_transactions_update():
         }
     # SET THE ORDER STATUS
     ORDER.setStatus(request.get_json()['stat'])
-
     # Setting other attributes
     try:
         if request.get_json()['info']:
@@ -214,12 +262,13 @@ def api_transactions_update():
 
     # Update database
     UPDATEMerchOrder(ORDER)
-
+    
     # Grab the necessary info of the USER
     merch_order = SEARCHMerchOrder(ORDER.reference)[0]
     merch: Merchandise = SEARCHMerchandise(merch_order.merchandise_id)[0]
     account: Account = getAccountByID(merch_order.account_id)
     account_order: AccountOrders = AccountOrders(account, merch, merch_order)
+    account_order.reference = GetReference(account_order.order.reference)
     # Email the USER if paid
     # if ORDER.getStatus() == ORDER_STATUS.PAID.value:
     #    pushEmail(Email("PSITS Payment receipt " + GetReference(account_order.order.reference),
@@ -228,6 +277,8 @@ def api_transactions_update():
     #    pushEmail(Email("PSITS Order cancellation ", account_order.account.email,
     #                    messages.product_cancel(account_order)))
 
+    # Update the lightweight list
+    updateAccountOrdersLightWeight(AccountOrdersLW.parse(account_order))
     databaseLog(
         f'API[PUT] - Remote {request.remote_addr} - Updated Transaction record [{merch_order.reference}]')
     return {
@@ -311,8 +362,9 @@ def api_transactions_delete(ref):
             "message": f"ORDER NOT FOUND"
         }
     # DELETE THE ORDER
-
+    removeAccountOrderLightWeight(GetReference(ORDER.reference))
     DELETEMerchOrder(ORDER.uid)
+    
     databaseLog(
         f'API[DELETE] - Remote {request.remote_addr} - Permitted to delete Transaction Ref: [{ref}]')
     return {

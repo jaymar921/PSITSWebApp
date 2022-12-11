@@ -264,3 +264,51 @@ class PROMO:
         self.merch: int = merch
         self.discount: float = discount
         self.slot: int = slot
+
+
+class AccountOrdersLW:
+    def __init__(self, reference_code, fullname, product, info, qty, amt, status, discounted_price, order_date):
+        self.ref_code = reference_code
+        self.fullname = fullname
+        self.product = product
+        self.info = info
+        self.quantity = qty
+        self.amount = amt
+        self.status = status
+        self.discounted_price = discounted_price
+        self.order_date = order_date
+
+    @staticmethod
+    def parse(accountOrder: AccountOrders):
+        return AccountOrdersLW(
+            accountOrder.reference,
+            f'{accountOrder.account.firstname} {accountOrder.account.lastname}',
+            accountOrder.merch.title,
+            accountOrder.order.additional_info,
+            accountOrder.order.quantity,
+            accountOrder.merch.price,
+            accountOrder.getStatus(),
+            GetPriceRef(accountOrder.order.reference),
+            accountOrder.order.order_date
+            )
+
+    def toJSON(self):
+        data: dict = {
+            "reference": self.ref_code,
+            "fullname": self.fullname,
+            "product": self.product,
+            "info": self.info,
+            "quantity": self.quantity,
+            "amount": self.amount,
+            "discounted_price": self.discounted_price,
+            "order_date":self.order_date,
+            "status": self.status,
+        }
+        #return json.dumps(data,  indent=4, sort_keys=False, default=str)
+        return data
+    
+    def equals(self, __o: object) -> bool:
+        # Only the status, info and quantity will be compared
+        if str(self.ref_code) == str(__o.ref_code) and self.quantity == __o.quantity and str(self.status) == str(__o.status) and str(self.info) == str(__o.info):
+            return True
+        return False

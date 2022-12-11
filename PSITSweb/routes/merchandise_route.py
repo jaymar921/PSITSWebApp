@@ -253,7 +253,7 @@ def psits_receipt_generator(uid):
     
     promo_valid = False
     for promo in GetAllPromo():
-        if promocode in promo.code:
+        if promocode.strip() in promo.code:
             promo_valid = True
     return render_template('app_templates_1_3/Receipt.html', 
     login='none', 

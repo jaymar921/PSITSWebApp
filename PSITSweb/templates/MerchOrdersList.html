@@ -444,8 +444,8 @@
       <div style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
         <span class="small-mobile hide" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
           ‣<a style="color: green;">'all'</a> - Search all orders
-          ‣<a style="color: green;">'student: [ID/NAME]'</a> - Search all orders with specific student 
-          ‣<a style="color: green;">'student: [ID/NAME] : [STATUS]'</a> - Search all orders with specific student and status
+          ‣<a style="color: green;">'student: [NAME]'</a> - Search all orders with specific student 
+          ‣<a style="color: green;">'student: [NAME] : [STATUS]'</a> - Search all orders with specific student and status
           ‣<a style="color: green;">'merch: [TITLE]'</a> - Search all orders with specific merchandise
           ‣<a style="color: green;">'merch: [TITLE] : [STATUS]'</a> - Search all orders with specific merchandise and status
 
@@ -473,7 +473,7 @@
                   <button title="Transact one at a time" type="button" onclick="showModal()" class="normalButton"> <div class="flexer" style="display:flex;"><i class="fa-solid fa-scroll"></i><p class="hide">&nbsp;HANDLE</p></div></button>
                   
                   <br><br>
-                  <input id="search_student" type="text" name="search" placeholder="SEARCH REF # | STATUS | PRODUCT | ID NUMBER | RFID | LASTNAME" value="{{search}}" required>
+                  <input id="search_student" type="text" name="search" placeholder="REFERENCE|merch:[param]:[status]|student:[param]:[status]" value="{{search}}" required>
                   <input id="secret_key" type="hidden" value="{{key}}">  
                   <button title="Search by multiple transactions" type="button" onclick="search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value); return;" class="normalButton"><div class="flexer" style="display:flex;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i> <p class="hide">&nbsp;Search</p></div></button>
                 </center>
@@ -496,7 +496,7 @@
               <div class="dropdown">
                 <p>Filters: </p>
                 <div class="dropdown-content">
-                  <span title="This only scans order's additional info if it contains 'Size: #'" id="filter-message" style="white-space: pre-line; justify-content: left;"></span>
+                  <span title="This only scans order's additional info if it contains 'Size: #' that are not cancelled" id="filter-message" style="white-space: pre-line; justify-content: left;"></span>
                 </div>
               </div>
               <hr>
