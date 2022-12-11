@@ -12,7 +12,7 @@ from Database import getAnnouncements, getAccountByID,\
     databaseInit, databaseLog, GETAllEvent, GETAllPSITSOfficer, GETAllFacultyMember, CREATEFacultyMember, \
     UPDATEFacultyMember,  \
     SEARCHFacultyMember, GETAllMerchandise, SEARCHMerchOrder, getAllAccounts
-from Models import FacultyMember, Merchandise, Account
+from Models import FacultyMember, Merchandise, Account, MerchOrder
 from Util import rankOfficers, CONFIGURATION, CONFIGURATION_DISPLAY
 from Util import isAdmin, GetReference
 from waitress import serve
@@ -224,13 +224,13 @@ def showCSVData(fn, search):
                     students = getAllAccounts(search)
                     return render_template("CSVTemplate.html", students=students)
                 elif fn == 'orders':
-                    orders = SEARCHMerchOrder(search)
+                    orders: MerchOrder = SEARCHMerchOrder(search)
                     accounts = getAllAccounts('all')
                     merchandise = GETAllMerchandise()
 
                     data: list = []
 
-                    data.append("\"REF #\",\"NAME\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"STATUS\"\n")
+                    data.append("\"REF #\",\"NAME\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
 
                     for order in orders:
                         account: Account = None
@@ -241,7 +241,15 @@ def showCSVData(fn, search):
                         for mer in merchandise:
                             if mer.uid == order.merchandise_id:
                                 merch = mer
-                        val = f"\"{GetReference(order.reference)}\",\"{account.firstname} {account.lastname}\",\"{merch.title}\",\"{order.order_date}\",\"{order.quantity}\",\"{order.additional_info}\",\"{order.status}\"\n"
+
+                        # Determine the sizes
+                        size: str = ''
+                        for item in order.additional_info.split('\n'):
+                            if 'size' in item.lower():
+                                if len(item.split(':')) > 1:
+                                    size = size + item.split(':')[1].strip() + ', '
+
+                        val = f"\"{GetReference(order.reference)}\",\"{account.firstname} {account.lastname}\",\"{merch.title}\",\"{order.order_date}\",\"{order.quantity}\",\"{order.additional_info}\",\"{size[:-2]}\",\"{order.status}\"\n"
                         data.append(val)
 
                     CSVtoExl(data)

@@ -441,13 +441,25 @@
       <div class="tableTitle">
         <h1>Orders List</h1>
       </div>
-      <div style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
-        <span class="small-mobile hide" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b>Enhanced Searching Mode</b>
-          ‣<a style="color: green;">'all'</a> - Search all orders
-          ‣<a style="color: green;">'student: [NAME]'</a> - Search all orders with specific student 
-          ‣<a style="color: green;">'student: [NAME] : [STATUS]'</a> - Search all orders with specific student and status
-          ‣<a style="color: green;">'merch: [TITLE]'</a> - Search all orders with specific merchandise
-          ‣<a style="color: green;">'merch: [TITLE] : [STATUS]'</a> - Search all orders with specific merchandise and status
+      <br>
+      <div class="dropdown" style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
+        <span class="small-mobile hide" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b style="font-size: 120%;">Enhanced Searching Mode</b>
+
+          <div class="dropdown-content">
+            <span title="These are advanced searching methods"  style="white-space: pre-line; justify-content: left;">
+              ‣<a style="color: green;">'all'</a> - Search all orders
+              ‣<a style="color: green;">'all: [STATUS]'</a> - Search all orders with specific status
+              ‣<a style="color: green;">'all: [STATUS] : size : [size]'</a> - Search all orders with specific status and size
+              ‣<a style="color: rgb(141, 58, 219);">'all: !cancelled'</a> - You can use !(not) operator on status to filter the opposite
+
+              ‣<a style="color: green;">'student: [NAME]'</a> - Search all orders with specific student 
+              ‣<a style="color: green;">'student: [NAME] : [STATUS]'</a> - Search all orders with specific student and status
+              ‣<a style="color: green;">'merch: [TITLE]'</a> - Search all orders with specific merchandise
+              ‣<a style="color: green;">'merch: [TITLE] : [STATUS]'</a> - Search all orders with specific merchandise and status
+              ‣<a style="color: green;">'merch: [TITLE] : [STATUS] : size : [size]'</a> - Search all orders with specific merchandise, status and size
+              
+            </span>
+          </div>
 
           <a style="color: rgb(161, 10, 116)"><b>When dealing with individual transactions, it is recommended to go to 'Handle Transaction' mode</b></a>
         </span>
@@ -515,6 +527,7 @@
                 <th>NAME</th>
                 <th>PRODUCT</th>
                 <th class="hide">ADD INFO.</th>
+                <th class="hide">SIZE</th>
                 <th class="hide">QUANTITY</th>
                 <th class="hide">AMOUNT</th>
                 <th>STATUS</th>

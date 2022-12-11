@@ -69,7 +69,7 @@ def updateAccountOrdersLightWeight(order_param: AccountOrdersLW):
             order.quantity = order_param.quantity
             order.status = order_param.status
             order.info = order_param.info
-            print(f'Updated status \n{order.toJSON()}')
+            print(f'Updated status -> {order.toJSON()}')
             break
     if not order_found:
         LIGHTWEIGHT_ACCOUNT_ORDERS.append(order_param)
@@ -83,13 +83,16 @@ def removeAccountOrderLightWeight(reference: str):
             found_order = order
 
     if found_order is not None:
-        print(f'REMOVED {reference}')
         LIGHTWEIGHT_ACCOUNT_ORDERS.remove(found_order)
 
-# Run thread per 20s
+# Run thread per 10s
 def merch_order_updater():
+    time.sleep(5)
     while True:
-        updateMerch(SEARCHMerchOrder('all'), GETAllMerchandise())
+        # I avoid loading SQL simultaneously
+        merch = SEARCHMerchOrder('all')
+        time.sleep(1)
+        updateMerch(merch, GETAllMerchandise())
         preloadAccountOrders_LightWeight()
         time.sleep(20)
 
@@ -132,6 +135,7 @@ def api_transactions_get(search):
     product_to_search = ''
     status_to_search = ''
     student_to_search = ''
+    size_to_search = ''
 
     if search.lower().startswith('merch:'):
         item_to_search_in_merch = search.split(":")
@@ -148,6 +152,10 @@ def api_transactions_get(search):
         item_to_search_in_merch = search.split(":")
         if len(item_to_search_in_merch) > 1: # STATUS
             status_to_search = item_to_search_in_merch[1].lower()
+    if 'size:' in search.lower():
+        item_to_search_in_all = search.lower().split("size:")
+        if len(item_to_search_in_all) > 1: # SIZE
+            size_to_search = item_to_search_in_all[1].lower().strip()
     
     global LIGHTWEIGHT_ACCOUNT_ORDERS
     for a in LIGHTWEIGHT_ACCOUNT_ORDERS:
@@ -172,7 +180,10 @@ def api_transactions_get(search):
                 continue
         reference_found: bool = False
         if search in account_order.ref_code:
-            reference_found = True
+            reference_found = True 
+        if size_to_search != '':
+            if str(size_to_search) not in str(account_order.size).lower():
+                continue
         
         if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
             ORDERS.append(account_order)
@@ -283,7 +294,7 @@ def api_transactions_update():
         f'API[PUT] - Remote {request.remote_addr} - Updated Transaction record [{merch_order.reference}]')
     return {
         "status": 201,
-        "message": "RECORD UPDATED"
+        "message": f"RECORD UPDATED FOR {account_order.reference}"
     }
 
 

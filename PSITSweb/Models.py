@@ -267,7 +267,7 @@ class PROMO:
 
 
 class AccountOrdersLW:
-    def __init__(self, reference_code, fullname, product, info, qty, amt, status, discounted_price, order_date):
+    def __init__(self, reference_code, fullname, product, info, qty, amt, status, discounted_price, order_date, size):
         self.ref_code = reference_code
         self.fullname = fullname
         self.product = product
@@ -277,9 +277,16 @@ class AccountOrdersLW:
         self.status = status
         self.discounted_price = discounted_price
         self.order_date = order_date
+        self.size = size
 
     @staticmethod
     def parse(accountOrder: AccountOrders):
+        # Determine the sizes
+        size: str = ''
+        for item in accountOrder.order.additional_info.split('\n'):
+            if 'size' in item.lower():
+                if len(item.split(':')) > 1:
+                    size = size + item.split(':')[1].strip() + ', '
         return AccountOrdersLW(
             accountOrder.reference,
             f'{accountOrder.account.firstname} {accountOrder.account.lastname}',
@@ -289,7 +296,8 @@ class AccountOrdersLW:
             accountOrder.merch.price,
             accountOrder.getStatus(),
             GetPriceRef(accountOrder.order.reference),
-            accountOrder.order.order_date
+            accountOrder.order.order_date,
+            size[:-2]
             )
 
     def toJSON(self):
@@ -298,6 +306,7 @@ class AccountOrdersLW:
             "fullname": self.fullname,
             "product": self.product,
             "info": self.info,
+            "size": self.size,
             "quantity": self.quantity,
             "amount": self.amount,
             "discounted_price": self.discounted_price,

@@ -131,7 +131,7 @@ async function search_transaction(searchData, key){
         
 
         //const {order:_order, account, reference, getTotal, getStatus} = order;
-        const {reference, fullname, product, info, quantity, status, discounted_price} = order
+        const {reference, fullname, product, info, quantity, status, discounted_price, size} = order
 
         let form_body = document.createElement('form');
         form_body.method = 'POST';
@@ -197,6 +197,18 @@ async function search_transaction(searchData, key){
         // filter the sizes
         if(status !== 'CANCELLED')
             filterSizesFromInfo(info)
+
+        table_col.appendChild(input_field);
+        table_row.appendChild(table_col);
+
+        
+        // size
+        table_col = document.createElement("td");
+        table_col.setAttribute('class', 'hide');
+        input_field = document.createElement('input');
+        input_field.setAttribute('id', reference+"size");
+        input_field.disabled = true;
+        input_field.value = `${size}`;
 
         table_col.appendChild(input_field);
         table_row.appendChild(table_col);
@@ -399,7 +411,14 @@ function updateReceipt(name = '', product = '', price = '', discounted_price = '
     // info
     document.getElementById('info_buyer').value = name;
     document.getElementById('info_product').value = product;
-    document.getElementById('info_info').value = info;
+    let info_lines = info.split('\n');
+    let info_new = '';
+    for(let lines of info_lines){
+        if(lines === ' ' || lines === '\n' || lines === '')
+            continue;
+        info_new += `${lines.trim()}\n`
+    }
+    document.getElementById('info_info').value = info_new;
     document.getElementById('info_price').value = price?parseFloat(price).toFixed(2):'';
     document.getElementById('info_discounted_price').value = discounted_price?parseFloat(discounted_price).toFixed(2):'';
     document.getElementById('info_quantity').value = quantity;
@@ -450,14 +469,14 @@ function showModal(){
     document.getElementById('order-modal').style.display = "flex";
     document.getElementById('transaction_ui').classList.add('blur');
     setTimeout(()=>{
-        document.getElementById('handle_search').focus();
+        //document.getElementById('handle_search').focus();
     }, 100);
 }
 
 function hideModal(){
     document.getElementById('order-modal').style.display = "none";
     document.getElementById('transaction_ui').classList.remove('blur');
-    document.getElementById('search_student').focus();
+    //document.getElementById('search_student').focus();
 }
 
 function updateReceiptEvent(){
