@@ -15,28 +15,7 @@ def hashData(data: str) -> str:
     return str(result)
 
 def admins():
-    return {
-        'API_SECRET':'15187968798223',
-        'ABEJAR': '19889781',
-        'RIBO': '19895283',
-        'COLONIA': '20220885',
-        'BELMONTE': '19871367',
-        'SIERRA': '19889898',
-        'ABELLANA': '21471909',
-        'DUCAL': '19880152',
-        'ANIBAN': '21496369',
-        'CEMPRON': '19841998',
-        'COSTILLAS': '21540950',
-        'LEYROS': '21435474',
-        'PADOLINA': '21400973',
-        'DE LOS REYES': '19903483',
-        'FLORENTINO': '18725242',
-        'CUICO': '19888957',
-        'OPINA': '19884253',
-        'TIEMPO': '19924414',
-        'SIR DD': '613000',
-        'RACUYA': '19845262'
-    }
+    return CONFIGURATION()['ADMINS']
 
 def isAdmin(uid) -> bool:
     for key, value in admins().items():
@@ -192,17 +171,38 @@ def CONFIGURATION()-> dict:
         lines = config.readlines()
         settings = []
         
+        dictionary_append = False
+        dictionary_builder: dict = {}
+        dictionary_title: str = ''
         for line in lines:
             if '::' in line:
                 settings.append(line.strip())
-        for setting in settings:
-            try:
-                option = setting.split(' = ')[1]
-                if '_' == option:
-                    option = ''
-                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","")] = option
-            except Exception as e:
-                configuration_map[setting.split(' = ')[0].replace(":","").replace("=","").strip()] = ''
+            
+            if '{' in line and '::' in line:
+                dictionary_append = True
+                dictionary_builder.clear()
+                dictionary_title = line.replace('::','').replace('=','').replace('{','').replace('}','').replace('\n','').strip()
+            if '}' in line and dictionary_append:
+                dictionary_append = False
+                configuration_map[dictionary_title] = dictionary_builder
+                continue
+            if dictionary_append:
+                try:
+                    key: str = line.split(':')[0].strip().replace('\'','').replace('"','')
+                    val: str = line.split(':')[1].strip().replace(',','').replace('\'','').replace('"','')
+                    if key and val:
+                        dictionary_builder[key] = val
+                except:
+                    print('An error occured parsing '+line)
+                continue
+            for setting in settings:
+                try:
+                    option = setting.split(' = ')[1]
+                    if '_' == option:
+                        option = ''
+                    configuration_map[setting.split(' = ')[0].replace(":","").replace("=","")] = option
+                except Exception as e:
+                    configuration_map[setting.split(' = ')[0].replace(":","").replace("=","").strip()] = ''
     return configuration_map
 
 
@@ -239,9 +239,31 @@ def loadFileToDict(filename)->dict:
     with open(filename, "r") as config:
         lines = config.readlines()
         settings = []
+    
+    dictionary_append = False
+    dictionary_builder: dict = {}
+    dictionary_title: str = ''
     for line in lines:
         if '::' in line:
             settings.append(line.strip())
+
+        if '{' in line and '::' in line:
+            dictionary_append = True
+            dictionary_builder.clear()
+            dictionary_title = line.replace('::','').replace('=','').replace('{','').replace('}','').replace('\n','').strip()
+        if '}' in line and dictionary_append:
+            dictionary_append = False
+            configuration_map[dictionary_title] = dictionary_builder
+            continue
+        if dictionary_append:
+            try:
+                key: str = line.split(':')[0].strip().replace('\'','').replace('"','')
+                val: str = line.split(':')[1].strip().replace(',','').replace('\'','').replace('"','')
+                if key and val:
+                    dictionary_builder[key] = val
+            except:
+                print('An error occured parsing '+line)
+            continue
         for setting in settings:
             try:
                 option = setting.split(' = ')[1]
@@ -254,4 +276,4 @@ def loadFileToDict(filename)->dict:
 
 # saveToFile('jaymar.txt','::admin = 1\n')
 # saveToFile('jaymar.txt','::2nd = 2\n')
-# print(loadFileToDict('jaymar.txt'))
+#print(loadFileToDict('jaymar.txt'))

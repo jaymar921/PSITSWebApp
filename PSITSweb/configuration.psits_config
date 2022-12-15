@@ -31,3 +31,8 @@ If a server is hosted publicly, you can hook the api from that address,
 NOTE if API_ALLOW_HOOK is set to True, the Database connection is disregarded
 ::API_ALLOW_HOOK = False
 ::API_LINK = localhost
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+::ADMINS = {
+    'API_SECRET':'1325791815069237',
+    'ABEJAR': '19889781'
+}

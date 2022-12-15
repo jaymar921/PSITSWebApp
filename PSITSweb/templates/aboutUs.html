@@ -209,8 +209,11 @@
 <div class="merch_container">
   <center><h1><b>PSITS</b> OFFICERS</h1>
   <div class="merch">
-    {% for officer in officers %}
-  <div class="product">
+    <div class="row"> 
+  {% for officer in officers %}
+  
+  <div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="product">
 
       {% if officer.image_file != '' %}
       <center><img style="width:200px;" class="merch_product" id="{{officer.uid}}" onclick="zoomPicture({{officer.uid}})" loading="lazy"
@@ -221,8 +224,10 @@
       <p>{{officer.position}}</p></center>
       <br />
  
+    </div>
   </div>
   {% endfor %}
+</div>
   </div>
   </div>
 <br />
@@ -237,7 +242,7 @@
       <span>
         First of all, we would like to thank the dean, Mr. Neil Basabe, for giving us the opportunity to develop this website for the PSITS organization and the students we serve.
 
-        We would like to thank our PSITS Adviser , Mr. Dennis Durano, and our fellow A.Y. 2022-2023 officers for bringing support in deploying the website.
+        We would like to thank our PSITS Adviser , Mr. Dennis Durano, and our fellow A.Y. 2022-2023 officers for bringing support in deploying the <a href="https://github.com/jaymar921/PSITSWebApp">website</a>.
 
         We are pleased to welcome you all to the Philippine Society of Information Technology Students (PSITS) website.
 
