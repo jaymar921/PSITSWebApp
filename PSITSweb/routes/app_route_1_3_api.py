@@ -69,6 +69,7 @@ def updateAccountOrdersLightWeight(order_param: AccountOrdersLW):
             order.quantity = order_param.quantity
             order.status = order_param.status
             order.info = order_param.info
+            order.size = order_param.size
             print(f'Updated status -> {order.toJSON()}')
             break
     if not order_found:

@@ -318,6 +318,6 @@ class AccountOrdersLW:
     
     def equals(self, __o: object) -> bool:
         # Only the status, info and quantity will be compared
-        if str(self.ref_code) == str(__o.ref_code) and self.quantity == __o.quantity and str(self.status) == str(__o.status) and str(self.info) == str(__o.info):
+        if str(self.ref_code) == str(__o.ref_code) and self.quantity == __o.quantity and str(self.status) == str(__o.status) and str(self.info) == str(__o.info) and str(self.size) == str(__o.size):
             return True
         return False
