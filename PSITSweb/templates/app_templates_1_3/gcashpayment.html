@@ -101,7 +101,7 @@
     <input type="text" id="toCopy" value="{{orderData.fullname}}, {{orderData.reference}}"><br><br>
     <button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="copyToClipboard()">Click to Copy</button><br><br>
     <p>Step 3: <strong>Open GCASH, Upload the QR Code, enter the amount and paste the copied text into the message area</strong></p><br>
-    <button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="location.href='gcash://com.mynt.gcash/app/006300120000'">Open GCash</button>
+    <button class="normalButton" style="position: relative;margin: auto; left:50%; transform: translateX(-50%);" onclick="GCashPayment()">Open GCash</button>
 </div>
 <script>
     "use strict";
@@ -113,6 +113,10 @@
         //copyText.setSelectionRange(0, 99999); // For mobile devices
         document.execCommand(`copy`);
         
+      }
+
+      function GCashPayment(){
+        window.open(`gcash://com.mynt.gcash/app/006300120000`,'','width=210,height=700,margin=0');
       }
 </script>
 {% endblock %}
