@@ -13,7 +13,7 @@ from Database import getAnnouncements, getAccountByID,\
     SEARCHFacultyMember#, GETAllMerchandise, SEARCHMerchOrder, getAllAccounts
 from Models import FacultyMember#, Merchandise, Account, MerchOrder
 from Util import rankOfficers, CONFIGURATION, CONFIGURATION_DISPLAY
-from Util import isAdmin#, GetReference
+from Util import isAdmin, hashData#, GetReference
 from waitress import serve
 #import messages
 #import threading
@@ -21,7 +21,7 @@ from waitress import serve
 THREADS = []
 
 UPLOAD_FOLDER = CONFIGURATION()['SERVER_FILES_PATH']
-ALLOWED_EXTENSION = {'png'}
+ALLOWED_EXTENSION = {'png', 'jpg'}
 RUNNING = False
 
 app = Flask(__name__)
@@ -38,6 +38,8 @@ import routes.order_route
 import routes.merchandise_route
 import routes.app_route_1_3
 import routes.app_route_1_3_api
+import routes.app_route_1_4
+import routes.app_route_1_4_api
 from webApp_utility import save_redirection, checkImageExist, is_blocked_route
 
 """
@@ -76,7 +78,14 @@ def landing_page():
     for announcement in announcements:
         if checkImageExist(str(announcement.uid) + announcement.title + ".png"):
             announcement.image_location = f"{str(announcement.uid) + announcement.title}.png"
-
+        if checkImageExist(str(announcement.uid) + announcement.title + ".jpg"):
+            announcement.image_location = f"{str(announcement.uid) + announcement.title}.jpg"
+        for num in range(1,100):
+            if checkImageExist(f"{str(announcement.uid) + announcement.title + str(num)}.png"):
+                announcement.image_file_extras.append(f"{str(announcement.uid) + announcement.title + str(num)}.png")
+        for num in range(1,100):
+            if checkImageExist(f"{str(announcement.uid) + announcement.title + str(num)}.jpg"):
+                    announcement.image_file_extras.append(f"{str(announcement.uid) + announcement.title + str(num)}.jpg")
     # show the latest 10 announcement
     temp = announcements.copy()
     if len(announcements) > 10:
@@ -87,13 +96,14 @@ def landing_page():
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("Homepage.html",
-                                   title="PSITS ADMIN",
+                                   title="PSITS ANNOUNCEMENTS",
                                    ANNOUNCEMENTS=announcements,
                                    login="none",
                                    logout="block",
                                    account=session['username'],
                                    admin="block",
                                    events=events,
+                                   access_key = str("API_SECRET-"+hashData(str((int(session['username'])*250)))).strip(),
                                    account_data=getAccountByID(session['username']))
         else:
             if is_blocked_route('landing_page'):

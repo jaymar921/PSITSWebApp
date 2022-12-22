@@ -13,6 +13,7 @@ class Announcement:
         self.date = date
         self.content = content
         self.image_location = ''
+        self.image_file_extras: list = []
 
     def __repr__(self):
         return str(self.uid)

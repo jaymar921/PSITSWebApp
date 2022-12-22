@@ -1,188 +1,268 @@
 {% extends 'base.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+{% if admin == 'block' %}
+<div id="updateModal" style="display:'none';position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; z-index: 200; ">
+    <div class="announcement_thread" style="display:'{{admin}}'; box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.23);">
+        <div style="position: relative; text-align: right; right: 5px">
+            <a style="color:darkcyan; font-size: 15px;" onclick="closeUpdateAnnouncementModal()" class="removePost" ><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+        <form method="get">
+            <div class="announcement_field">
+                <input type="text" id="access_key" placeholder="" value="{{access_key}}" hidden>
+                <input type="text" id="update_uid" placeholder="" hidden>
+                <input type="text" id="update_title" placeholder="Announcement Title" required>
+            </div>
 
-
-<div class="dean">
-    <div class="leftContent">
-        <div class="imageContent">
-        <img src="{{url_for('static', filename='images/faculties/fulltime/basabe.png')}}">
-        <br>
-        <br>
-        <h3>Mr. Neil Basabe</h3>
-        <h5>Dean</h5>
-    </div>
-    </div>
-    <br>
-    <hr>
-    <br>
-    <div class="rightContent">
-        <h3>Dean’s Welcome Message</h3>
+            <div class="announcement_field_content">
+                <textarea id="update_content" cols="5" rows="5" required placeholder="What's on your mind, {{account_data.firstname}}?"></textarea>
+            </div>
+            <div class="announcement_field">
+                <p>You can only update the text content of the announcement</p>
+            </div>
    
-        <span>
-            First of all, I would like to congratulate the PSITS officers of A.Y. 2022-2023 and the adviser, Mr. Dennis Durano, for finally deploying a website for the organization and the students that they serve.
-
-            I am pleased to extend a warm welcome to all new and continuing students of the College of Computer Studies at the University of Cebu. We are eager to start another semester with you, whether you are taking classes on campus or online.
-            
-            You, I, or any of your teachers have had to make a lot of adjustments this semester as we return to face-to-face instruction. Together, we are all learning how to function again in this supposed to be familiar environment made unfamiliar because of the Covid19 pandemic.  I do, however, wish to thank the entire college teachers and staff. Before the semester began, they worked incredibly hard to provide you with an education that is unmatched. I'm hoping this semester will go really well for all of you.
-            
-            Once more, welcome to the University of Cebu College of Computer Studies, where quality and globally competitive information technology and computer science education is right within your reach.
-        </span>
+            <hr>
+            <div class="announcement_field">
+                <button name="submit" type="button" class="normalButton" onclick="UpdateAnnouncementAPI()">Update Announcement</button>
+            </div>
+        </form>
     </div>
 </div>
+{% endif %}
 
-<div class="contents">
-
-        
-
-    <div class="announcement_content">
+<div id="all-contents">
+    <div class="dean">
+        <div class="leftContent">
+            <div class="imageContent">
+            <img src="{{url_for('static', filename='images/faculties/fulltime/basabe.png')}}">
+            <br>
+            <br>
+            <h3>Mr. Neil Basabe</h3>
+            <h5>Dean</h5>
+        </div>
+        </div>
         <br>
+        <hr>
         <br>
+        <div class="rightContent">
+            <h3>Dean’s Welcome Message</h3>
        
-        <div class="announcement_thread" style="display:{{admin}};">
-           
-            <h1>ADMINISTRATION</h1>
-            <hr>
-            <br />
-            <div style="display: flex;">
-                <div class="adminActions" style="display: block; padding: 10px;">
-                    <div class="announcement_field">
-                        <button onclick="studentsInfo()" class="normalButton"><i class="fa-solid fa-user"></i> ACCOUNTS</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="showEvents()" class="normalButton"><i class="fa-solid fa-calendar-days"></i> EVENTS</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@MerchandiseOrdersList'" class="normalButton" > <i class="fa-sharp fa-solid fa-cart-shopping"></i> ORDERS</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@MerchandiseList'" class="normalButton"><i class="fa-solid fa-shirt"></i> MERCH</button>
-                    </div>
-                </div>
-                <br>
-                <div class="adminActions" style="display: block; padding: 10px;">
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@OfficerList'" class="normalButton"><i class="fa-solid fa-user"></i> OFFICERS</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@PrintingServiceAdmin'" class="normalButton"><i class="fa-solid fa-user"></i> PRINTING SERVICE</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@DataAnalytics'" class="normalButton"><i class="fa-solid fa-chart-simple"></i> DATA ANALYTICS</button>
-                    </div>
-                    <br>
-                    <div class="announcement_field">
-                        <button onclick="location.href='/PSITS@Routes'" class="normalButton"><i class="fa-solid fa-wrench"></i> MAINTENANCE</button>
-                    </div>
-                    <br>
-                </div>
-            </div>
-        </div>
-
-        <div class="announcement_title">
-            <br /><br />
-            <h1>ANNOUNCEMENTS</h1>
-            <br /><br />
-        </div>
-        {% if account_data %}
-        <div class="announcement_thread" style="display:{{admin}};">
-            <form action="/PSITS@announce" method="post" enctype="multipart/form-data">
-                <div class="announcement_field">
-                    <input type="text" name="title" placeholder="Announcement Title" required>
-                </div>
-
-                <div class="announcement_field_content">
-                    <textarea name="content" cols="5" rows="5" required placeholder="What's on your mind, {{account_data.firstname}}?"></textarea>
-                </div>
-                <div class="announcement_field">
-                    <label for="file_input">Include image:  <i>**Accept only PNG</i></label> <br />
-                    <input class="file_input" type="file" name="file" accept=".png" >
-                </div>
-       
-                <hr>
-                <div class="announcement_field">
-                    <button name="submit" type="submit" class="normalButton">Post Announcement</button>
-                </div>
-            </form>
-        </div>
-        {% endif %}
-        <br />
-
-        {% for announcement in ANNOUNCEMENTS %}
-        <div class="announcement_thread">
-            <h2>{{announcement.title}}</h2>
-
-            <h3>({{announcement.date}})</h3>
-            <hr>
-            <span class="contain-links">{{announcement.content}}</span>
-            {% if announcement.image_location != '' %}
-            <img class="announcement_image" id="{{announcement.uid}}" onclick="zoomPicture({{announcement.uid}})" loading="lazy"
-                src="{{ url_for('download_file', filename=announcement.image_location) }}">
-            {% endif %}
-            <a style="display:{{admin}}" onclick="deleteAnnouncement({{announcement.uid}})" class="removePost" >Remove</a>
-            <br />
-            <br />
-            <br />
-        </div>
-        {% endfor %}
-        <br><br><br>
-    </div>
-    <hr>
+            <span>
+                First of all, I would like to congratulate the PSITS officers of A.Y. 2022-2023 and the adviser, Mr. Dennis Durano, for finally deploying a website for the organization and the students that they serve.
     
-    <div class="events">
+                I am pleased to extend a warm welcome to all new and continuing students of the College of Computer Studies at the University of Cebu. We are eager to start another semester with you, whether you are taking classes on campus or online.
+                
+                You, I, or any of your teachers have had to make a lot of adjustments this semester as we return to face-to-face instruction. Together, we are all learning how to function again in this supposed to be familiar environment made unfamiliar because of the Covid19 pandemic.  I do, however, wish to thank the entire college teachers and staff. Before the semester began, they worked incredibly hard to provide you with an education that is unmatched. I'm hoping this semester will go really well for all of you.
+                
+                Once more, welcome to the University of Cebu College of Computer Studies, where quality and globally competitive information technology and computer science education is right within your reach.
+            </span>
+        </div>
+    </div>
+    
+    <div class="contents">
+    
+            
         
-        <h1>Links</h1>
-        <div style="text-align: center;">
-            <button class="normalButton" onclick="location.href='/uploads/org.psits.mobileapp-Signed.apk'"><i class="fa fa-download"></i> Android APP</button>
-        </div>
-        <br>
-        <div style="display: flex; padding: 5px;">
-            <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for("static",filename="images/uc.png")}}">
-            <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://universityofcebu.ethinksites.com/" target="_blank">UC - Ethink</a></h3>
-        </div>
-        <div style="display: flex; padding: 5px;">
-            <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for("static",filename="images/uc.png")}}">
-            <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://enrollment.uc.edu.ph/" target="_blank">UC - Enrollment</a></h3>
-        </div>
-        <div style="display: flex; padding: 5px;">
-            <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for("static",filename="images/CCS_LOGO.png")}}">
-            <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://ccs.uc.edu.ph/" target="_blank">UC - CCS</a></h3>
-        </div>
-        <div style="display: flex; padding: 5px;">
-            <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Facebook_icon_2013.svg/640px-Facebook_icon_2013.svg.png">
-            <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://www.facebook.com/PSITS.UCmain" target="_blank">PSITS - UC MAIN</a></h3>
-        </div>
-        <br>
-        <br>
-        <h1>Upcoming Events</h1>
-
-            <button class="normalButton" style="display: {{admin}};" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
-        
-            <br />
-        {% for event in events %}
-            <div class="events_thread">
-                <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
-                <hr>
-                <br />
-                <span class="info contain-links">{{ event.information }}</span>
+        <div class="announcement_content">
+    
+            
+            
+    
+            <div class="announcement_title">
+                <br /><br />
+                <h1>ANNOUNCEMENTS</h1>
+                <br /><br />
             </div>
-        {% endfor %}
-        <br>
-    </div> 
-  
-    <script>
-        function community_page(){
-            location.href = '{{url_for("community_page")}}';
-        }
-    </script>
-
-
+            {% if account_data %}
+            <div class="announcement_thread" style="display:'{{admin}}';">
+                <form action="/PSITS@announce" method="post" enctype="multipart/form-data">
+                    <div class="announcement_field">
+                        <input type="text" name="title" placeholder="Announcement Title" required>
+                    </div>
+    
+                    <div class="announcement_field_content">
+                        <textarea name="content" cols="5" rows="5" required placeholder="What's on your mind, {{account_data.firstname}}?"></textarea>
+                    </div>
+                    <div class="announcement_field">
+                        <label for="file_input">Include image:  <i>**Accept only PNG and JPG</i></label> <br />
+                        <input class="file_input" type="file" name="files[]" accept=".png,.jpg" multiple="">
+                    </div>
+           
+                    <hr>
+                    <div class="announcement_field">
+                        <button name="submit" type="submit" class="normalButton">Post Announcement</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            <br />
+    
+            {% for announcement in ANNOUNCEMENTS %}
+            <div class="announcement_thread">
+                {% if admin == 'block' %}
+                <div style="position: relative; text-align: right; right: 5px">
+                    <a style="color:darkcyan; font-size: 15px;" onclick="openUpdateAnnouncementModal('{{announcement.uid}}',`{{announcement.title}}`,`{{announcement.content}}`)"><i class="fa fa-wrench" aria-hidden="true"></i></a>&nbsp;&nbsp;
+                    <a style="font-size: 15px;" onclick="deleteAnnouncement('{{announcement.uid}}')" class="removePost" ><i class="fa fa-trash" aria-hidden="true"></i></a>
+                </div>
+                {% endif %}
+                <h2 id="{{announcement.uid}}title" style="font-weight: 900;">{{announcement.title}}</h2>
+    
+                <h3>({{announcement.date}})</h3>
+                <hr>
+                <span id="{{announcement.uid}}content" class="contain-links">{{announcement.content}}</span>
+                {% if announcement.image_file_extras|length > 0%}
+                <div class="announcement_image"  style="padding: 0px;margin: 0px;position: relative;width: 100%;height: 100%; border-radius: 0px; border: 0px">
+    
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators" style="z-index: 0;">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        
+                            {% for index in range(0,announcement.image_file_extras|length) %}
+                                <li data-target="#myCarousel" data-slide-to=index></li>
+                            {% endfor %}
+                        
+                    </ol>
+                
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" style="background-color: rgba(255,255,255,1);">
+                        <div class="item active" >
+                            <img src="{{ url_for('download_file', filename=announcement.image_location) }}" style="height: 100%; width: 100%; object-fit: cover;" loading="lazy" alt="{{item}}">
+                        </div>
+                        
+                            {% for item in announcement.image_file_extras %}
+                                <div class="item">
+                                    <img src="{{url_for('download_file', filename=item)}}" style="height: auto; width: 100%; object-fit: cover;" loading="lazy" alt="{{item}}">
+                                </div>
+                            {% endfor %}
+                        
+                    </div>
+                
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                    </div>
+                </div>
+              {% else %}
+                {% if announcement.image_location != '' %}
+                    <img class="announcement_image" id="{{announcement.uid}}" loading="lazy"
+                        src="{{ url_for('download_file', filename=announcement.image_location) }}">
+                {% endif %}
+              {% endif %}
+                
+                <br />
+                <br />
+                <br />
+            </div>
+            {% endfor %}
+            <br><br><br>
+        </div>
+        <hr>
+        
+        <div class="events">
+            
+            <h1>Links</h1>
+            <div style="text-align: center;">
+                <button class="normalButton" onclick="location.href='/uploads/org.psits.mobileapp-Signed.apk'"><i class="fa fa-download"></i> Android APP</button>
+            </div>
+            <br>
+            <div style="display: flex; padding: 5px;">
+                <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for('static',filename='images/uc.png')}}">
+                <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://universityofcebu.ethinksites.com/" target="_blank">UC - Ethink</a></h3>
+            </div>
+            <div style="display: flex; padding: 5px;">
+                <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for('static',filename='images/uc.png')}}">
+                <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://enrollment.uc.edu.ph/" target="_blank">UC - Enrollment</a></h3>
+            </div>
+            <div style="display: flex; padding: 5px;">
+                <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="{{url_for('static',filename='images/CCS_LOGO.png')}}">
+                <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://ccs.uc.edu.ph/" target="_blank">UC - CCS</a></h3>
+            </div>
+            <div style="display: flex; padding: 5px;">
+                <img style="height: 32px; width: 32px; margin-left: 20px; margin-right: 5px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Facebook_icon_2013.svg/640px-Facebook_icon_2013.svg.png">
+                <h3 style="padding: 5px;"><a style="color: black; text-decoration: none;" href="https://www.facebook.com/PSITS.UCmain" target="_blank">PSITS - UC MAIN</a></h3>
+            </div>
+            <br>
+            <br>
+            <h1>Upcoming Events</h1>
+    
+                <button class="normalButton" style="display: '{{admin}}';" onclick="createNewEvent()"><i class="fa-solid fa-plus"></i> Add Event</button>
+            
+                <br />
+            {% for event in events %}
+                <div class="events_thread">
+                    <h2><i class="fa-sharp fa-solid fa-calendar-days"></i>{{ event.title }}</h2>
+                    <hr>
+                    <br />
+                    <span class="info contain-links">{{ event.information }}</span>
+                </div>
+            {% endfor %}
+            <br>
+        </div> 
+      
+        <script>
+            function community_page(){
+                location.href = '{{url_for("community_page")}}';
+            }
+        </script>
+    
+    
+    </div>
+    
 </div>
+{% if admin == 'block' %}
+<script>
+    'use strict';
+    function closeUpdateAnnouncementModal(){
+        document.getElementById('updateModal').style.display = 'none';
+    }
 
+    function openUpdateAnnouncementModal(uid, title, content){
+        document.getElementById('updateModal').style.display = 'block';
+        document.getElementById('update_title').value = title.trim();
+        document.getElementById('update_uid').value = `${uid}`;
+        let contents = ``;
+        let content_fragments = `${content}`.trim().split(' ');
+        for(let i = 0; i < content_fragments.length; i++){
+            if(content_fragments[i].toLowerCase().includes('posted') || content_fragments[i].toLowerCase().includes('updated')){
+                if(content_fragments.length > (i + 1)){
+                    if(content_fragments[i+1].includes('by:'))
+                        break;
+                }
+            }
+            contents = contents + content_fragments[i] + " ";
+        }
+        document.getElementById('update_content').innerHTML = `${contents}`;
+    }
 
+    function UpdateAnnouncementAPI(){
+        closeUpdateAnnouncementModal();
+        fetch(`/PSITS/api/announcement?key=${document.getElementById('access_key').value}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                uid: document.getElementById('update_uid').value,
+                title:document.getElementById('update_title').value,
+                content:document.getElementById('update_content').value,
+                user: "{{account_data.firstname}} {{account_data.lastname}}"
+            }),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        }).then((response)=> {
+            document.getElementById(`${document.getElementById('update_uid').value}title`).innerHTML = document.getElementById('update_title').value;
+            document.getElementById(`${document.getElementById('update_uid').value}content`).innerHTML = document.getElementById('update_content').innerHTML + "\nAnnouncement was update via api call";
+            anchorLinks();
+        });
+    }
+
+    closeUpdateAnnouncementModal();
+</script>
+{% endif %}
 {% endblock %}

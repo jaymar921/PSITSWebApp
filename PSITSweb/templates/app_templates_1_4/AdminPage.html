@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="announcement_content">
+    <br>
+    <br>
+   
+    <div class="announcement_thread">
+       
+        <h1>ADMINISTRATION</h1>
+        <hr>
+        <br />
+        <div style="display: flex;">
+            <div class="adminActions" style="display: block; padding: 10px;">
+                <div class="announcement_field">
+                    <button onclick="studentsInfo()" class="normalButton"><i class="fa-solid fa-user"></i> ACCOUNTS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="showEvents()" class="normalButton"><i class="fa-solid fa-calendar-days"></i> EVENTS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@MerchandiseOrdersList'" class="normalButton" > <i class="fa-sharp fa-solid fa-cart-shopping"></i> ORDERS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@MerchandiseList'" class="normalButton"><i class="fa-solid fa-shirt"></i> MERCH</button>
+                </div>
+            </div>
+            <br>
+            <div class="adminActions" style="display: block; padding: 10px;">
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@OfficerList'" class="normalButton"><i class="fa-solid fa-user"></i> OFFICERS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@PrintingServiceAdmin'" class="normalButton"><i class="fa-solid fa-user"></i> PRINTING SERVICE</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@DataAnalytics'" class="normalButton"><i class="fa-solid fa-chart-simple"></i> DATA ANALYTICS</button>
+                </div>
+                <br>
+                <div class="announcement_field">
+                    <button onclick="location.href='/PSITS@Routes'" class="normalButton"><i class="fa-solid fa-wrench"></i> ROUTING</button>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

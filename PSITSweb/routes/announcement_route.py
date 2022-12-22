@@ -32,17 +32,24 @@ def post_announcement():
             postAnnouncement(title, date_time.strftime("%Y-%m-%d"), contentVerifier(content))
             ID = getLatestAnnouncement()
             databaseLog(f"Account ID [{session['username']}] posted an announcement [{title}]")
-            if 'file' in request.files:
-                file = request.files['file']
-                if file is not None:
-                    if file.filename != '':
-                        ext = file.filename.split(".")[1]
-                        if ext in ALLOWED_EXTENSION:
-                            file.filename = str(ID) + title + "." + ext
-                            path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-                            file.save(path)
-                            file.close()
-                            databaseLog(f"Announcement [{title}] comes with an image")
+            if 'files[]' in request.files:
+                files = request.files.getlist('files[]')
+                if files is not None:
+                    counter = 0
+                    for file in files:
+                        filename = file.filename
+                        if filename != '':
+                            ext = file.filename.split(".")[1]
+                            if ext in ALLOWED_EXTENSION:
+                                if counter == 0:
+                                    filename = str(ID) + title + "." + ext
+                                else:
+                                    filename = str(ID) + title + str(counter) + "." + ext
+                                path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                                file.save(path)
+                                file.close()
+                                counter = counter + 1
+                                databaseLog(f"Announcement [{title}] comes with an image")
         else:
             return render_template("404Page.html", logout="none", login="none",
                                    message="Don't try to break the page :<")

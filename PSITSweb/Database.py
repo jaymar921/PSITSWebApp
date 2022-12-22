@@ -1061,3 +1061,38 @@ def API_TARGET(uri):
 
 # t = threading.Thread(target=worker, args=['hello'])
 # t.start()
+
+# VERSION 1.4
+def updateAnnouncement(uid: int ,title: str, date, content: str):
+    """"
+        postAnnouncement will insert the data to `announcements` table from `psitswebapp` database
+        table: announcements
+            id - int (auto increment) [NO NEED TO CALL]
+            title - varchar
+            date_published - date
+            content - varchar
+    """
+    query: str = f"UPDATE `announcements` SET title='{title}', date_published='{date}', content='{content}' WHERE id={uid}"
+    executeQueryCommit(query)
+    return None
+
+def getAnnouncement(id) -> Announcement:
+    """"
+        getAnnouncements will get the data from `announcements` table in `psitswebapp` database
+        table: announcements
+            id - int (auto increment)
+            title - varchar
+            date_published - date
+            content - varchar
+    """
+    query: str = f"SELECT * FROM `announcements` WHERE id={id}"
+    data: dict = executeQueryReturn(query)
+
+    for content in data:
+        c = Announcement(
+            uid=content.get('id'),
+            title=content.get('title'),
+            date=content.get('date_published'),
+            content=content.get('content')
+        )
+        return c

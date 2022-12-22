@@ -95,7 +95,10 @@
               {% endif %}
               
             {% endif %}
-           <li><a href="{{url_for('landing_page')}}">HOME</a></li>
+            <li><a href="{{url_for('landing_page')}}">HOME</a></li>
+            {% if admin == 'block' %}
+            <li><a href="{{url_for('psits_admin_page')}}">ADMIN</a></li>
+            {%endif%}
            <li><a href="{{url_for('about_us')}}">ABOUT US</a></li>
            <li><a href="{{url_for('psits_merchandise')}}">MERCH</a></li>
            <!--<li><a href="{{url_for('psits_faculty_members')}}">FACULTY</a></li>-->
@@ -172,8 +175,10 @@
 						res += `<a href='${link}' target='_blank'>${link}</a>`;
 					}else{
 
-            // check if `Posted By: {name} (time)` exist
-            if(strings[index].substring(0,6) === "Posted" && !hasPostedBy){
+            // check if `Posted By: {name} (time)` exist  or 
+            // check if `Update By: {name} (time)` exist
+            console.log(strings[index].substring(0,20))
+            if((strings[index].substring(0,6) === "Posted" || strings[index].substring(0,8).includes('Updated')) && !hasPostedBy){
               res += `<b>`;
               hasPostedBy = true;
             }else if(strings[index].includes("(") && hasPostedBy){

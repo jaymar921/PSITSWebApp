@@ -32,6 +32,9 @@ def get_redirection_extra():
 def checkImageExist(name: str):
     return os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], name))
 
+def renameFile(origin, newname):
+    os.rename(os.path.join(app.config['UPLOAD_FOLDER'], origin),os.path.join(app.config['UPLOAD_FOLDER'], newname)) 
+
 
 def block_route(route):
     ROUTES_CONTROLLER.append(route)
