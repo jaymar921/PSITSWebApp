@@ -3,7 +3,7 @@ from Util import GetPriceRef
 
 from Util import deprecated, DecimalEncoder, DateTimeEncoder, GetReference
 from enum import Enum
-import json
+#import json
 
 
 class Announcement:
@@ -289,7 +289,7 @@ class AccountOrdersLW:
                     size = size + item.split(':')[1].strip() + ', '
         return AccountOrdersLW(
             accountOrder.reference,
-            f'{accountOrder.account.firstname} {accountOrder.account.lastname}',
+            f'{accountOrder.account.lastname}, {accountOrder.account.firstname}',
             accountOrder.merch.title,
             accountOrder.order.additional_info,
             accountOrder.order.quantity,

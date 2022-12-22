@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>PSITS Print Receipt</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<style>
+    body{
+        margin: 0;
+    }
+</style>
+<body>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="{{url_for('static', filename='html5-qrcode.js')}}"></script>
+    <div class="reciept" style="width: 180px;">
+        <hr>
+        <div>
+          <h1 style="text-align: center;">PSITS Receipt</h1>
+          <div id="qrcode" class="qr_code"></div>
+          <script type="text/javascript">
+            new QRCode(document.getElementById("qrcode"), {
+                text: "{{ref}}",
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        </script>
+        <h3 style="text-align: center;">{{ref}}</h3>
+        <hr>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Buyer: </label>
+        </div>
+        <div style="display: flex;">
+            <a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.account.lastname}}, {{ORDER.account.firstname}}&nbsp;</a>
+        </div>
+        <br>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Product: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.merch.title}}&nbsp;</a>
+        </div>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Aditional Information: </label>
+        </div>
+        <div style="display: flex;">
+            <a style="position: absolute;color:black; font-size: 10px; text-align: left; left: 3px; width: 181px; font-weight:bolder; white-space: pre-line;">{{ORDER.order.additional_info}}&nbsp;</a>
+        </div>
+        <br><br>
+        <div style="display: flex;">
+            <label style="font-size: 12px;width:  50%;">Original-Price: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">₱{{ORDER.merch.price}}&nbsp;</a>
+        </div>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Discounted Price: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">₱{{price}}&nbsp;</a>
+        </div>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Purchase-Date: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.order.order_date}}&nbsp;</a>
+        </div>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Quantity: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.order.quantity}}&nbsp;</a>
+        </div>
+        <div style="display: flex;">
+            {% if promocode_valid %}
+            <label style="font-size: 12px;">Promocode: </label><a title="VALID PROMOCODE" style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{promocode}}&nbsp;</a>
+            {% else %}
+            <label style="font-size: 12px;">Promocode: </label><a title="INVALID PROMOCODE" style="position: absolute;color:black; font-size: 12px; text-align: right; right: 3px; width: 100%; text-decoration: line-through; font-weight:900;">{{promocode}}&nbsp;</a>
+            {% endif %}
+        </div>
+        <hr>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Total: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">₱{{total}}</a>
+        </div>
+        <div style="display: flex;">
+            <label style="font-size: 12px;">Status: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.order.status}}</a>
+        </div>
+        <hr>
+        <div style="display: flex;">
+            <p style="font-size: 12px;">This is an official copy of your <br>receipt. Do not lose this receipt!</p>
+        </div>
+        <br>
+        <hr>
+        <br>
+        &nbsp;
+        </div>
+      </div>
+    <script>
+        setInterval(()=>{window.print();}, 300)
+        window.addEventListener('afterprint', (event) => {
+            window.close();
+          });
+    </script>
+</body>
+</html>

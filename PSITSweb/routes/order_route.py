@@ -10,9 +10,10 @@ from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATE
     updateOrder, getOrderById, getAllOrders, DeductPromoSlot, GetPromo
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
-    OrderAccount, PROMO
+    OrderAccount, PROMO, AccountOrdersLW
 from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData, CONFIGURATION
 from webApp_utility import checkImageExist
+from routes.app_route_1_3_api import updateAccountOrdersLightWeight
 
 
 API_LINK: str = CONFIGURATION()['API_LINK'] if (
@@ -158,7 +159,8 @@ def psits_order_product():
                 merch,
                 SEARCHMerchOrder(order.reference)[0]
             )
-
+            accountOrder.reference = GetReference(order.reference)
+            updateAccountOrdersLightWeight(AccountOrdersLW.parse(accountOrder))
             # Send email to user
             # pushEmail(Email("PSITS Orders", accountOrder.account.email,messages.product_ordered(accountOrder, promo)))
 

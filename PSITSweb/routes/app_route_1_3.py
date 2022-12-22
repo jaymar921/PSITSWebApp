@@ -6,8 +6,8 @@ import flask
 import Database
 import json
 from Models import STATIC_DATA, Account, MerchOrder, ORDER_STATUS, Merchandise
-from Util import isAdmin, hashData, allowed_file, directoryExist, createDir, getNumberOfFiles, fileExist, removeFile, GetPriceRef
-from webApp_utility import save_redirection, checkImageExist, block_route, is_blocked_route, unblock_route, has_redirection, get_redirection, get_redirection_extra
+from Util import isAdmin, GetPriceRef
+from webApp_utility import save_redirection, block_route, is_blocked_route, unblock_route, has_redirection, get_redirection, get_redirection_extra
 
 
 @app.route("/PSITS@DataAnalytics/", methods=['GET'])
@@ -227,7 +227,7 @@ def community_page():
         '21496369': ['Volunteer', 'border-gradient-purple', '', {}],  # Dex
         '21540950': ['Volunteer', 'border-gradient-purple', '', {}],  # Paul
         # Padolina
-        '21400973': ['Volunteer', 'border-gradient-purple', '', {}],
+        # '21400973': ['Volunteer', 'border-gradient-purple', '', {}],
         # Rey
         '19903483': ['Volunteer', 'border-gradient-purple', '', {'icons': [{'fa-brands fa-github': 'https://github.com/TheOriginalReben'}]}],
         # Sir Roi

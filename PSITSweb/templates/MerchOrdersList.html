@@ -124,7 +124,7 @@
   }
 
   .information-container label, input, textarea, select{
-    font-size: 15px;
+    font-size: 13px;
     padding: 8px;
   }
 
@@ -388,6 +388,8 @@
       </div>
       <br />
       <hr>
+      <br />
+      <a class="normalButton" style="display: flex;" onclick="Print()" target="_blank">Print Receipt</a>
     </div>
   </div>
   <div class="form">
@@ -442,7 +444,7 @@
         <h1>Orders List</h1>
       </div>
       <br>
-      <div class="dropdown" style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
+      <div class="" style="position: relative ;display: inline-block; left: 50%; transform:translateX(-50%);">
         <span class="small-mobile hide" style="padding: 5px;color:black; white-space: pre-line; justify-content: left; text-align: left;"><b style="font-size: 120%;">Enhanced Searching Mode</b>
 
           <div class="dropdown-content">
@@ -553,6 +555,22 @@
           function loadAPI(){
             setAPI_LINK('{{api_link}}');
             search_transaction(document.getElementById('search_student').value,document.getElementById('secret_key').value);
+          }
+
+          function GetReceiptRef(){
+            return document.getElementById('fld_reference').innerHTML;
+          }
+
+          function PrintReceipt(){
+            window.open( 
+              `/PSITS/Orders/Receipt/${GetReceiptRef()}?print=True`, "_blank");
+          }
+          function Print(){
+            var myWindow=window.open(`/PSITS/Orders/Receipt/${GetReceiptRef()}?print=True`,'','width=210,height=700,margin=0');
+            //myWindow.document.write("<p>This is 'myWindow'</p>");
+            
+            //myWindow.document.close();
+            //myWindow.focus();
           }
         </script>
   <br /><br /><br /><br /><br /><br />

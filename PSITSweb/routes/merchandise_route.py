@@ -222,49 +222,7 @@ def remove_promo():
     return redirect(url_for('psits_merchandise_list'))
 
 
-@app.route("/PSITS/Orders/Receipt/<uid>", methods = ['GET'])
-def psits_receipt_generator(uid):
-    save_redirection('psits_receipt_generator', uid)
-    if is_blocked_route('psits_receipt_generator'):
-        return redirect(url_for('maintenance_page'))
-    try:
-        order: MerchOrder = SEARCHMerchOrder(uid)[0]
-        account: Account = getAccountByID(order.account_id)
-        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
-        accountOrder: AccountOrders = AccountOrders(account, merch, order)
-        total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
-        price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
-        
-        
-        _addInfo = order.additional_info.split(' ')
-        promocode: str = ''
-        try:
-            stop = False
-            for fragment in _addInfo:
-                if 'promocode' in fragment.lower():
-                    stop = True
-                    continue
-                if stop:
-                    promocode = fragment
-                    break
-        except: pass
-    except:
-        return redirect(url_for('cant_find_link'))
-    
-    promo_valid = False
-    for promo in GetAllPromo():
-        if promocode.strip() in promo.code:
-            promo_valid = True
-    return render_template('app_templates_1_3/Receipt.html', 
-    login='none', 
-    logout='none', 
-    title=f'Receipt {uid}', 
-    ORDER = accountOrder, 
-    ref = uid, 
-    total = total, 
-    price = price,
-    promocode=promocode,
-    promocode_valid=promo_valid)
+
 
 @app.route("/PSITS/GCashPayment/<uid>")
 def gcash_payment(uid):

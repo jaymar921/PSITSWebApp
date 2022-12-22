@@ -1,16 +1,18 @@
 from __main__ import app
 import os
 
-from flask import request
+from flask import request, redirect, url_for, session, render_template
 import json
 import threading, time
+import pandas as pd
 
 
 from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
-    ,getAllAccounts, getAccountWithPassword
-from EmailAPI import pushEmail
+    ,getAllAccounts, getAccountWithPassword, GetAllPromo
+# from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, AccountOrdersLW
-from Util import GetReference, isAdmin, ifKeyPermitted, hashData
+from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef
+from webApp_utility import save_redirection, is_blocked_route
 
 # GLOBALS
 merch_orders: list = [] # SEARCHMerchOrder('all')
@@ -86,7 +88,7 @@ def removeAccountOrderLightWeight(reference: str):
     if found_order is not None:
         LIGHTWEIGHT_ACCOUNT_ORDERS.remove(found_order)
 
-# Run thread per 10s
+# Run thread per 50s
 def merch_order_updater():
     time.sleep(5)
     while True:
@@ -95,7 +97,7 @@ def merch_order_updater():
         time.sleep(1)
         updateMerch(merch, GETAllMerchandise())
         preloadAccountOrders_LightWeight()
-        time.sleep(20)
+        time.sleep(50)
 
 merch_order_thread = threading.Thread(target=merch_order_updater)
 merch_order_thread.start()
@@ -509,3 +511,165 @@ def api_account_p_search(search):
         mimetype='application/json'
     )
     return response
+
+
+
+
+# create a CSV list for students and orders list
+@app.route("/PSITS@CSVdata/<fn>/<search>")
+def showCSVData(fn, search):
+    if "username" in session:
+        if isAdmin(session['username']):
+            if fn is not None:
+                if fn == "students":
+                    students = getAllAccounts(search)
+                    return render_template("CSVTemplate.html", students=students)
+                elif fn == 'orders':
+                    if search is None:
+                        search = 'all'
+                    if search == 'ALL':
+                        search = search.lower()
+                    data: list = []
+
+                    data.append("\"REF #\",\"NAME\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
+
+                    # Prepare the searching
+                    product_to_search = ''
+                    status_to_search = ''
+                    student_to_search = ''
+                    size_to_search = ''
+
+                    if search.lower().startswith('merch:'):
+                        item_to_search_in_merch = search.split(":")
+
+                        if len(item_to_search_in_merch) > 1: # Product
+                            product_to_search = item_to_search_in_merch[1].lower()
+                            if len(item_to_search_in_merch)>2: # STATUS
+                                status_to_search = item_to_search_in_merch[2].lower()
+                    if search.lower().startswith('student:'):
+                        item_to_search_in_student = search.split(":")
+                        if len(item_to_search_in_student) > 1: # ID/LNAME/FNAME
+                            student_to_search = item_to_search_in_student[1].lower()
+                    if search.lower().startswith('all:'):
+                        item_to_search_in_merch = search.split(":")
+                        if len(item_to_search_in_merch) > 1: # STATUS
+                            status_to_search = item_to_search_in_merch[1].lower()
+                    if 'size:' in search.lower():
+                        item_to_search_in_all = search.lower().split("size:")
+                        if len(item_to_search_in_all) > 1: # SIZE
+                            size_to_search = item_to_search_in_all[1].lower().strip()
+
+                    for order in LIGHTWEIGHT_ACCOUNT_ORDERS:
+                        account_order: AccountOrdersLW = order
+                         # Do the search
+                        if product_to_search != '':
+                            if product_to_search.strip() not in account_order.product.lower():
+                                continue
+                        if status_to_search != '':
+                            if '!' in status_to_search.strip():
+                                stat: str = status_to_search.replace('!','').strip()
+                                if stat in account_order.status.lower():
+                                    continue
+                            elif status_to_search.strip() not in account_order.status.lower():
+                                continue
+                        if student_to_search != '':
+                            found_name: bool = False
+                            if student_to_search.strip() in account_order.fullname.lower():
+                                found_name = True
+                            if not found_name:
+                                continue
+                        reference_found: bool = False
+                        if search in account_order.ref_code:
+                            reference_found = True 
+                        if size_to_search != '':
+                            if str(size_to_search) not in str(account_order.size).lower():
+                                continue
+
+                        # Determine the sizes
+                        size: str = ''
+                        for item in account_order.info.split('\n'):
+                            if 'size' in item.lower():
+                                if len(item.split(':')) > 1:
+                                    size = size + item.split(':')[1].strip() + ', '
+
+                        val = f"\"{account_order.ref_code}\",\"{account_order.fullname}\",\"{account_order.product}\",\"{account_order.order_date}\",\"{account_order.quantity}\",\"{account_order.info}\",\"{size[:-2]}\",\"{account_order.status}\"\n"
+                        data.append(val)
+
+                    CSVtoExl(data)
+                    
+                    
+                    #return render_template("CSVTemplate.html", orders=data)
+                    return redirect(url_for('download_file',filename='GENERATED.csv'))
+
+        else:
+            return render_template("404Page.html", logout="none", login="none",
+                                   message="Don't try to break the page :<")
+    return redirect(url_for("landing_page"))
+
+def CSVtoExl(data):
+    GenerateCSVFile(data)
+    read_file = pd.read_csv (app.config['UPLOAD_FOLDER'] + 'GENERATED.csv', sep='|', encoding = "ISO-8859-1")
+    read_file.to_excel (app.config['UPLOAD_FOLDER'] +'GENERATED.xlsx', index = None, header=True)
+
+
+def GenerateCSVFile(data):
+    with open(app.config['UPLOAD_FOLDER'] + 'GENERATED.csv', 'w') as file:
+        for line in data:
+            file.write(line)
+
+@app.route("/PSITS/Orders/Receipt/<uid>", methods = ['GET'])
+def psits_receipt_generator(uid):
+    save_redirection('psits_receipt_generator', uid)
+    if is_blocked_route('psits_receipt_generator'):
+        return redirect(url_for('maintenance_page'))
+    try:
+        order: MerchOrder = SEARCHMerchOrder(uid)[0]
+        account: Account = getAccountByID(order.account_id)
+        merch: Merchandise = SEARCHMerchandise(order.merchandise_id)[0]
+        accountOrder: AccountOrders = AccountOrders(account, merch, order)
+        total ="{:.2f}".format(int(accountOrder.order.quantity) * GetPriceRef(accountOrder.order.reference)) 
+        price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
+        
+        
+        _addInfo = order.additional_info.split(' ')
+        promocode: str = ''
+        try:
+            stop = False
+            for fragment in _addInfo:
+                if 'promocode' in fragment.lower():
+                    stop = True
+                    continue
+                if stop:
+                    promocode = fragment
+                    break
+        except: pass
+    except:
+        return redirect(url_for('cant_find_link'))
+    
+    promo_valid = False
+    for promo in GetAllPromo():
+        if promocode.strip() in promo.code:
+            promo_valid = True
+    if 'print' in request.args:
+        try:
+            if bool(request.args['print']) == True:
+                accountOrder.order.additional_info = accountOrder.order.additional_info.replace('Promocode:','')
+                return render_template('app_templates_1_3/PrintReceipt.html',  
+                ORDER = accountOrder, 
+                ref = uid, 
+                total = total, 
+                price = price,
+                promocode=promocode,
+                promocode_valid=promo_valid)
+        except:
+            pass
+    return render_template('app_templates_1_3/Receipt.html', 
+    login='none', 
+    logout='none', 
+    title=f'Receipt {uid}', 
+    ORDER = accountOrder, 
+    ref = uid, 
+    total = total, 
+    price = price,
+    promocode=promocode,
+    promocode_valid=promo_valid)
