@@ -96,17 +96,14 @@
               
             {% endif %}
             <li><a href="{{url_for('landing_page')}}">HOME</a></li>
-            {% if admin == 'block' %}
-            <li><a href="{{url_for('psits_admin_page')}}">ADMIN</a></li>
-            {%endif%}
            <li><a href="{{url_for('about_us')}}">ABOUT US</a></li>
            <li><a href="{{url_for('psits_merchandise')}}">MERCH</a></li>
            <!--<li><a href="{{url_for('psits_faculty_members')}}">FACULTY</a></li>-->
            <li><a href="{{url_for('community_page')}}">COMMUNITY</a></li>
            <li><hr class="bannerLine"style="display:none;"></li>
 
-            <li style="display: {{login}}"><a onclick="location.href='/PSITS@Login'" style="cursor:pointer; color: white;">LOG IN</a></li>
-            <li style="display: {{logout}}" ><a data-toggle="modal" data-target="#logoutModal" style="cursor:pointer; color: white;">LOG OUT</a></li>
+            <li style="display:{{login}}"><a onclick="location.href='/PSITS@Login'" style="cursor:pointer; color: white;">LOG IN</a></li>
+            <li style="display:{{logout}}" ><a data-toggle="modal" data-target="#logoutModal" style="cursor:pointer; color: white;">LOG OUT</a></li>
         </ul>
      </nav>
     </div>
@@ -177,7 +174,6 @@
 
             // check if `Posted By: {name} (time)` exist  or 
             // check if `Update By: {name} (time)` exist
-            console.log(strings[index].substring(0,20))
             if((strings[index].substring(0,6) === "Posted" || strings[index].substring(0,8).includes('Updated')) && !hasPostedBy){
               res += `<b>`;
               hasPostedBy = true;

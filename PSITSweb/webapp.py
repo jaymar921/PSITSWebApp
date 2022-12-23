@@ -104,7 +104,8 @@ def landing_page():
                                    admin="block",
                                    events=events,
                                    access_key = str("API_SECRET-"+hashData(str((int(session['username'])*250)))).strip(),
-                                   account_data=getAccountByID(session['username']))
+                                   account_data=getAccountByID(session['username']),
+                                   version = 'v1.4')
         else:
             if is_blocked_route('landing_page'):
                 return redirect(url_for('maintenance_page'))
@@ -115,14 +116,16 @@ def landing_page():
                                    account=session['username'],
                                    admin="none",
                                    events=events,
-                                   account_data=getAccountByID(session['username']))
+                                   account_data=getAccountByID(session['username']),
+                                   version = 'v1.4')
     if is_blocked_route('landing_page'):
         return redirect(url_for('maintenance_page'))
     return render_template("Homepage.html",
-                           title="PSITS ANNOUNCEMENTS",
-                           ANNOUNCEMENTS=announcements,
-                           login="block",
-                           logout="none", admin="none", events=events)
+                            title="PSITS ANNOUNCEMENTS",
+                            ANNOUNCEMENTS=announcements,
+                            login="block",
+                            logout="none", admin="none", events=events,
+                            version = 'v1.4')
 
 
 @app.route("/PSITS@Faculty", methods=['GET', 'POST'])
