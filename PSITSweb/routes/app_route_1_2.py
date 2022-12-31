@@ -34,6 +34,9 @@ def reset_password(uid):
 @app.route('/PSITS@ResetPassword/<uid>', methods=['POST', 'GET'])
 def reset_account_password(uid):
     if flask.request.method == 'GET':
+        if 'username' not in session:
+            return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but there was an error at the server side, please try again")
         if int(session['username']) == int(uid):
             msg = f"Time to reset your password {Database.getAccountByID(uid).firstname}!"
             return render_template('app_templates_1_2/ResetPasswordForm.html',idnum=uid,logout='block',login='none',message=msg)

@@ -322,3 +322,42 @@ class AccountOrdersLW:
         if str(self.ref_code) == str(__o.ref_code) and self.quantity == __o.quantity and str(self.status) == str(__o.status) and str(self.info) == str(__o.info) and str(self.size) == str(__o.size):
             return True
         return False
+
+class Quiz:
+    def __init__(self, QuizTopic, Questionaires, QuizOwner, CreationDate, CreationTime):
+        self.QuizTopic = QuizTopic
+        self.Quiz: list = Questionaires
+        self.QuizOwner = QuizOwner
+        self.CreationDate = CreationDate
+        self.CreationTime = CreationTime
+        self.ShowProfile = ''
+
+    def toJSON(self):
+        return {
+            'QuizTopic':self.QuizTopic,
+            'Quiz': [x.toJSON() for x in self.Quiz],
+            'QuizOwner': self.QuizOwner,
+            'CreationDate': self.CreationDate,
+            'CreationTime': self.CreationTime,
+            'ShowProfile': self.ShowProfile
+        }
+
+class Questionaires:
+    def __init__(self, QuizID, QuizQuestion, QuizAnswers, QuizAnswer, QuestionTimer, Type):
+        self.QuizID = QuizID
+        self.QuizQuestion = QuizQuestion
+        self.QuizAnswers = QuizAnswers
+        self.QuizAnswer = QuizAnswer
+        self.QuestionTimer = QuestionTimer
+        self.Type = Type
+        
+
+    def toJSON(self):
+        return {
+            'QuizID': self.QuizID,
+            'QuizQuestion': self.QuizQuestion,
+            'QuizAnswers': self.QuizAnswers,
+            'QuizAnswer': self.QuizAnswer,
+            'QuestionTimer': self.QuestionTimer,
+            'Type': self.Type,
+        }

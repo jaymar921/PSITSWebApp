@@ -1,5 +1,5 @@
 from __main__ import app
-import os
+import os, json, datetime as dt
 
 from flask import session
 
@@ -47,3 +47,43 @@ def is_blocked_route(route):
 def unblock_route(route):
     if is_blocked_route(route):
         ROUTES_CONTROLLER.remove(route)
+
+def saveToFile(filename, data):
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'w') as file:
+        file.write(data)
+
+def loadFromFile(filename):
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'r') as file:
+        lines = file.readlines()
+    outputStr = ''
+    for line in lines:
+        outputStr = outputStr + line
+    return outputStr
+
+def loadJSONFromFile(filename):
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'r') as file:
+        lines = file.readlines()
+    outputStr = ''
+    for line in lines:
+        outputStr = outputStr + line
+    return json.loads(outputStr)
+
+def deleteFile(filename):
+    if os.path.exists(filename):
+        os.remove(filename)
+
+def getListOfFiles(directory):
+    return os.listdir(directory)
+
+def getFileDaysFromModified(filename):
+    file_date = dt.datetime.fromtimestamp(os.path.getmtime(filename))
+    if not file_date:
+        file_date = dt.datetime.fromtimestamp(os.path.getctime(filename))
+    d0 = dt.date(file_date.year, file_date.month, file_date.day)
+    d1 = dt.datetime.now().date()
+    d1 = dt.date(d1.year, d1.month, d1.day)
+    delta = d1-d0
+    return delta.days
+
+#   print(loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Quiz\\Quiz_C.json"))
+#   print(getListOfFiles(app.config['UPLOAD_FOLDER']+'Quiz\\'))

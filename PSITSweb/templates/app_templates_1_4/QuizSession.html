@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .banner nav{
+        z-index: 2;
+    }
+    .quiz-window{
+        position: relative;
+        width: auto;
+        height: 80vh;
+        margin: 0;
+        background-image: url('{{url_for("static",filename="images/db34d40b271fb59477621550bf73ea0b.jpg")}}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: 0;
+    }
+    .quiz-modal{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0,0,0,0.9);
+        width: 330px;
+        border: 10px solid white;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        z-index: 1;
+
+        /*shadow*/
+        -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
+        -moz-box-shadow: -3px -2px 30px 14px rgba(0,0,0,0.425);
+        box-shadow: -4px -3px 45px 21px rgba(0,0,0,0.35);
+    }
+
+    #modal-info, #instruction-info{
+        text-align: left;
+        padding: 20px;
+        font-size: 15px;;
+    }
+
+    .normalButton{
+        font-size: 20px;
+    }
+    .instruction-modal{
+        opacity: 0;
+    }
+
+    #myProgress {
+        width: 100%;
+        background-color: grey;
+      }
+      
+    #myBar {
+      width: 100%;
+      height: 30px;
+      background-color: green;
+    }
+
+    input, label{
+        font-size: 11px;
+        border: 0;
+        padding: 3px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    
+
+    .unselectable {
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .code-block{
+        background-color: rgb(233, 247, 247);
+        display: block;
+        white-space: break-spaces;
+        text-align: left;
+        border: 2px dotted gainsboro;
+        font-weight: 0;
+        font-size: 13px;
+        padding: 10px;
+        color: rgb(255, 117, 117);
+    }
+    .question{
+        font-size: 18px;
+    }
+    .option-div{
+        padding: 10px;
+        text-align: left;
+    }
+
+    @media(max-width: 500px){
+        .quiz-window{
+            height: 100vh;
+        }
+
+        input, label{
+            font-size: 8px;
+            padding: 0;
+        }
+        .question{
+            font-size: 12px;
+        }
+        .code-block{
+            font-size: 10px;
+        }
+        .option-div{
+            padding: 5px;
+        }    
+        .quiz-modal{
+            width: 300px;
+        }
+    }
+</style>
+<script defer src="{{url_for('static',filename='quiz-session.js')}}"></script>
+
+<div class="container">
+    <input id="quiz-data" type="text" value="{{QUIZ_DATA}}" hidden>
+    {% if account_data %}
+    <input id="quizzer-id" type="text" value="{{account_data.uid}}" hidden>
+    {% endif %}
+    <div id="welcome-modal" class="quiz-modal">
+        <br>
+        <h1 id="modal-title">It's Quiz time!</h1>
+        <br>
+        <p id="modal-info">Welcome to Quiz!</p>
+        <br>
+        <br>
+        {% if account_data %}
+            <button id="welcomeBtn" class="normalButton" onclick="playMusic(); proceed();">Are you ready?</button>
+        {% else %}
+            <button class="normalButton" onclick="location.href='/PSITS@Login'">Login</button>
+        {% endif %}
+        <br>
+        <br>
+        {% if account_data %}
+            <p id="welcomeFooter">You are logged-in as '{{account_data.lastname}}'</p>
+        {% else %}
+            <p id="welcomeFooter">You must login first</p>
+        {% endif %}
+        <br>
+    </div>
+    <div id="instruction-modal" class="quiz-modal" style="display: none;">
+        <br>
+        {% if account_data %}
+            <h1 id="">Hi {{account_data.firstname}},</h1>
+        {% endif %}
+        <br>
+        <p id="instruction-info">You will be taking a quiz about ''</p>
+        <br>
+        <br>
+        <button id="" class="normalButton" onclick="gameStart();">Start</button>
+        <br>
+        <br>
+        <p id="">Sit back and get focused 😎</p>
+        <br>
+    </div>
+
+    <div id="endgame-modal" class="quiz-modal" style="display: none;">
+        <br>
+        {% if account_data %}
+            <h1 id="endgame-header">Hi {{account_data.firstname}},</h1>
+        {% endif %}
+        <br>
+        <p id="endgame-info">You will be taking a quiz about ''</p>
+        <br>
+        <br>
+        <button id="endgame-btn" class="normalButton" onclick="">View Score</button>
+        <br>
+        <br>
+        <p id="endgame-info-last">Sit back and get focused 😎</p>
+        <br>
+    </div>
+
+    <div id="result-modal" class="quiz-modal" style="display: none;">
+        <br>
+        {% if account_data %}
+            <h1 id="result-header">Hello {{account_data.firstname}},</h1>
+        {% endif %}
+        <br>
+        <p id="result-info">You will be taking a quiz about ''</p>
+        <br>
+        <br>
+        <button id="result-btn" class="normalButton" onclick="">View Score</button>
+        <br>
+        <br>
+        <p id="result-info-last">Sit back and get focused 😎</p>
+        <br>
+    </div>
+
+    <div id="warning-modal" class="quiz-modal" style="display: none;">
+        <br>
+        {% if account_data %}
+            <h1 id="result-header">{{account_data.firstname}}, are you cheating?</h1>
+        {% endif %}
+        <br>
+        <p id="warning-info">Do not open any tabs!</p>
+        <br>
+        <br>
+        <button id="warning-btn" class="normalButton" onclick="CloseWarning()">Continue</button>
+        <br>
+        <br>
+        <p id="result-info-last">You are recorded! 📷</p>
+        <br>
+    </div>
+    
+    <div class="quiz-window">
+        <div id="quiz-session" class="quiz-modal unselectable" style="display: none;">
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
+            <br>
+            <h4 id="question" class="question unselectable">Question</h4>
+            <div id="code-block"></div>
+            <br>
+            <div id="option-group" class="unselectable">
+    
+            </div>
+            <br>
+            <button class="normalButton" onclick="nextQuestion()">Next</button>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+<audio id="quiz-music">
+    <source src="{{url_for('static',filename='music/music.mp3')}}" type="audio/mpeg">
+</audio>
+<audio id="yay-sfx">
+    <source src="{{url_for('static',filename='music/yay.mp3')}}" type="audio/mpeg">
+</audio>
+<audio id="warning-sfx">
+    <source src="{{url_for('static',filename='music/warning.mp3')}}" type="audio/mpeg">
+</audio>
+{% if result %}
+    {% if result.RetakeDays | int == 0 %}
+        <script>
+            document.getElementById('welcomeBtn').innerHTML = 'Retake Quiz';
+        </script>
+    {% else %}
+        <script>
+            
+            document.getElementById('welcomeBtn').innerHTML = 'View Score';
+            document.getElementById('welcomeFooter').innerHTML = `Retake Quiz by ${'{{result.RetakeDays}}'} days`
+            document.getElementById('welcomeBtn').addEventListener('click', checkOnClick);
+            function checkOnClick(){
+                ShowScore({'score':"{{result['score']}}",'sessionTime':"{{result['sessionTime']}}"}, '{{result["answers"] | length}}');
+            }
+            setInterval(()=>{
+                try{
+                    cancelQuiz();
+                }catch{}
+            }, 100);
+        </script>
+    {% endif %}
+{% endif %}
+
+<script>
+    /* Get the documentElement (<html>) to display the page in fullscreen */
+    var elem = document.documentElement;
+    
+    /* View in fullscreen */
+    function openFullscreen() {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    }
+    
+    /* Close fullscreen */
+    function closeFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      }
+    }
+    </script>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+<script defer src="{{ url_for('static', filename='quiz-creator.js')}}"></script>
+<style>
+    .content{
+        position: relative;
+        margin: 0;
+    }
+
+    .creation-window{
+        position: relative;
+        text-align: center;
+        border: 3px solid rgb(102, 102, 102);
+        border-radius: 10px;
+        background-color:rgb(211, 211, 211);
+        width: 340px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .creation-window label, input, select, textarea{
+        font-size:15px;
+        padding: 5px;
+    }
+    textarea{
+        height: 100px;
+        width: 100%;
+        resize: none;
+    }
+    .creation-window input, select{
+        position: relative;
+        width: 120px;
+        right: 0;
+    }
+
+    .right-aligned, .left-aligned{
+        position: relative;
+        text-align: right; 
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 20px;;
+    }
+
+    .left-aligned{
+        text-align: left; 
+    }
+
+    .output-window{
+        text-align: center;
+    }
+
+    .question{
+        text-align: left;
+        display: block;
+        padding: 20px;
+        background-color: white;
+    }
+
+    .question h2{
+        font-size: 120%;
+        white-space: pre-line;
+    }
+    .question span{
+        background-color: rgb(233, 247, 247);
+        display: block;
+        white-space: pre-line;
+        border: 2px dotted gainsboro;
+        font-weight: 0;
+        font-size: 20px;
+        padding: 10px;
+        color: rgb(255, 117, 117);
+    }
+
+    @media(min-width: 640px){
+        .creation-window{
+            width: 80%;
+        }
+        .right-aligned, .left-aligned{
+            width: 340px;
+        }
+
+        .creation-window input, select{
+            width: 45%;
+        }
+    
+    }
+</style>
+<div class="container">
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a style="position: relative;" class="normalButton" href="/PSITS@QuizAdmin">BACK</a>
+    <br><br><br>
+    <div class="creation-window">
+        <h1>Create a Quiz</h1>
+        <br>
+        <div class="right-aligned">
+            <label for="quiz-title">Quiz Topic:&nbsp;</label><input id="quiz-title" type="text" placeholder="Topic..."><br>
+            <label for="quiz-type">Type of Quiz:&nbsp;</label>
+            <select id="quiz-type">
+                <option title="No time limit" value="normal" selected>Normal</option>
+                <option title="Set time limit for each questions" value="timed">Timed Questions</option>
+            </select>
+            <input type="text" id="api-key" value="{{access_key}}" hidden>
+        </div>
+        <input id="quiz_owner" type="text" value="{{account_data.lastname}}, {{account_data.firstname}}" hidden>
+        <div id="output-quiz-questions-create">
+            <!-- 
+                Questions Goes Here 
+                I made a script that will interact on user selection,
+                feel free to check quiz-creator.js
+
+                -Jayharron :D
+            -->
+        </div>
+        <div class="left-aligned">
+            <hr><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="normalButton" onclick="addNewMultipleChoiceQuestion()">+</button><label>Add Multiple Choice</label><br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="normalButton" onclick="addNewShortAnswerQuestion()">+</button><label>Add Short Answer</label><br><br>
+        </div>
+        <button class="normalButton" onclick="saveQuiz()">Save Quiz</button>
+        <br>
+        <br>
+        <p id="save-message"></p>
+        <br>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div id="output-window" class="output-window">
+        <h1 id="output-quiz-title">Quiz Preview</h1>
+        <div id="output-quiz-questions">
+            <!-- 
+                Questions Goes Here 
+                I made a script that will interact on user selection,
+                feel free to check quiz-creator.js
+
+                -Jayharron :D
+            -->
+        </div>
+    </div>
+    <br>
+</div>
+{% if data %}
+<input type="text" value="{{data}}" id="quiz-data-edit" hidden>
+<script>
+    setTimeout(()=>{
+        QuizLoader(document.getElementById('quiz-data-edit').value);
+    }, 1000);
+</script>
+{% endif %}
+{% endblock %}

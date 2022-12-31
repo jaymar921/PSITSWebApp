@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .banner nav{
+        z-index: 2;
+    }
+    .quiz-window{
+        position: relative;
+        width: auto;
+        height: auto;
+        margin: 0;
+        background-image: url('{{url_for("static",filename="images/db34d40b271fb59477621550bf73ea0b.jpg")}}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: 0;
+        align-items: center;
+        align-content: center;
+    }
+    .topics{
+        left: 50%;
+        transform: translateX(-50%);
+        position: relative;
+        background-color: rgba(0,0,0,0.9);
+        width: 330px;
+        border: 10px solid rgb(67, 188, 249);
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        z-index: 1;
+
+        /*shadow*/
+        -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
+        -moz-box-shadow: -3px -2px 30px 14px rgba(0,0,0,0.425);
+        box-shadow: -4px -3px 45px 21px rgba(0,0,0,0.35);
+        cursor: pointer;
+    }
+
+    .info{
+        left: 50%;
+        transform: translateX(-50%);
+        position: relative;
+        background-color: rgba(0,0,0,0.9);
+        width: 330px;
+        border: 10px solid white;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        z-index: 1;
+
+        /*shadow*/
+        -webkit-box-shadow: -2px -1px 15px 7px rgba(0,0,0,0.5);
+        -moz-box-shadow: -3px -2px 30px 14px rgba(0,0,0,0.425);
+        box-shadow: -4px -3px 45px 21px rgba(0,0,0,0.35);
+    }
+</style>
+
+<div class="container">
+    <div class="quiz-window">
+        <div style="background-color: rgba(0,0,0,0.35);padding: 50px;">
+            <div>
+                <br>
+                <h1 style="color: white; text-align: center;font-weight:900;font-size:50px">Tests and Quizzes</h1>
+                <br><br>
+            </div>
+            {% for quiz in QUIZ_DATA %}
+                {% if 'yes' in quiz.Quiz.ShowProfile %}
+                    <div class="topics" onclick="location.href='/PSITS/Quiz/{{quiz.UID}}'">
+                        <h1 title='Take {{quiz.Quiz.QuizTopic}} quiz'>{{quiz.Quiz.QuizTopic}}</h1>
+                    </div>
+                    <br>
+                {% endif %}
+            {% endfor %}
+            <div class="info">
+                <br><br>
+                <p style="color: yellowgreen; text-align: center;font-weight:900;font-size:15px">You can take the quiz as much as you want, don't worry if you have a low score, you can retake the quiz after 15 days</p>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

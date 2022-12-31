@@ -2,6 +2,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{url_for('static', filename='progress.css')}}">
 
 <style>
     .community-container{
@@ -27,7 +28,7 @@
       -ms-user-select: none;
       user-select: none;
     }
-    .profile-image{
+    .profile-image, .info-image{
         position: relative;
         border-radius: 180px;
         left: 50%;
@@ -36,6 +37,10 @@
         height: 64px;
         overflow: hidden;
     }
+    .info-image{
+      width: 120px;
+      height: 120px;
+  }
 
     .info{
         text-align: center;
@@ -209,12 +214,137 @@
         100% {-webkit-mask-position:left}
       }
 
-    
+      .student-info{
+        position: fixed;
+        width: 340px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        padding: 10px;
+        background-color: rgb(0, 0, 0);
+        border: 5px solid grey;
+        z-index: 1;
+        color: white
+      }
 </style>
 <br />
 <button class="backButton" onclick="location.href='/'">Back</button>
 <br /><br />
-<div class="community-container">
+<div class="student-info" id="student-info" style="display: none;" onclick="closeInfo()">
+  <div style="display: flex;padding: 5px;">
+    <div onclick="closeInfo()">
+      <img class="info-image" id='info-image' src="https://via.placeholder.com/150x150"> 
+    </div>
+    <div style="padding: 0px 0px 0px 20px;">
+      <h5 id="student-info-name"></h5>
+      <p id="student-info-courseyear" style="margin: 0;"></p>
+      <div id="student-info-links" style="font-size: 25px;">
+        
+      </div>
+    </div>
+  </div>
+  <br>
+  <div style="text-align: center;">
+    <h4 id="skills-title">Skills</h4>
+    <br>
+    <div id="skills-data" >
+    </div>
+  </div>
+</div>
+<script>
+
+  function closeInfo(){
+    document.getElementById('student-info').style.display = 'none';
+  }
+  async function showInformation(name, courseyear, links, idno){
+    
+    document.getElementById('student-info-name').innerHTML = name;
+    document.getElementById('student-info-courseyear').innerHTML = courseyear;
+    document.getElementById('info-image').src = document.getElementById(`${idno}img`).src;
+      
+    let infoLinkElement = document.getElementById('student-info-links');
+    infoLinkElement.innerHTML = '';
+
+    let linkElement = document.getElementById(links);
+    linkElement.childNodes.forEach(child => {
+      let clone = child.cloneNode(true);
+      infoLinkElement.appendChild(clone);
+    });
+    const SkillData = document.getElementById('skills-data');
+    SkillData.innerHTML = '';
+
+    let response = await fetch(`/PSITS/api/quiz?studentId=${idno}`);
+    let data = await response.json();
+    if(data.UserData){
+      
+      if(data.UserData.length>0)
+        document.getElementById('skills-title').innerHTML = 'Skills';
+      else  {
+        document.getElementById('skills-title').innerHTML = 'No Record';
+      }
+      data.UserData.forEach( result => {
+        const FLEX_DIV = document.createElement('div');
+        FLEX_DIV.style.display = 'flex';
+
+        const PROGRESS_DIV = document.createElement('div');
+        PROGRESS_DIV.style.width = '70%';
+        PROGRESS_DIV.style.height = '20px';
+        PROGRESS_DIV.style.borderRight = '1px solid black';
+        PROGRESS_DIV.style.paddingRight = '5px';
+
+        const PROGRESS_METER = document.createElement('div');
+        PROGRESS_METER.classList.add('meter');
+        let percentage = (result.Score/result.TotalScore)*100;
+        if(percentage >= 70)
+          PROGRESS_METER.classList.add('green');
+        else if(percentage >= 40)
+          PROGRESS_METER.classList.add('orange');
+        else
+          PROGRESS_METER.classList.add('red');
+        
+        PROGRESS_METER.classList.add('nostripes');
+
+        const PROGRESS_SPAN = document.createElement('span');
+        PROGRESS_SPAN.style.width = `${percentage}%`;
+
+        PROGRESS_METER.appendChild(PROGRESS_SPAN);
+        PROGRESS_DIV.appendChild(PROGRESS_METER);
+        FLEX_DIV.appendChild(PROGRESS_DIV);
+
+        const TOPIC_DIV = document.createElement('div');
+
+        const TOPIC = document.createElement('a');
+        TOPIC.innerHTML = `${result.QuizTopic}`;
+        TOPIC.style.textAlign = 'right';
+        TOPIC.style.paddingLeft = '5px';
+        TOPIC.href = `/PSITS/Quiz/${result.QuizID}`;
+        TOPIC.style.color = '#007bff';
+        TOPIC_DIV.style.height = '20px';
+        TOPIC_DIV.appendChild(TOPIC);
+        FLEX_DIV.appendChild(TOPIC_DIV);
+        SkillData.appendChild(FLEX_DIV);
+        SkillData.appendChild(document.createElement('br'));
+      })
+      SkillData.appendChild(document.createElement('br'))
+      let take_quiz = document.createElement('a');
+      take_quiz.innerHTML = 'Take skills test';
+      take_quiz.href = '/PSITS/PublicQuizzes';
+      take_quiz.classList.add('normalButton');
+      SkillData.appendChild(take_quiz)
+      SkillData.appendChild(document.createElement('br'))
+      SkillData.appendChild(document.createElement('br'))
+    }else{
+      document.getElementById('skills-title').innerHTML = 'No Record';
+      let take_quiz = document.createElement('a');
+      take_quiz.innerHTML = 'Take skills test';
+      take_quiz.href = 'PSITS/PublicQuizzes'
+      SkillData.appendChild(take_quiz)
+    }
+
+    document.getElementById('student-info').style.display = 'block';
+  }
+</script>
+<div class="community-container" onclick="closeInfo()">
     <h1 style="text-align: center; color:#074873; ">PSITS Community</h1> <br>
         {% set count = namespace(value=0) %}
 
@@ -226,17 +356,18 @@
 
                 <div style="margin: 5px">
                     {% if user.uid|string in devs %}
-                    <div class="user {{devs[user.uid|string][1]}}" title="{{user.firstname}} {{user.lastname}}">
+                    <div class="user {{devs[user.uid|string][1]}}" title="{{user.firstname}} {{user.lastname}} (View more info)"
+                      onclick="showInformation('{{user.firstname}} {{user.lastname}}','{{user.course}} {{user.year}}','{{user.uid}}links','{{user.uid}}')">
                     {% else %}
-                    <div class="user" title="{{user.firstname}} {{user.lastname}}">
+                    <div class="user" title="{{user.firstname}} {{user.lastname}} (View more info)" onclick="showInformation('{{user.firstname}} {{user.lastname}}','{{user.course}} {{user.year}}','{{user.uid}}links','{{user.uid}}')">
                     {% endif %}
                         <div class="profile">
                             {% if user.img == '' %}
-                            <img class="profile-image" loading="lazy" src="https://via.placeholder.com/64x64">  
+                            <img id="{{user.uid}}img" class="profile-image" loading="lazy" src="https://via.placeholder.com/64x64">  
                             {% elif user.uid|string in devs %}
-                            <img class="profile-image {{devs[user.uid|string][2]}}" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
+                            <img id="{{user.uid}}img" class="profile-image {{devs[user.uid|string][2]}}" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
                             {% else %}
-                            <img class="profile-image" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
+                            <img id="{{user.uid}}img" class="profile-image" loading="lazy" src="{{ url_for('download_file', filename=user.img) }}">  
                             {% endif %}
                         </div>
                         <div class="info">
@@ -252,14 +383,15 @@
                             {% if user.uid|string in devs%}
                             <p class="add_info">{{ devs[user.uid|string][0] }}</p>
                             {% endif %}
-                            {% if user.uid|string in devs %}
-                                {% for icons in devs[user.uid|string][3]['icons']%}
-                                    {% for key in icons %}
-                                    <i onclick="location.href='{{icons[key]}}'" title="{{icons[key]}}" style="cursor: pointer;" class="{{key}}"></i>&nbsp;
-                                    {% endfor %}
-                                {% endfor %}
-                            {% endif %}
-                            
+                            <div id="{{user.uid}}links">
+                              {% if user.uid|string in devs %}
+                                  {% for icons in devs[user.uid|string][3]['icons']%}
+                                      {% for key in icons %}
+                                      <i onclick="location.href='{{icons[key]}}'" title="{{icons[key]}}" style="cursor: pointer;" class="{{key}}"></i>&nbsp;
+                                      {% endfor %}
+                                  {% endfor %}
+                              {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -272,5 +404,6 @@
     
 </div>
 <br />
-
+<script src="{{url_for('static', filename='jquery.js')}}"></script>
+<script src="{{url_for('static', filename='progress.js')}}"></script>
 {% endblock %}

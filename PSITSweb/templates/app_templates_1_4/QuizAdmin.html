@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .contents{
+        position: relative;
+        display: block;
+        text-align: center;
+        align-items: center;
+        align-content: center;
+        width: 100%;
+    }
+
+    .contents table{
+        position: relative;
+        width: 80%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-collapse: collapse;
+    }
+    .contents table thead th, tbody tr td{
+        border: 2px solid gainsboro;
+        margin: auto;
+        font-size: 20px;
+    }
+
+    a{
+        cursor: pointer;
+    }
+
+    .noborder{
+        border: 0;
+        border-collapse: collapse;
+    }
+    .normalButton{
+        font-size: 15px;
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    .quizID{
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .quizRow{
+        overflow: hidden;
+        display: grid;
+        place-items: left;
+        border: 0;
+        background-color: rgb(239, 239, 239);
+    }
+
+    @media (max-width: 800px) {
+        .contents table thead th, tbody tr td{
+            font-size: 15px;
+        }
+        .normalButton{
+            font-size: 10px;
+            padding: 5px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .contents table thead th, tbody tr td{
+            font-size: 10px;
+        }
+    }
+</style>
+
+<div class="container">
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a style="position: relative;" class="normalButton" href="/PSITS/Administration">BACK</a>
+    <br><br><br><br><br>
+    <div class="contents">
+        <input type="text" id="api-key" value="{{access_key}}" hidden>
+        <br>
+        <h1>Quiz</h1><br>
+        <p>“We cannot solve problems with the kind of thinking we employed when we came up with them.” — Albert Einstein</p><br>
+        <table>
+            <thead>
+                <th title="Quiz ID">Quiz ID</th>
+                <th title="Title of the quiz">Title</th>
+                <th title="Type of quiz (timed/normal)">Type</th>
+                <th title="Number of items in the quiz">Items</th>
+                <th title="Number of individuals who took the quiz">Quizzers</th>
+                <th title="Display result at profile (Community Page)">Show</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                {% for quiz in QUIZ_DATA %}
+                <tr>
+                    <td><div class="quizRow"><a class="quizID" href="/PSITS/Quiz/{{quiz.UID}}">{{quiz.UID}}</a></div></td>
+                    <td>{{quiz.Quiz.QuizTopic}}</td>
+                    {% if quiz.Quiz.Quiz|length > 0 %}
+                        {% if quiz.Quiz.Quiz[0].QuestionTimer != -1 %}
+                            <td>Timed</td>
+                        {% else %}
+                            <td>Normal</td>
+                        {% endif %}
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+                    <td>{{quiz.Quiz.Quiz|length}}</td>
+                    <td><a href="/PSITS@QuizAdmin/{{quiz.UID}}/Quizzers">{{QUIZZER[quiz.UID]}}</a></td>
+                    <td title="Display result at profile (Community Page)"><input type="checkbox" onclick="tick(this, {{quiz.Quiz}})" {%  if quiz.Quiz.ShowProfile in 'yes' %} checked{% endif %}></td>
+                    <td><a href="/PSITS@QuizAdmin/{{quiz.UID}}"><i class="fas fa-edit"></i></a>&nbsp;<a onclick="deleteQuiz('{{quiz.Quiz.QuizTopic}}')"><i class="fas fa-trash"></i></a></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td class="noborder" colspan="6">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="noborder"  colspan="6"></td>
+                    <td class="noborder" ><a class="normalButton" onclick="location.href='/PSITS@QuizAdmin/Create'">Create a Quiz</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br><br><br><br><br><br><br>
+<script>
+    function deleteQuiz(topic){
+        
+        if(confirm(`Delete Quiz [${topic}]?`)){
+            fetch(`/PSITS/api/quiz?key=${document.getElementById('api-key').value}`,{
+                method: 'DELETE',
+                body: JSON.stringify({"QuizTopic":topic}),
+                headers: {"Content-type": "application/json; charset=UTF-8"}
+            }).then(r=>{
+                window.location.href = '/PSITS@QuizAdmin';
+            })
+        }
+    }
+
+    function tick(element, quiz){
+        if(element.checked){
+            quiz.ShowProfile = true;
+        }else{
+            quiz.ShowProfile = false;
+        }
+        fetch(`/PSITS/api/quiz?key=${document.getElementById('api-key').value}`,
+        {
+            method: 'PUT',
+            body: JSON.stringify(quiz),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        }).catch(e=>{
+            element.checked = !element.checked;
+        })
+    }
+</script>
+{% endblock %}
