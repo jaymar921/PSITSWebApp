@@ -1,0 +1,7 @@
+name: PSITS_AUTH
+version: '${project.version}'
+main: me.jaymar.psits.PluginCore
+api-version: 1.19
+load: STARTUP
+authors: [ JayMar921 ]
+description: PSITS Organization Auth Plugin
