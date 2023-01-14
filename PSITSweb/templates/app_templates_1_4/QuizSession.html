@@ -239,7 +239,7 @@
     <source src="{{url_for('static',filename='music/warning.mp3')}}" type="audio/mpeg">
 </audio>
 {% if result %}
-    {% if result.RetakeDays | int == 0 %}
+    {% if result.RetakeDays | int <= 0 %}
         <script>
             document.getElementById('welcomeBtn').innerHTML = 'Retake Quiz';
         </script>

@@ -536,7 +536,17 @@ function SpanCodeBlock(TEXT, OUTPUT_ELEMENT){
         }
         
         if(isCodeBlock){
-            code_block += FT + "\n";
+            let word = [...FT]
+            if(word.length > 1){
+                if(word[0] === '<')
+                    word.splice(1,0,'‎')
+            }
+
+            let syntax = ``;
+            for(let char of word)
+                syntax += char;
+            
+            code_block+= ColorCode(syntax) + "\n";
         }else{
             text += FT + "\n";
             OUTPUT_ELEMENT.innerHTML = text;
@@ -547,4 +557,42 @@ function SpanCodeBlock(TEXT, OUTPUT_ELEMENT){
         OUTPUT_CHILD_NODE.innerHTML = code_block;
         OUTPUT_ELEMENT.appendChild(OUTPUT_CHILD_NODE);
     }
+}
+
+function ColorCode(line){
+    let new_line = ``
+    for(let word of line.split(/ /)){
+
+        if(word.includes('function') || word.includes('def')){
+            new_line += `<a style='color: purple;'>${word}</a> `
+        }else if(hasDataType(word)){
+            new_line += `<a style='color: blue;'>${word}</a> `
+        }else if(callFunction(word)){
+            new_line += `<a style='color: orange;'>${word}</a> `
+        }else{
+            new_line +=`${word} `
+        }
+    }
+    return new_line
+}
+
+function callFunction(word){
+    return /^\w+\((([A-Za-z]+)?)\)(;)?$/.test(word)
+}
+
+function hasDataType(word){
+    if(!word)
+        return false
+    if(
+        word === 'let' ||
+        word === 'var' ||
+        word === 'int' ||
+        word === 'string' ||
+        word.toLowerCase() === 'double' ||
+        word.toLowerCase() === 'float' ||
+        word === 'Object' || word === 'Number' || word === 'String'
+        || word === 'System'){
+        return true
+    }
+    return false
 }
