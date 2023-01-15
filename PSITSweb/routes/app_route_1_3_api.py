@@ -190,25 +190,168 @@ def api_transactions_get(search):
         
         if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
             ORDERS.append(account_order)
-            if account_order.status == ORDER_STATUS.ORDERED.value:
-                ORDERS_TALLY += (account_order.discounted_price *
-                                account_order.quantity)
-            elif account_order.status != ORDER_STATUS.ORDERED.value and account_order.status != ORDER_STATUS.CANCELLED.value:
-                PAID_TALLY += (account_order.discounted_price *
-                            account_order.quantity)
-            if account_order.status != ORDER_STATUS.CANCELLED.value:
-                TOTAL_TALLY += (account_order.discounted_price *
-                                account_order.quantity)
 
     ORDERS_JSON: list = []
     for ORDER_DATA in ORDERS:
         ORDERS_JSON.append(ORDER_DATA.toJSON())
 
     response_data: dict = {
+        'ORDERS': ORDERS_JSON,
+        'search': search,
+        'status': 200
+    }
+    databaseLog(
+        f'API[GET] - Remote {request.remote_addr} - Permitted to access Transactions ["{search}"]')
+    response = app.response_class(
+        response=json.dumps(response_data, indent=4,
+                            sort_keys=False, default=str),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route("/PSITS/api/transactions_tally/<search>", methods=['GET'])
+def api_transactions_get_tally(search):
+
+    request_key = request.args.get('key')
+
+    if not request_key:
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to access Transactions ["{search}"] with no key')
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to access Transactions ["{search}"] with invalid key')
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+
+    if search is None:
+        search = 'all'
+    if search == 'ALL':
+        search = search.lower()
+    
+    ORDERS: list = []
+    ORDERS_TALLY: float = 0
+    TOTAL_TALLY: float = 0
+    PAID_TALLY: float = 0
+    #counter: int = 0
+
+    # Prepare the searching
+    product_to_search = ''
+    status_to_search = ''
+    student_to_search = ''
+    size_to_search = ''
+    merch_orders: dict = {}
+    monthly_sales: dict = {}
+
+    monthly_orders: dict = {}
+    merch_orders_reserve: dict = {}
+
+    if search.lower().startswith('merch:'):
+        item_to_search_in_merch = search.split(":")
+
+        if len(item_to_search_in_merch) > 1: # Product
+            product_to_search = item_to_search_in_merch[1].lower()
+            if len(item_to_search_in_merch)>2: # STATUS
+                status_to_search = item_to_search_in_merch[2].lower()
+    if search.lower().startswith('student:'):
+        item_to_search_in_student = search.split(":")
+        if len(item_to_search_in_student) > 1: # ID/LNAME/FNAME
+            student_to_search = item_to_search_in_student[1].lower()
+    if search.lower().startswith('all:'):
+        item_to_search_in_merch = search.split(":")
+        if len(item_to_search_in_merch) > 1: # STATUS
+            status_to_search = item_to_search_in_merch[1].lower()
+    if 'size:' in search.lower():
+        item_to_search_in_all = search.lower().split("size:")
+        if len(item_to_search_in_all) > 1: # SIZE
+            size_to_search = item_to_search_in_all[1].lower().strip()
+    
+    global LIGHTWEIGHT_ACCOUNT_ORDERS
+    for a in LIGHTWEIGHT_ACCOUNT_ORDERS:
+        account_order: AccountOrdersLW = a
+
+        # Do the search
+        if product_to_search != '':
+            if product_to_search.strip() not in account_order.product.lower():
+                continue
+        if status_to_search != '':
+            if '!' in status_to_search.strip():
+                stat: str = status_to_search.replace('!','').strip()
+                if stat in account_order.status.lower():
+                    continue
+            elif status_to_search.strip() not in account_order.status.lower():
+                continue
+        if student_to_search != '':
+            found_name: bool = False
+            if student_to_search.strip() in account_order.fullname.lower():
+                found_name = True
+            if not found_name:
+                continue
+        reference_found: bool = False
+        if search in account_order.ref_code:
+            reference_found = True 
+        if size_to_search != '':
+            if str(size_to_search) not in str(account_order.size).lower():
+                continue
+        date_fragment = str(account_order.order_date).split('-')
+        key_format = date_fragment[0]+" "+date_fragment[1]
+        product_key: str = account_order.product
+        if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
+            if account_order.status == ORDER_STATUS.ORDERED.value:
+                ORDERS_TALLY += (account_order.discounted_price *
+                                account_order.quantity)
+                # get the sales
+                if key_format in monthly_orders:
+                    amount = monthly_orders[key_format] + account_order.discounted_price * account_order.quantity
+                    monthly_orders[key_format] = amount
+                else:
+                    monthly_orders[key_format] = account_order.discounted_price * account_order.quantity
+
+                # get the orders
+                
+                if product_key in merch_orders_reserve:
+                    amount = merch_orders_reserve[product_key] + account_order.quantity
+                    merch_orders_reserve[product_key] = amount
+                else:
+                    merch_orders_reserve[product_key] = account_order.quantity
+                
+            elif account_order.status != ORDER_STATUS.ORDERED.value and account_order.status != ORDER_STATUS.CANCELLED.value:
+                PAID_TALLY += (account_order.discounted_price *
+                            account_order.quantity)
+                # get the sales
+                if key_format in monthly_sales:
+                    amount = monthly_sales[key_format] + account_order.discounted_price * account_order.quantity
+                    monthly_sales[key_format] = amount
+                else:
+                    monthly_sales[key_format] = account_order.discounted_price * account_order.quantity
+
+                # get the orders
+                
+                if product_key in merch_orders:
+                    amount = merch_orders[product_key] + account_order.quantity
+                    merch_orders[product_key] = amount
+                else:
+                    merch_orders[product_key] = account_order.quantity
+                
+            if account_order.status != ORDER_STATUS.CANCELLED.value:
+                TOTAL_TALLY += (account_order.discounted_price *
+                                account_order.quantity)
+
+    response_data: dict = {
         'reserve': ORDERS_TALLY,
         'total': TOTAL_TALLY,
         'paid': PAID_TALLY,
-        'ORDERS': ORDERS_JSON,
+        'merch_orders': merch_orders,
+        'monthly_sales': monthly_sales,
+        'monthly_orders': monthly_orders,
+        'merch_orders_reserve': merch_orders_reserve,
         'search': search,
         'status': 200
     }

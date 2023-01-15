@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body{
+        background-color: rgb(199, 199, 199);
+    }
+    .window{
+        width: 100%;
+        min-height: 50vh;
+        padding-top: 50px;
+    }
+
+    .health_container{
+        position: relative;
+        width: 500px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .health_card{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        width: 500px;
+        display: flex;
+        background-color: rgba(87, 121, 15, 0.5);
+        color: white;
+        padding: 10px;
+        box-shadow: 3px 3px 4px 4px darkgreen;
+    }
+
+    .health_card .title{
+        width: 350px;
+        font-size: 8px;
+        padding: 10px;
+    }
+
+    .status{
+        position: relative;
+        background-color: green;
+        right: 0;
+        text-align: center;
+        width: 150px;
+    }
+
+    .status p{
+        padding: 10px;
+    }
+
+    @media (max-width:500px){
+        .health_container{
+            width: 300px;
+        }
+
+        .health_card{
+            width: 300px;
+        }
+
+        .health_card .title{
+            width: 200px;
+            font-size: 7px;
+        }
+
+        .status{
+            width: 100px;
+        }
+
+    }
+
+    /* KEYFRAMES */
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: .25;
+    transform: scale(.75);
+  }
+}
+
+/* PULSE BUBBLES */
+
+.pulse-container {
+  position: relative;
+  width: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pulse-bubble {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #3ff9dc;
+}
+
+.pulse-bubble-1 {
+    animation: pulse .4s ease 0s infinite alternate;
+}
+.pulse-bubble-2 {
+    animation: pulse .4s ease .2s infinite alternate;
+}
+.pulse-bubble-3 {
+    animation: pulse .4s ease .4s infinite alternate;
+}
+
+
+</style>
+<script defer src="{{ url_for('static', filename='health.js')}}"></script>
+
+<div class="window">
+    &nbsp;&nbsp;&nbsp;&nbsp;<a style="position: relative;" class="normalButton" href="/PSITS/Administration">BACK</a>
+    <br><br><br><br>
+    <div class="health_container">
+        <!-- LOADING DOTS... -->
+        <h1 style="text-align: center;color: #074873;">Server Health</h1>
+        <br>
+        <div class="health_card">
+            <div class="title">
+                <h1>DB Accounts (Retrieve all)</h1>
+            </div>
+            <div id="account" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>DB Announcements (Retrieve all)</h1>
+            </div>
+            <div id="announcement" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>DB Merchandise (Retrieve all)</h1>
+            </div>
+            <div id="merchandise" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>DB Order (Retrieve all)</h1>
+            </div>
+            <div id="order" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>Orders Route API (Retrieve all)</h1>
+            </div>
+            <div id="order_route" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>Accounts API (Retrieve all)</h1>
+            </div>
+            <div id="account_api" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="health_card">
+            <div class="title">
+                <h1>Account Update API [Single Account]</h1>
+            </div>
+            <div id="account_update_api" class="status">
+                <div class="spinner-box">
+                    <div class="pulse-container">  
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <p>Server Health, shows the response time of server API and Routes, the higher the milliseconds value, the slower the system response.</p>
+        <br><br>
+    </div>
+    
+</div>
+{% endblock %}

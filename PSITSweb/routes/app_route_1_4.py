@@ -266,3 +266,25 @@ def psits_admin_exam_topics():
         QUIZ_DATA=QUIZ_DATA,
         account_data=getAccountByID(session['username'])
     )
+
+
+@app.route('/PSITS@Health')
+def psits_server_health():
+    save_redirection('psits_server_health')
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+    if not isAdmin(session['username']):
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+
+
+    return render_template(
+        "app_templates_1_4/ServerHealth.html",
+        title="SERVER HEALTH",
+        login="none",
+        logout="block",
+        account=session['username'],
+        admin="block",
+        account_data=getAccountByID(session['username'])
+    )

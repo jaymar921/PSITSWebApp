@@ -1,15 +1,33 @@
 'use strict';
 
-function loadAnalytic(){
+async function loadData(){
+    // searching transactions, must have a key for authentication
+    let key = document.getElementById('key').value;
+    const response = await fetch(`/PSITS/api/transactions_tally/all?key=${key}`,{
+        headers: {
+            Authorization: key,
+        },
+    })
+    let data = await response.json()
+    return data
+}
+
+async function loadAccounts(){
+    let key = document.getElementById('key').value;
+    const response = await fetch(`/PSITS/api/students_tally?key=${key}`,{
+        headers: {
+            Authorization: key,
+        },
+    })
+    let data = await response.json()
+    return data
+}
+
+async function loadAnalytic(){
     // created by Jayharron, feel free to modify this file in the future
     // getting the dataset value and attributes
-    let dataset_revenue = document.getElementById('dataset_revenue').value;
-    let dataset_sales = document.getElementById('dataset_sales').value;
-    let dataset_monthly_orders = document.getElementById('dataset_montly_orders').value;
-    let dataset_dept_orders = document.getElementById('dataset_dept_orders').value;
-    
-    let dataset_courses = document.getElementById('dataset_courses').value;
-    let dataset_levels = document.getElementById('dataset_levels').value;
+    const {monthly_sales: dataset_revenue,merch_orders:dataset_sales,monthly_orders: dataset_monthly_orders, merch_orders_reserve: dataset_dept_orders} = await loadData()
+    const {account_per_level, account_per_course} = await loadAccounts();
     let monthlyChartHTML = document.getElementById('monthlySales').getContext('2d');
     let deptChartHTML = document.getElementById('deptSales').getContext('2d');
     let courseChartHTML = document.getElementById('courses').getContext('2d');
@@ -23,12 +41,12 @@ function loadAnalytic(){
     let yrlyOrder = 0;
 
     // converting the dataset value to object
-    let dataset_revenue_object = JSON.parse(dataset_revenue);
-    let dataset_sales_object = JSON.parse(dataset_sales);
-    let dataset_courses_object = JSON.parse(dataset_courses);
-    let dataset_levels_object = JSON.parse(dataset_levels);
-    let dataset_monthly_orders_object = JSON.parse(dataset_monthly_orders);
-    let dataset_dept_orders_object = JSON.parse(dataset_dept_orders)
+    let dataset_revenue_object = dataset_revenue;
+    let dataset_sales_object = dataset_sales;
+    let dataset_courses_object = account_per_course;
+    let dataset_levels_object = account_per_level;
+    let dataset_monthly_orders_object = dataset_monthly_orders;
+    let dataset_dept_orders_object = dataset_dept_orders;
 
     // creating the array of monthly sales and label data 
     let monthlySales = new Array();
@@ -326,9 +344,6 @@ function loadAnalytic(){
     
         }
     })
-    // clear the values
-    document.getElementById('dataset_revenue').value = '';
-    document.getElementById('dataset_sales').value = '';
 }
 
 loadAnalytic();

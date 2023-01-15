@@ -8,11 +8,11 @@ import pandas as pd
 import datetime
 
 
-from Database import updateAnnouncement, SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
-    ,getAllAccounts, getAccountWithPassword, GetAllPromo, getAnnouncement
+from Database import updateAnnouncement, SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, GETAllMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
+    ,getAllAccounts, getAccountWithPassword, GetAllPromo, getAnnouncement, getAnnouncements, API_TARGET
 # from EmailAPI import pushEmail
 from Models import Quiz, Questionaires, Announcement
-from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, contentVerifier,directoryExist, createDir
+from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, contentVerifier,directoryExist, createDir, admins
 from webApp_utility import save_redirection, is_blocked_route, checkImageExist, renameFile, saveToFile, loadJSONFromFile, getListOfFiles, deleteFile
 
 
@@ -72,6 +72,57 @@ Updated by: {user} ({datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")})
     
     response = app.response_class(
         response=json.dumps({"status":204}, indent=4,
+                            sort_keys=False, default=str),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route('/PSITS/api/students_tally', methods=['GET'])
+def api_get_students_tally():
+    request_key = request.args.get('key')
+
+    if not request_key:
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to update students_tally with no key')
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to update students_tally with invalid key')
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+
+    try:
+        
+        accounts: list = getAllAccounts('all')
+        levels: dict = {}
+        courses: dict = {}
+        for account in accounts:
+            level = account.year
+            course = account.course
+            if level in levels:
+                levels[level] = levels[level] + 1
+            else:
+                levels[level] = 1
+            if course in courses:
+                courses[course] = courses[course] + 1
+            else:
+                courses[course] = 1
+    except Exception as e:
+        print(e)
+        return {
+            "status": 500,
+            "message": f"The server does not understand the request content provided"
+        }
+    
+    response = app.response_class(
+        response=json.dumps({"status":204, "account_per_level":levels,"account_per_course":courses, "registered_accounts":len(accounts)}, indent=4,
                             sort_keys=False, default=str),
         status=200,
         mimetype='application/json'
@@ -285,4 +336,84 @@ def psits_api_quiz_get():
         return {
             "status": 500,
             "message": f"The server does not understand the request content provided"
+        }
+
+
+@app.route('/PSITS/api/health', methods=['GET'])
+def psits_api_health():
+    try:
+        option = str(request.args.get('option'))
+        dt_temp = datetime.datetime.now()   
+
+        if option == 'accounts':
+            getAllAccounts('all')
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'account_retrieve_test',
+                "result":test_ms
+            }
+        elif option == 'announcements':
+            getAnnouncements()
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'announcement_retrieve_test',
+                "result":test_ms
+            }
+        elif option == 'merchandise':
+            GETAllMerchandise()
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'merchandise_retrieve_test',
+                "result":test_ms
+            }
+        elif option == 'orders':
+            GETAllMerchOrder()
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'orders_retrieve_test',
+                "result":test_ms
+            }
+        elif option == 'order_route':
+            API_TARGET('http://127.0.0.1:5000/PSITS/api/transactions/all')
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'order_route',
+                "result":test_ms
+            }
+        elif option == 'account_api':
+            API_TARGET('http://127.0.0.1:5000/PSITS/api/students_tally')
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'order_route',
+                "result":test_ms
+            }
+        elif option == 'account_update_api':
+            getAccountByID(19889781)
+            test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
+
+            return {
+                "status":200,
+                "option":'order_route',
+                "result":test_ms
+            }
+    except Exception as e:
+        return {
+            "status":500,
+            "result":e
+        }
+    return {
+            "status":200,
+            'message': 'Please provide an option to retrieve'
         }

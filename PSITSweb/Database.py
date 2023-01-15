@@ -1046,10 +1046,11 @@ def API_TARGET(uri):
     except requests.ConnectionError:
        return "Connection Error"  
     Jresponse = uResponse.text
-    data = json.loads(Jresponse)
-
-
-    return data
+    try: 
+        data = json.loads(Jresponse)
+        return data
+    except:
+        return "Error"
 
 # import threading
 # import time

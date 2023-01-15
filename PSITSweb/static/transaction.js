@@ -8,6 +8,33 @@ function setAPI_LINK(link){
     api_link = link;
 }
 
+async function generateTally(searchData, key){
+
+    let data;
+    try{
+        document.getElementById('display_reserve').innerHTML = '...';
+        document.getElementById('display_paid').innerHTML = '...';
+        document.getElementById('display_total').innerHTML = '...';
+        // searching transactions, must have a key for authentication
+        const response = await fetch(`${api_link}/PSITS/api/transactions_tally/${new String(searchData)}?key=${key}`,{
+            headers: {
+                Authorization: key,
+            },
+        })
+        data = await response.json()
+
+        // display the necessary data
+        document.getElementById('display_reserve').innerHTML = formatToCurrency(Number.parseFloat(data.reserve));
+        document.getElementById('display_paid').innerHTML = `₱${formatToCurrency(Number.parseFloat(data.paid))}`;
+        document.getElementById('display_total').innerHTML = `₱${formatToCurrency(Number.parseFloat(data.total))}`;
+    }catch(e){
+        info_box.style.display = "none";
+        return;
+    }
+
+    
+}
+
 async function search_transaction(searchData, key){
     clearMap();
     let info_box = document.getElementById('info_box');
@@ -18,6 +45,7 @@ async function search_transaction(searchData, key){
 
     info_box.style.display = "block";
     
+    generateTally(searchData, key);
     let data;
     try{
         // searching transactions, must have a key for authentication
@@ -47,10 +75,6 @@ async function search_transaction(searchData, key){
         return;
     }else{
 
-        // display the necessary data
-        document.getElementById('display_reserve').innerHTML = formatToCurrency(Number.parseFloat(data.reserve));
-        document.getElementById('display_paid').innerHTML = `₱${formatToCurrency(Number.parseFloat(data.paid))}`;
-        document.getElementById('display_total').innerHTML = `₱${formatToCurrency(Number.parseFloat(data.total))}`;
         document.getElementById('search_student').value = searchData;
         
         if(data.ORDERS.length > 0){
