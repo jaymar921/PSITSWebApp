@@ -13,8 +13,7 @@
     }
 </style>
 <body>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="{{url_for('static', filename='qrcode.min.js')}}"></script>
     <script src="{{url_for('static', filename='html5-qrcode.js')}}"></script>
     <div class="reciept" style="width: 180px;">
         <hr>
