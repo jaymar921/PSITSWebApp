@@ -417,3 +417,48 @@ def psits_api_health():
             "status":200,
             'message': 'Please provide an option to retrieve'
         }
+
+@app.route('/PSITS/api/survey', methods=['POST'])
+def psits_api_survey_post():
+    try:
+       
+        SURVEY = request.get_json()['Survey']
+        directory = app.config['UPLOAD_FOLDER']+f"\\Survey\\"
+        if not directoryExist(directory):
+            createDir(directory)
+        saveToFile(app.config['UPLOAD_FOLDER']+f"Survey\\Survey_{SURVEY['surveyTitle']}.json",json.dumps(SURVEY, indent=4, sort_keys=False, default=str))
+
+        return {
+            "status": 200,
+            "message": "Saved"
+        }
+    except Exception as e:
+        print(e)
+        print('error')
+        return {
+            "status": 500,
+            "message": f"The server does not understand the request content provided"
+        }
+
+@app.route('/PSITS/api/survey_response', methods=['POST'])
+def psits_api_survey_response_post():
+    try:
+       
+        SURVEY = request.get_json()['Survey']
+        print(SURVEY)
+        directory = app.config['UPLOAD_FOLDER']+f"\\Survey\\Responses"
+        if not directoryExist(directory):
+            createDir(directory)
+        saveToFile(app.config['UPLOAD_FOLDER']+f"Survey\\Responses\\{SURVEY['SurveyTitle']}_{SURVEY['User']}.json",json.dumps(SURVEY, indent=4, sort_keys=False, default=str))
+
+        return {
+            "status": 200,
+            "message": "Saved"
+        }
+    except Exception as e:
+        print(e)
+        print('error')
+        return {
+            "status": 500,
+            "message": f"The server does not understand the request content provided"
+        }

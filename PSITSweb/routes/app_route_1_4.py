@@ -4,6 +4,7 @@ from Database import getAccountByID
 from Models import Account
 from Util import isAdmin, hashData, directoryExist, createDir
 from webApp_utility import save_redirection, checkImageExist, is_blocked_route, getListOfFiles, loadJSONFromFile, getFileDaysFromModified
+import random
 
 
 @app.route('/PSITS/Administration')
@@ -287,4 +288,159 @@ def psits_server_health():
         account=session['username'],
         admin="block",
         account_data=getAccountByID(session['username'])
+    )
+
+@app.route("/PSITS/CreateSurvey")
+def psits_create_survey():
+    save_redirection('psits_create_survey')
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+    if not isAdmin(session['username']):
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+
+
+    return render_template(
+        "app_templates_1_4/CreateSurvey.html",
+        title="Create Survey",
+        login="none",
+        logout="block",
+        account=session['username'],
+        admin="block",
+        account_data=getAccountByID(session['username'])
+    )
+
+@app.route("/PSITS@Survey")
+def psits_survey():
+    save_redirection('psits_survey')
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+    if not isAdmin(session['username']):
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+
+    SURVEY_DATA: list = []
+    for survey_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\'):
+        if '.json' not in survey_data_file:
+            continue
+        survey_json_data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\{survey_data_file}")
+        survey_json_data['id'] = hashData(survey_data_file)
+        respondents = 0
+        for response_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\Responses'):
+            if '.json' not in response_data_file:
+                continue
+            if survey_json_data['surveyTitle'] in response_data_file:
+                respondents = respondents + 1
+        survey_json_data['respondents'] = respondents
+        SURVEY_DATA.append(survey_json_data)
+
+    return render_template(
+        "app_templates_1_4/SurveyAdmin.html",
+        title="Create Survey",
+        login="none",
+        logout="block",
+        account=session['username'],
+        admin="block",
+        account_data=getAccountByID(session['username']),
+        SURVEY_DATA=SURVEY_DATA
+    )
+
+@app.route("/PSITS/Survey/<uid>")
+def psits_survey_session(uid):
+    save_redirection('psits_survey_session', uid)
+    
+    anonymous=False
+    survey_title = ''
+    SURVEY_DATA = ''
+    for survey_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\'):
+        if '.json' not in survey_data_file:
+            continue
+        survey_json_data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\{survey_data_file}")
+        survey_json_data['id'] = hashData(survey_data_file)
+        anonymous = bool(survey_json_data['allowAnonymous'])
+        
+        if survey_json_data['id'] == uid:
+            survey_title = survey_json_data['surveyTitle']
+            SURVEY_DATA = json.dumps(survey_json_data, indent=4, sort_keys=False, default=str)
+
+            for response_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\Responses'):
+                if '.json' not in response_data_file:
+                    continue
+
+    if SURVEY_DATA == '':
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="The survey link may not be available or have been deleted")
+
+    if 'username' not in session and not anonymous:
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="You must login first before you can access this survey")
+
+    if anonymous:
+        return render_template(
+            "app_templates_1_4/SurveySession.html",
+            title=survey_title,
+            login="block",
+            logout="none",
+            account=f'Anonymous_{hashData(str(random.random()))}',
+            admin="none",
+            SURVEY_DATA=SURVEY_DATA
+        )
+    else:
+        return render_template(
+            "app_templates_1_4/SurveySession.html",
+            title=survey_title,
+            login="none",
+            logout="block",
+            account=session['username'],
+            admin="none",
+            account_data=getAccountByID(session['username']),
+            SURVEY_DATA=SURVEY_DATA
+        )
+
+@app.route("/PSITS/Survey/Respondents/<uid>")
+def psits_survey_respondents(uid):
+    save_redirection('psits_survey_respondents', uid)
+
+    if 'username' not in session:
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+    if not isAdmin(session['username']):
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="Sorry but this page is only for authorized personnel")
+    
+    survey_title = ''
+    SURVEY_DATA = ''
+    RESPONDENTS: list = []
+    for survey_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\'):
+        if '.json' not in survey_data_file:
+            continue
+        survey_json_data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\{survey_data_file}")
+        survey_json_data['id'] = hashData(survey_data_file)
+        
+        if survey_json_data['id'] == uid:
+            SURVEY_DATA = survey_json_data
+            survey_title = survey_json_data['surveyTitle'] + " Respondents"
+
+            for response_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\Responses\\'):
+                if '.json' not in response_data_file:
+                    continue
+                if survey_json_data['surveyTitle'] in response_data_file:
+                    data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\Responses\\{response_data_file}")
+                    RESPONDENTS.append(data)
+    
+    if SURVEY_DATA == '':
+        return render_template("404Page.html", logout="none", login="none",
+                                   message="The survey link may not be available or have been deleted")
+    return render_template(
+        "app_templates_1_4/SurveyRespondents.html",
+        title=survey_title,
+        login="none",
+        logout="block",
+        account=session['username'],
+        admin="none",
+        account_data=getAccountByID(session['username']),
+        SURVEY_DATA=SURVEY_DATA,
+        RESPONDENTS=RESPONDENTS
     )

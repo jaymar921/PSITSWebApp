@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='survey.css')}}">
+<div class="survey_container">
+    <div>
+        <h1>Create a survey</h1>
+    </div>
+    <div class="survey_inputs">
+        <label title="Allow anonymous doesn't require users to login"><input id="allowAnonymous" type="checkbox"> Allow Anonymous</label>
+    </div>
+    <div class="survey_inputs"> 
+        <label>Survey title: <input id="surveyTitle" type="text" placeholder="Survey Title..."></label>
+    </div>
+    <div class="survey_inputs"> 
+        <label><textarea id="surveyDescription" type="text" placeholder="Survey Description..."></textarea></label>
+    </div>
+    <div id="survey_content">
+    </div>
+    
+    <div class="survey_inputs">
+        <button onclick="addQuestion()">Add Question</button>
+    </div>
+    <div class="survey_inputs">
+        <button onclick="saveQuestion()">Save Survey</button>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='survey.js')}}" async defer></script>
+{% endblock %}

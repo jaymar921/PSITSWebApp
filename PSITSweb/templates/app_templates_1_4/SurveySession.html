@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .wrapper{
+        width: 100%;
+        height: 100vh;
+    }
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='survey.css')}}">
+<div class="wrapper">
+    <div class="survey_container">
+        <input value="{{SURVEY_DATA}}" type="text" hidden id="data" />
+        <input value="{{account}}" type="text" hidden id="user">
+        <div class="survey_session" id="survey_session">
+            <h1 id="title"></h1>
+            <p  id="question"></p>
+            <select id="answer-selection" hidden></select>
+            <textarea id="answer" placeholder="Type your answer here..." hidden></textarea>
+            <div>
+                <br>
+                <button class="normalButton" id="session-button" onclick="nextQuestion()" hidden>Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='survey.js')}}"></script>
+<script>
+    loadSurvey(document.getElementById('data').value);
+    document.getElementById('data').value = '-';
+</script>
+
+{% endblock %}

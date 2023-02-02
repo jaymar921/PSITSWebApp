@@ -1,0 +1,88 @@
+body{
+    background-color: rgb(229, 248, 241);
+}
+
+.survey_container{
+    width: 100%;
+    height: fit-content;
+}
+
+.survey_container div{
+    width: 100%;
+}
+
+.survey_container div h1{
+    text-align: center;
+}
+
+.survey_container .survey_inputs, .survey_content .survey_inputs{
+    position: relative;
+    min-width: 50px;
+    width: fit-content;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+}
+
+.survey_container .survey_inputs textarea{
+    width: 300px;
+    height: 100px;
+    margin: 1px;
+    resize: none;
+}
+
+.survey_container .survey_content{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.05);
+    border: 2px dashed grey;
+}
+
+.survey_container .survey_session{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-width: 350px;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    transition: all 500ms ease-in;
+}
+
+.survey_container .survey_session h1, p, textarea{
+    position: relative;
+    text-align: left;
+    min-width: 350px;
+    width: 80%;
+    font-weight: 800;
+    white-space: pre-line;
+}
+
+.survey_container .survey_session textarea{
+    border: 0px;
+    resize: none;
+    color: rgba(0,0,0,0.5);
+    font-weight: 800;
+    outline: none;
+    height: 50px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.survey_container .survey_session select{
+    border: 0px;
+    resize: none;
+    color: rgba(0,0,0,0.6);
+    font-weight: 800;
+    outline: none;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.hide{
+    opacity: 0;
+}
