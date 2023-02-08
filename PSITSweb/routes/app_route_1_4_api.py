@@ -498,3 +498,20 @@ def psits_api_survey_response_post():
             "status": 500,
             "message": f"The server does not understand the request content provided"
         }
+
+# Testing purpose
+@app.route('/PSITS/api/dummy', methods=['POST','GET','DELETE','PUT'])
+def psits_dummy_api():
+    try:
+        DUMMY = request.get_json()['Dummy']
+    except:
+        return {
+            "status": 200,
+            "message": f"Executed [{request.method}]",
+            "ObjectReceived":"NONE"
+        }
+    return {
+            "status": 200,
+            "message": f"Executed [{request.method}]",
+            "ObjectReceived":DUMMY
+        }
