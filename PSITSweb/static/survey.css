@@ -3,13 +3,14 @@ body{
 }
 
 .survey_container{
-    width: 100%;
+    position: relative;
     height: fit-content;
+    min-height: 400px;
     transition: all 500ms ease-in;
 }
 
 .survey_container div{
-    width: 100%;
+    width: 30%;
 }
 
 .survey_container div h1{
@@ -36,29 +37,31 @@ body{
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    width: 300px;
+    width: 290px;
     padding: 10px;
     background-color: rgba(0,0,0,0.05);
     border: 2px dashed grey;
 }
 
 .survey_container .survey_session{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    min-width: 350px;
-    width: 80%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    min-width: 300px;
+    height: fit-content;
+    width: 100%;
     transition: all 500ms ease-in;
 }
 
 .survey_container .survey_session h1, p, textarea{
     position: relative;
     text-align: left;
-    min-width: 350px;
+    min-width: 300px;
     width: 80%;
-    font-weight: 800;
+    font-weight: 600;
     white-space: pre-line;
+}
+
+.survey_container .survey_session p, textarea{
+    font-size: 100%;
 }
 
 .survey_container .survey_session textarea{
@@ -96,4 +99,10 @@ body{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+@media (max-width: 500px){
+    .survey_container .survey_session p, textarea{
+        font-size: 80%;
+    }
 }

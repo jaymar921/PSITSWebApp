@@ -1120,7 +1120,6 @@ body {
     padding: 15px 50px;
     text-align: center;
     width: 100%;
-
 }
 
 .form_modal form {
@@ -2067,6 +2066,10 @@ word-wrap: break-word;
     }
     .banner nav .logo .headerShort {
         display:block;
+    }
+
+    .welcome h1{
+        font-size:35px;
     }
 
     .announcement_thread .adminActions .announcement_field button{

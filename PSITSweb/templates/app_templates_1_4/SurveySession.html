@@ -3,8 +3,10 @@
 <style>
     .wrapper{
         width: 100%;
-        min-height: 60vh;
+        height: fit-content;
+        min-height: 200px;
         transition: all 500ms ease-in;
+        padding: 20px;
     }
 </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='survey.css')}}">
@@ -22,11 +24,9 @@
             <div>
                 <br>
                 <button class="normalButton" id="session-button" onclick="nextQuestion()" hidden>Proceed</button>
+                <br><br>
             </div>
         </div>
-    </div>
-    <div class="non-select" style="position: absolute; bottom: 5%; right: 5%; color: rgb(201, 214, 255); font-size: 12px;">
-        <p>Created by: Jayharron Mar Abejar</p>
     </div>
 </div>
 <script src="{{ url_for('static', filename='survey.js')}}"></script>
