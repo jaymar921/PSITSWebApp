@@ -338,12 +338,13 @@ def psits_survey():
 
     return render_template(
         "app_templates_1_4/SurveyAdmin.html",
-        title="Create Survey",
+        title="Survey Admin",
         login="none",
         logout="block",
         account=session['username'],
         admin="block",
         account_data=getAccountByID(session['username']),
+        access_key = str("API_SECRET-"+hashData(str((int(session['username'])*250)))).strip(),
         SURVEY_DATA=SURVEY_DATA
     )
 
@@ -428,6 +429,12 @@ def psits_survey_respondents(uid):
                     continue
                 if survey_json_data['surveyTitle'] in response_data_file:
                     data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\Responses\\{response_data_file}")
+                    try:
+                        account = getAccountByID(int(data['User']))
+                        data['imgSrc'] = account.img
+                        data['User'] = account.firstname + " " + account.lastname
+                    except:
+                        None
                     RESPONDENTS.append(data)
     
     if SURVEY_DATA == '':
@@ -443,4 +450,15 @@ def psits_survey_respondents(uid):
         account_data=getAccountByID(session['username']),
         SURVEY_DATA=SURVEY_DATA,
         RESPONDENTS=RESPONDENTS
+    )
+
+@app.route("/PSITS/api")
+def psits_api_documentation():
+    
+    return render_template(
+        "app_templates_1_4/APIdoc.html",
+        title='API Documentation',
+        login="none",
+        logout="none",
+        admin='none'
     )

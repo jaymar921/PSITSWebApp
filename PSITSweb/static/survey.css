@@ -1,10 +1,11 @@
 body{
-    background-color: rgb(229, 248, 241);
+    background-color: rgb(185, 202, 255);
 }
 
 .survey_container{
     width: 100%;
     height: fit-content;
+    transition: all 500ms ease-in;
 }
 
 .survey_container div{
@@ -61,6 +62,7 @@ body{
 }
 
 .survey_container .survey_session textarea{
+    background-color: rgb(208, 219, 255);
     border: 0px;
     resize: none;
     color: rgba(0,0,0,0.5);
@@ -73,6 +75,7 @@ body{
 }
 
 .survey_container .survey_session select{
+    background-color: rgb(208, 219, 255);
     border: 0px;
     resize: none;
     color: rgba(0,0,0,0.6);
@@ -83,6 +86,14 @@ body{
     padding: 10px;
 }
 
-.hide{
+.hidden{
     opacity: 0;
+}
+
+.non-select{
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

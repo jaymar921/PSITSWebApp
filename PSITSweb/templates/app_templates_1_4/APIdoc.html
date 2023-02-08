@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .wrapper{
+        width: 100%;
+        min-height: 60vh;
+        transition: all 500ms ease-in;
+    }
+    .center{
+        text-align: center;
+    }
+</style>
+<div class="wrapper">
+    <br>
+    <div style="width: 100%;">
+        <img style="position: relative; left: 50%; transform: translateX(-50%);" width="50%" src="{{ url_for('static', filename='images/api-icon.png')}}">
+    </div>
+    <br><br><br>
+    <h1 class="center">API Documentation</h1>
+    <br>
+    <p class="center">[On build]</p>
+    <br><br><br>
+</div>
+<script>
+
+</script>
+
+{% endblock %}

@@ -108,7 +108,7 @@ async function nextQuestion(){
         return;
     }
     if(question_id != 0 && question_id != lastQuestion+1){
-        document.getElementById('survey_session').classList.add('hide');
+        document.getElementById('survey_session').classList.add('hidden');
         SaveResult();
     }
     if(question_id == lastQuestion){
@@ -123,7 +123,7 @@ async function nextQuestion(){
             headers: {"Content-type": "application/json; charset=UTF-8"}
         }).then(r => {
             setTimeout(()=>{
-                document.getElementById('survey_session').classList.remove('hide');
+                document.getElementById('survey_session').classList.remove('hidden');
                 document.getElementById('title').innerHTML = "Form was submitted!";
                 document.getElementById('question').innerHTML = "Your response has been sent, thank you for your spare time! You may close this tab now.";
                 document.getElementById('answer').hidden = true;
@@ -140,7 +140,7 @@ async function nextQuestion(){
         return;
     }
     
-    document.getElementById('survey_session').classList.add('hide');
+    document.getElementById('survey_session').classList.add('hidden');
     await setTimeout(()=>{
         document.getElementById('session-button').innerHTML = (question_id==lastQuestion-1)?"Submit":"Next";
         loadQuestion(question_id++, false);
@@ -162,7 +162,7 @@ async function backQuestion(){
         return;
     }
     
-    document.getElementById('survey_session').classList.add('hide');
+    document.getElementById('survey_session').classList.add('hidden');
     await setTimeout(()=>{
         document.getElementById('session-button').innerHTML = (question_id==lastQuestion)?"Submit":"Next";
         
@@ -176,7 +176,7 @@ async function backQuestion(){
 
 
 function loadQuestion(question_id, back=false){
-    document.getElementById('survey_session').classList.remove('hide');
+    document.getElementById('survey_session').classList.remove('hidden');
     document.getElementById('title').innerHTML = "";
     document.getElementById('question').innerHTML = Survey.surveyQuestions[question_id].Question;
     document.getElementById('answer').hidden = Survey.surveyQuestions[question_id].Option?true:false;

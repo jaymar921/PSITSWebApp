@@ -116,13 +116,16 @@
             {% endfor %}
         </div>
     </div>
-    <h1 style="text-align: center;font-weight:900">Participants</h1>
+    <h1 style="text-align: center;font-weight:900">Respondents</h1>
     <hr class="line">
     {% for participant in RESPONDENTS %}
     <div class="group-users">
         <div class="user-info" style="overflow: hidden;">
-            
+            {% if participant.imgSrc %}
+            <img style="width: 150px;height: 150px;" src="/uploads/{{participant.imgSrc}}">
+            {% else %}
             <img src="https://via.placeholder.com/150x150">
+            {% endif %}
             <h1 >{{participant.User}}</h1>
         </div>
         <div class="user-answers">

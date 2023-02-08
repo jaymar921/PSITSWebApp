@@ -73,6 +73,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;<a style="position: relative;" class="normalButton" href="/PSITS/Administration">BACK</a>
     <br><br><br><br><br>
     <div class="contents">
+        <input id="access_key" type="text" value="{{access_key}}" hidden>
         <br>
         <h1>Survey</h1><br>
         <table>
@@ -88,7 +89,7 @@
                         <td><div class="quizRow"><a class="quizID" href="/PSITS/Survey/{{ SURVEY.id }}">{{ SURVEY.id }}</a></div></td>
                         <td>{{ SURVEY.surveyTitle }}</td>
                         <td><a href="/PSITS/Survey/Respondents/{{ SURVEY.id }}">{{ SURVEY.respondents }}</a></td>
-                        <td></td>
+                        <td><a onclick="deleteSurvey('{{ SURVEY.surveyTitle }}')"><i class="fas fa-trash"></i></a></td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -104,6 +105,21 @@
 </div>
 <br><br><br><br><br><br><br>
 <script>
-    
+    function deleteSurvey(title){
+        let api_key = document.getElementById('access_key').value;
+        fetch('/PSITS/api/survey?key='+api_key,
+        {
+            method: 'DELETE',
+            body: JSON.stringify({"Survey":{
+                "SurveyTitle":title,
+            }}),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        }
+        ).then(
+            (r)=>{
+                window.location.href = '/PSITS@Survey'
+            }
+        )
+    }
 </script>
 {% endblock %}

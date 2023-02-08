@@ -418,27 +418,63 @@ def psits_api_health():
             'message': 'Please provide an option to retrieve'
         }
 
-@app.route('/PSITS/api/survey', methods=['POST'])
+@app.route('/PSITS/api/survey', methods=['POST', 'DELETE'])
 def psits_api_survey_post():
-    try:
-       
-        SURVEY = request.get_json()['Survey']
-        directory = app.config['UPLOAD_FOLDER']+f"\\Survey\\"
-        if not directoryExist(directory):
-            createDir(directory)
-        saveToFile(app.config['UPLOAD_FOLDER']+f"Survey\\Survey_{SURVEY['surveyTitle']}.json",json.dumps(SURVEY, indent=4, sort_keys=False, default=str))
+    if request.method.lower() == 'post':
+        try:
+        
+            SURVEY = request.get_json()['Survey']
+            directory = app.config['UPLOAD_FOLDER']+f"\\Survey\\"
+            if not directoryExist(directory):
+                createDir(directory)
+            saveToFile(app.config['UPLOAD_FOLDER']+f"Survey\\Survey_{SURVEY['surveyTitle']}.json",json.dumps(SURVEY, indent=4, sort_keys=False, default=str))
 
-        return {
-            "status": 200,
-            "message": "Saved"
-        }
-    except Exception as e:
-        print(e)
-        print('error')
-        return {
-            "status": 500,
-            "message": f"The server does not understand the request content provided"
-        }
+            return {
+                "status": 200,
+                "message": "Saved"
+            }
+        except Exception as e:
+            print(e)
+            print('error')
+            return {
+                "status": 500,
+                "message": f"The server does not understand the request content provided"
+            }
+    else:
+        try:
+            request_key = request.args.get('key')
+
+            if not request_key:
+                databaseLog(
+                    f'API[DELETE] - Remote {request.remote_addr} - Tried to delete survey data with no key')
+                return {
+                    "status": 403,
+                    "message": "ACCESS DENIED: key must be provided at query string."
+                }
+
+            if not ifKeyPermitted(request_key):
+                databaseLog(
+                    f'API[DELETE] - Remote {request.remote_addr} - Tried to delete survey data with invalid key')
+                return {
+                    "status": 403,
+                    "message": f"ACCESS DENIED: invalid key -- {request_key}"
+            }
+
+            SURVEY = request.get_json()['Survey']
+            deleteFile(app.config['UPLOAD_FOLDER']+f"Survey\\Survey_{SURVEY['SurveyTitle']}.json")
+            databaseLog(
+                    f'API[DELETE] - Remote {request.remote_addr} - Deleted survey data [{SURVEY["SurveyTitle"]}]')
+            return {
+                "status": 200,
+                "message": "Removed"
+            }
+        except Exception as e:
+            print(e)
+            print('error')
+            return {
+                "status": 500,
+                "message": f"The server does not understand the request content provided"
+            }
 
 @app.route('/PSITS/api/survey_response', methods=['POST'])
 def psits_api_survey_response_post():
