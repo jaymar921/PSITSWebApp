@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
+    body{
+        background-color: black;
+        color: white;
+    }
     .wrapper{
         width: 100%;
         min-height: 60vh;
@@ -9,16 +13,151 @@
     .center{
         text-align: center;
     }
+    img{
+        width: 50%;
+    }
+
+    .minW-350_maxW-700{
+        min-width: 350px;
+        width: fit-content;
+        max-width: 700px;
+        font-size: 100%;
+    }
+
+    .minW-350_W-700{
+        min-width: 350px;
+        width: 700px;
+    }
+
+    .green{
+        color: green;
+    }
+
+    .purple{
+        color: purple;
+    }
+
+    .aqua{
+        color: rgb(91, 140, 161);
+    }
+
+    .brown{
+        color: burlywood;
+    }
+
+    .orange{
+        color: orange;
+    }
+
+
+    .code{
+        position: relative;
+        border: 2px solid grey;
+        white-space:pre-wrap;
+        padding: 20px;
+        font-family: 'Courier New', Courier, monospace;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 100%;
+    }
+
+    @media (max-width: 500px) {
+        img{
+            width: 80%;
+        }   
+        .code{
+            font-size: 50%;
+        }
+        .minW-350_W-700{
+            min-width: 350px;
+            width: 95%;
+        }
+        .minW-350_maxW-700{
+            font-size: 60%;
+            min-width: 350px;
+            width: 300px;
+        }
+    }
 </style>
 <div class="wrapper">
     <br>
     <div style="width: 100%;">
-        <img style="position: relative; left: 50%; transform: translateX(-50%);" width="50%" src="{{ url_for('static', filename='images/api-icon.png')}}">
+        <img style="position: relative; left: 50%; transform: translateX(-50%);"  src="{{ url_for('static', filename='images/api-icon.png')}}">
     </div>
     <br><br><br>
     <h1 class="center">API Documentation</h1>
     <br>
-    <p class="center">[On build]</p>
+    <p class="center" style="color: green"><a style="font-weight: 900" class="fa-solid fa-check"></a> Connect your app to us!</p>
+    <br><br>
+    <h3 class="center">Purpose</h3>
+    <p class="center minW-350_maxW-700">This documentation will allow your app to interact with our web application, if you are planning to create a mobile application via [Flutter/React-Native/Android Studio] that is for PSITS-UC MAIN then this documentation will be helpful to you. Before we start, we need something from you that you already know, we recommend you to have a knowledge on calling an API from your preferred language.</p>
+    <br><br>
+    <h3 class="center">Dummy API [Testing]</h3>
+    <p class="center minW-350_maxW-700">We will be using the Fetch API on JavaScript for this documentation</p>
+    <br>
+    <p class="center minW-350_maxW-700">GET</p>
+    <p class="minW-350_W-700 code"><a class="green">// Fetching using GET</a>
+async function api_call(){
+    <a class="green">// link for the dummy API</a>
+    let api_link = 'http://203.177.71.218:5000/PSITS/api/dummy';
+
+    <a class="green">// fetching the result</a>
+    let result = await fetch(api_link);
+
+    <a class="green">// wait for the result being parsed from the server</a>
+    let result_parsed = await result.json();
+    
+    <a class="green">// display the result</a>
+    console.log(result_parsed);
+}
+api_call();</p>
+    <p class="center minW-350_maxW-700">GET RESULT</p>
+    <p class="minW-350_W-700 code">{
+    <a class="aqua">"ObjectReceived"</a>:<a class="brown">"NONE"</a>,
+    <a class="aqua">"message"</a>:<a class="brown">"Executed [GET]"</a>,
+    <a class="aqua">"status"</a>:<a class="orange">200</a>
+}</p>
+    <br>
+    <p class="center minW-350_maxW-700">POST</p>
+    <p class="minW-350_W-700 code"><a class="green">// Sending Data [POST]</a>
+async function api_call(){
+    <a class="green">// link for the dummy API</a>
+    let api_link = 'http://203.177.71.218:5000/PSITS/api/dummy';
+    
+    <a class="green">// data to send, make sure there is a 'Dummy' key</a>
+    let data = `{
+        "Dummy":"This is dummy"
+    }`;
+
+    <a class="green">// sending the data via fetch</a>
+    let result = await fetch(api_link, {
+        method: 'POST',
+        body: data,
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
+
+    <a class="green">// wait for the result being parsed from the server</a>
+    let result_parsed = await result.json();
+
+    <a class="green">// display the result</a>
+    console.log(result_parsed);
+}
+api_call();</p>
+    <p class="center minW-350_maxW-700">POST RESULT</p>
+    <p class="minW-350_W-700 code">{
+    <a class="aqua">"ObjectReceived"</a>:<a class="brown">"This is dummy"</a>,
+    <a class="aqua">"message"</a>:<a class="brown">"Executed [POST]"</a>,
+    <a class="aqua">"status"</a>:<a class="orange">200</a>
+}</p>
+    <br><br><br>
+    <h1 class="center">Authentication</h1>
+    <p class="center minW-350_maxW-700">We live in a world where there is so many trust issues, before you can fully integrate our app into us, you need to have an <a class="orange">API-KEY</a>. This will serve as your identity that we trusted you to modify the app's data/metadata. Without the <a class="orange">API-KEY</a> there will be some API features that you are not permitted to access such as <a class="brown">SEARCHING, MODIFYING, and DELETING</a> entries from the database.</p>
+    <br>
+    <div style="position: relative; left: 50%; transform: translateX(-50%); width: fit-content;">
+        <button class="normalButton">REQUEST API-KEY</button>
+    </div>
     <br><br><br>
 </div>
 <script>
