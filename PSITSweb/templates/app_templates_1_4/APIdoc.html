@@ -49,6 +49,18 @@
         color: orange;
     }
 
+    .bg-1{
+        background-color: rgba(123, 242, 123, 0.1);
+    }
+
+    .bg-2{
+        background-color: rgba(214, 023, 123, 0.1);
+    }
+
+    .bg-3{
+        background-color: rgba(32, 32, 233, 0.1);
+    }
+
 
     .code{
         position: relative;
@@ -151,6 +163,106 @@ api_call();</p>
     <a class="aqua">"message"</a>:<a class="brown">"Executed [POST]"</a>,
     <a class="aqua">"status"</a>:<a class="orange">200</a>
 }</p>
+    <br><br><br>
+    <h3 class="center">Dummy Map API [ADVANCED]</h3>
+    <p class="center minW-350_maxW-700">We will be using the Fetch API on JavaScript for this documentation</p>
+    <br>
+<!-- -->
+    <p class="center minW-350_maxW-700">POST</p>
+    <p class="center minW-350_maxW-700"><a class="brown">Before retrieving [using GET] information from the server, you must save a data first</a></p>
+    <br>
+    <p class="minW-350_W-700 code bg-1">function api_call(){
+    <a class="green">//data to save</a>
+    let data = {
+        "data":{ <a class="green">// 'data' [DO NOT CHANGE/RENAME OR IT WONT WORK]</a>
+            "id": "map1",   <a class="green">// 'id' your map id [can me changed]</a>
+            "lat": 123.001, <a class="green">// 'lat' value [can me changed]</a>
+            "long": 23.23   <a class="green">// 'long' value [can me changed]</a>
+            <a class="green">// you can add any metadata here</a>
+        }
+    }
+    
+    fetch('http://203.177.71.218:5000/PSITS/api/map',{
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then( result => result.json()) <a class="green">// parse the result to json </a>
+    .then( result => {
+        console.log(result); <a class="green">// console.log the result </a>
+    }).catch( e => {console.log('error '+e)}) <a class="green">// console.log error</a>
+}
+api_call();<a class="green">// function call</a></p>
+    <p class="center minW-350_maxW-700">POST RESULT</p>
+    <p class="minW-350_W-700 code bg-1">{
+    <a class="aqua">"message"</a>: <a class="brown">"Executed [POST]",</a>
+    <a class="aqua">"status"</a>: <a class="brown">"Saved map1 data"</a>
+}</p>
+<!-- -->
+<br>
+<!-- -->
+<p class="center minW-350_maxW-700">GET</p>
+<p class="center minW-350_maxW-700"><a class="brown">Retrieving data from API, the 'id' should already exist otherwise it wont work</a></p>
+<p class="minW-350_W-700 code bg-2">function api_call(){
+    <a class="green">// id should exist</a>
+    fetch('http://203.177.71.218:5000/PSITS/api/map?id=map1')
+    .then( result => result.json()) <a class="green">// parse the result to json</a>
+    .then( result => {
+        console.log(result);        <a class="green">// print result </a>
+    }).catch( e => {console.log('error '+e)})<a class="green">// display error </a>
+}
+api_call();<a class="green">// function call</a></p>
+<p class="center minW-350_maxW-700">GET RESULT</p>
+<p class="minW-350_W-700 code bg-2">{
+    <a class="aqua">"data"</a>: {
+        <a class="aqua">"id"</a>: <a class="brown">"map1"</a>,
+        <a class="aqua">"lat"</a>: <a class="orange">120.005</a>,
+        <a class="aqua">"long"</a>: <a class="orange">35.201</a>
+    },
+    <a class="aqua">"message"</a>: <a class="brown">Executed [GET]"</a>",
+    <a class="aqua">"status"</a>: <a class="orange">200</a>
+}</p>
+<!-- -->
+<!-- -->
+<br>
+<p class="center minW-350_maxW-700">DELETE | PUT</p>
+<p class="center minW-350_maxW-700"><a class="brown">You'll only need the 'id' if you need to delete the saved data</a></p>
+<p class="minW-350_W-700 code bg-3">function api_call(){
+    <a class="green">// id should already exist</a>
+    let data = {
+        "data":{
+            "id":"map1", <a class="green">// required on PUT/DELETE</a>
+            "lat":152.123, <a class="green">// change the value</a>
+            "long":53.032  <a class="green">// change the value</a>
+        }
+    }
+    fetch('http://203.177.71.218:5000/PSITS/api/map',{
+        method: 'PUT', <a class="green">// PUT for update, DELETE for delete</a>
+        body: JSON.stringify(data),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then( result => result.json())
+    .then( result => {
+        console.log(result);
+    }).catch( e => {console.log('error '+e)})
+}
+api_call();<a class="green">// function call</a></p>
+<p class="center minW-350_maxW-700">PUT RESULT</p>
+    <p class="minW-350_W-700 code bg-3">{
+    <a class="aqua">"message"</a>: <a class="brown">"Executed [PUT]",</a>
+    <a class="aqua">"status"</a>: <a class="brown">"Updated map1 data"</a>
+}</p>
+<p class="center minW-350_maxW-700">DELETE RESULT</p>
+    <p class="minW-350_W-700 code bg-3">{
+    <a class="aqua">"message"</a>: <a class="brown">"Executed [DELETE]",</a>
+    <a class="aqua">"status"</a>: <a class="brown">"Removed map1 data"</a>
+}</p>
+<!-- -->
+
     <br><br><br>
     <h1 class="center">Authentication</h1>
     <p class="center minW-350_maxW-700">We live in a world where there is so many trust issues, before you can fully integrate our app into us, you need to have an <a class="orange">API-KEY</a>. This will serve as your identity that we trusted you to modify the app's data/metadata. Without the <a class="orange">API-KEY</a> there will be some API features that you are not permitted to access such as <a class="brown">SEARCHING, MODIFYING, and DELETING</a> entries from the database.</p>

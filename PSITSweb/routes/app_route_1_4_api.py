@@ -515,3 +515,63 @@ def psits_dummy_api():
             "message": f"Executed [{request.method}]",
             "ObjectReceived":DUMMY
         }
+
+DUMMY_DATA: dict = {}
+# map api testing
+@app.route('/PSITS/api/map', methods=['POST','GET','DELETE','PUT'])
+def psits_dummy_maps_api():
+    global DUMMY_DATA
+    try:
+        
+        _method = request.method.lower()
+
+        if 'get' in _method:
+            DATA = request.args.get('id')
+            if DATA == 'clear':
+                DUMMY_DATA.clear()
+                return {
+                    "status": 200,
+                    "message": f"Executed [{request.method}]",
+                    "data": 'Cleared Data'
+                }
+            return {
+                "status": 200,
+                "message": f"Executed [{request.method}]",
+                "data": DUMMY_DATA[DATA]
+            }
+        elif 'post' in _method:
+            DATA = request.get_json()['data']
+            DUMMY_DATA[DATA['id']] = DATA
+            return {
+                "status": 200,
+                "message": f"Executed [{request.method}]",
+                "status": f'Saved {DATA["id"]} data'
+            }
+        elif 'put' in _method:
+            DATA = request.get_json()['data']
+            DUMMY_DATA[DATA['id']] = DATA
+            return {
+                "status": 200,
+                "message": f"Executed [{request.method}]",
+                "status": f'Updated {DATA["id"]} data'
+            }
+        elif 'delete' in _method:
+            DATA = request.get_json()['data']
+            DUMMY_DATA[DATA['id']] = None
+            return {
+                "status": 200,
+                "message": f"Executed [{request.method}]",
+                "status": f'Removed {DATA["id"]} data'
+            }
+
+    except Exception as error:
+        return {
+            "status": 200,
+            "message": f"Executed [{request.method}]",
+            "status":f"Error {error}, data may not exist yet"
+        }
+    return {
+            "status": 200,
+            "message": f"Executed [{request.method}]"
+        }
+
