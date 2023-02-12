@@ -576,44 +576,7 @@ def api_account_update():
     }
 
 
-@app.route('/PSITS/api/accounts/<search>', methods=['GET'])
-def api_account_search(search):
-    request_key = request.args.get('key')
 
-    if not request_key:
-        databaseLog(
-            f'API[GET] - Remote {request.remote_addr} - Tried to access accounts ["{search}"] with no key')
-        return {
-            "status": 403,
-            "message": "ACCESS DENIED: key must be provided at query string."
-        }
-
-    if not ifKeyPermitted(request_key):
-        databaseLog(
-            f'API[GET] - Remote {request.remote_addr} - Tried to access accounts ["{search}"] with invalid key')
-        return {
-            "status": 403,
-            "message": f"ACCESS DENIED: invalid key -- {request_key}"
-        }
-    if search is None:
-        search = 'all'
-    if search == 'ALL':
-        search = search.lower()
-    
-    ACCOUNTS: list = []
-    db_data = getAllAccounts(search)
-
-    for a in db_data:
-        ACCOUNTS.append(a.toJSON())
-    databaseLog(
-        f'API[GET] - Remote {request.remote_addr} - Permitted to access accounts ["{search}"]')
-    response = app.response_class(
-        response=json.dumps(ACCOUNTS, indent=4,
-                            sort_keys=False, default=str),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
 
 @app.route('/PSITS/api/accounts_p/<search>', methods=['GET'])
 def api_account_p_search(search):

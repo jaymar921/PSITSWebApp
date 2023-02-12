@@ -12,8 +12,12 @@ from Database import updateAnnouncement, SEARCHMerchOrder, SEARCHMerchandise, ge
     ,getAllAccounts, getAccountWithPassword, GetAllPromo, getAnnouncement, getAnnouncements, API_TARGET
 # from EmailAPI import pushEmail
 from Models import Quiz, Questionaires, Announcement
-from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, contentVerifier,directoryExist, createDir, admins
+from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, contentVerifier,directoryExist, createDir, admins, binary_search
 from webApp_utility import save_redirection, is_blocked_route, checkImageExist, renameFile, saveToFile, loadJSONFromFile, getListOfFiles, deleteFile
+
+# Global data
+ACCOUNTS: dict = {}
+ACCOUNT_KEYS: list = []
 
 
 @app.route('/PSITS/api/announcement', methods=['PUT'])
@@ -346,7 +350,7 @@ def psits_api_health():
         dt_temp = datetime.datetime.now()   
 
         if option == 'accounts':
-            getAllAccounts('all')
+            API_TARGET('http://127.0.0.1:5000/PSITS/api/accounts/all')
             test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
 
             return {
@@ -391,7 +395,7 @@ def psits_api_health():
                 "result":test_ms
             }
         elif option == 'account_api':
-            API_TARGET('http://127.0.0.1:5000/PSITS/api/students_tally')
+            API_TARGET('http://127.0.0.1:5000/PSITS/api/accounts/all')
             test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
 
             return {
@@ -400,7 +404,7 @@ def psits_api_health():
                 "result":test_ms
             }
         elif option == 'account_update_api':
-            getAccountByID(19889781)
+            API_TARGET('http://127.0.0.1:5000/PSITS/api/accounts/19889781')
             test_ms = int((datetime.datetime.now()-dt_temp).total_seconds() * 1000)
 
             return {
@@ -575,3 +579,70 @@ def psits_dummy_maps_api():
             "message": f"Executed [{request.method}]"
         }
 
+# api for retrieving accounts
+def loadAccounts():
+    global ACCOUNTS
+    global ACCOUNT_KEYS
+    accounts = getAllAccounts('all')
+
+    for account in accounts:
+        ACCOUNTS[int(account.uid)] = account
+        ACCOUNT_KEYS.append(account.uid)
+    
+loadAccounts()
+
+@app.route('/PSITS/api/accounts/<search>', methods=['GET'])
+def api_account_search(search):
+    
+    request_key = request.args.get('key')
+
+    if not request_key:
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to access accounts ["{search}"] with no key')
+        return {
+            "status": 403,
+            "message": "ACCESS DENIED: key must be provided at query string."
+        }
+
+    if not ifKeyPermitted(request_key):
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Tried to access accounts ["{search}"] with invalid key')
+        return {
+            "status": 403,
+            "message": f"ACCESS DENIED: invalid key -- {request_key}"
+        }
+    if search is None:
+        search = 'all'
+    if search == 'ALL':
+        search = search.lower()
+    
+    idsearch = False
+    try:
+        idno = int(search)
+        idsearch = True
+    except: None
+    global ACCOUNTS
+    global ACCOUNT_KEYS
+    
+    if not idsearch:
+        _ACCOUNTS: list = []
+
+        for key, value in ACCOUNTS.items():
+            _ACCOUNTS.append(value.toJSON())
+        databaseLog(
+            f'API[GET] - Remote {request.remote_addr} - Permitted to access accounts ["{search}"]')
+        
+        response = app.response_class(
+            response=json.dumps(_ACCOUNTS, indent=4,
+                                sort_keys=False, default=str),
+            status=200,
+            mimetype='application/json'
+        )
+    else:
+        index = binary_search(ACCOUNT_KEYS, int(idno))
+        response = app.response_class(
+            response=json.dumps(ACCOUNTS.get(ACCOUNT_KEYS[int(index)]).toJSON(), indent=4,sort_keys=False, default=str),
+            status=200,
+            mimetype='application/json'
+        )
+    return response
