@@ -375,7 +375,7 @@ def psits_survey_session(uid):
                                    message="The survey link may not be available or have been deleted")
 
     if 'username' not in session and not anonymous:
-        return render_template("404Page.html", logout="none", login="none",
+        return render_template("404Page.html", logout="none", login="block",
                                    message="You must login first before you can access this survey")
 
     if anonymous:
