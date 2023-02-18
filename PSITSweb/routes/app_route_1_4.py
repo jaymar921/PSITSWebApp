@@ -355,6 +355,7 @@ def psits_survey_session(uid):
     anonymous=False
     survey_title = ''
     SURVEY_DATA = ''
+    RESPONDENTS = []
     for survey_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\'):
         if '.json' not in survey_data_file:
             continue
@@ -366,17 +367,28 @@ def psits_survey_session(uid):
             survey_title = survey_json_data['surveyTitle']
             SURVEY_DATA = json.dumps(survey_json_data, indent=4, sort_keys=False, default=str)
 
-            for response_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\Responses'):
+            for response_data_file in getListOfFiles(app.config['UPLOAD_FOLDER']+'Survey\\Responses\\'):
                 if '.json' not in response_data_file:
                     continue
+                if survey_json_data['surveyTitle'] in response_data_file:
+                    data = loadJSONFromFile(app.config['UPLOAD_FOLDER']+f"Survey\\Responses\\{response_data_file}")
+                    try:
+                        RESPONDENTS.append(int(data['User']))
+                    except:
+                        None
+                    
 
     if SURVEY_DATA == '':
         return render_template("404Page.html", logout="none", login="none",
                                    message="The survey link may not be available or have been deleted")
 
     if 'username' not in session and not anonymous:
-        return render_template("404Page.html", logout="none", login="block",
+        return render_template("404Page.html", title=survey_title, logout="none", login="block",
                                    message="You must login first before you can access this survey")
+
+    if int(session['username']) in RESPONDENTS:
+        return render_template("404Page.html", title=survey_title, logout="none", login="block",
+                                   message="You already have answered the survey")
 
     if anonymous:
         return render_template(
@@ -438,7 +450,7 @@ def psits_survey_respondents(uid):
                     RESPONDENTS.append(data)
     
     if SURVEY_DATA == '':
-        return render_template("404Page.html", logout="none", login="none",
+        return render_template("404Page.html", title=survey_title, logout="none", login="none",
                                    message="The survey link may not be available or have been deleted")
     return render_template(
         "app_templates_1_4/SurveyRespondents.html",

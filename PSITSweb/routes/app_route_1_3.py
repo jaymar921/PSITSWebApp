@@ -100,6 +100,9 @@ def profile_page():
 
 @app.route("/PSITS/Community")
 def community_page():
+    if 'username' not in session:
+        return render_template("404Page.html", title='PSITS Community', logout="none", login="block", message="Sorry but you have to login first before accessing this page")
+     
     accounts: list = Database.getAllAccounts('all')
 
     psits_devs: dict = {

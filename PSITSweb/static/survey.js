@@ -178,7 +178,8 @@ async function backQuestion(){
 function loadQuestion(question_id, back=false){
     document.getElementById('survey_session').classList.remove('hidden');
     document.getElementById('title').innerHTML = "";
-    document.getElementById('question').innerHTML = Survey.surveyQuestions[question_id].Question;
+    let data = Survey.surveyQuestions[question_id].Question
+    document.getElementById('question').innerHTML = parseLink(data);
     document.getElementById('answer').hidden = Survey.surveyQuestions[question_id].Option?true:false;
     
     document.getElementById('answer-selection').hidden = Survey.surveyQuestions[question_id].Option?false:true;
@@ -192,6 +193,23 @@ function loadQuestion(question_id, back=false){
         }
     }
     document.getElementById('answer').value = back?(SurveyAnswers[question_id]?SurveyAnswers[question_id]:""): "";
+}
+
+function parseLink(data){
+    let newString = '';
+
+    for(let content of data.split(' ')){
+        if(content.includes('\\n'))
+            content = ''
+        if(content.includes('http')){
+            const link = content;
+            content = `<a href='${link}' target='_blank' style='color: green'>External_Link</a>`
+        }
+
+        newString+= content + " ";
+    }
+
+    return newString;
 }
 
 

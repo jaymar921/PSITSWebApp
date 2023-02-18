@@ -97,7 +97,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <div class="container">
-    
+    <script>
+        let responses = []
+    </script>
     <div class="group">
         &nbsp;&nbsp;&nbsp;&nbsp;<a style="position: relative;" class="normalButton" href="/PSITS@Survey">BACK</a><br><br>
         <h1>{{SURVEY_DATA.surveyTitle}}</h1>
@@ -116,6 +118,11 @@
             {% endfor %}
         </div>
     </div>
+    <div>
+        <h2 style="text-align: center;font-weight:900">Results Tallied</h2>
+        <span id="resultData" style="width: 300px; white-space: pre-line; ">
+        </span>
+    </div>
     <h1 style="text-align: center;font-weight:900">Respondents</h1>
     <hr class="line">
     {% for participant in RESPONDENTS %}
@@ -133,12 +140,15 @@
             <br>
             <div class="row">
                 {% for index in range(participant.SurveyAnswers | length)%}
-                    <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-lg-6 col-md-4 col-sm-6">
                         <div class="answer">
                             <p style="cursor: help;"><i style="color: green;font-weight:900;" class="fa-solid fa-check"></i> [{{index+1}}]{{participant.SurveyAnswers[index]}}</p>
                         </div>
                         
                     </div>
+                    <script>
+                        responses.push('{{participant.SurveyAnswers[index]}}')
+                    </script>
                 {% endfor %}
             </div>
         </div>
@@ -149,4 +159,24 @@
     
 </div>
 <br>
+<script>
+    let DATA = new Map();
+    for(const answer of responses){
+        if(answer == '')
+            continue;
+        if(DATA.get(answer) != null){
+            DATA.set(answer, DATA.get(answer) + 1)
+        }else{
+            DATA.set(answer, 1);
+        }
+    }
+
+    let newStr = '';
+
+    for(const key of DATA){
+        newStr += `${key[0]} -- ${key[1]}\n`
+    }
+
+    document.getElementById('resultData').innerHTML = newStr;
+</script>
 {% endblock %}
