@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <SelectedDevice>Nexus_4_API_30</SelectedDevice>
-    <ActiveDebugProfile>Nexus_4_API_30</ActiveDebugProfile>
-    <DefaultDevice>Nexus_4_API_30</DefaultDevice>
+    <SelectedDevice>pixel_5_-_api_30</SelectedDevice>
+    <ActiveDebugProfile>Pixel 5 - API 30 %28Android 11.0 - API 30%29</ActiveDebugProfile>
+    <DefaultDevice>pixel_5_-_api_30</DefaultDevice>
     <AndroidDesignerPreferredTheme>Theme.Light.NoTitleBar.Fullscreen</AndroidDesignerPreferredTheme>
     <AndroidDesignerPreferredDevice>Nexus 4</AndroidDesignerPreferredDevice>
+    <SelectedPlatformGroup>Emulator</SelectedPlatformGroup>
   </PropertyGroup>
 </Project>

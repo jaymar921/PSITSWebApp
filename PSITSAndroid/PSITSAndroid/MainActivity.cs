@@ -17,15 +17,19 @@ namespace PSITSAndroid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
             webView = FindViewById<WebView>(Resource.Id.webview);
-            //webView.Settings.JavaScriptEnabled = true;
-            //webView.LoadUrl("https://203.177.71.218:5001");
+            webView.SetWebViewClient(new WebViewClient());
+            SetContentView(webView);
+            webView.Settings.JavaScriptEnabled = true;
+            webView.LoadUrl("http://119.92.196.92:5000");
 
-            webView.SetWebViewClient(new InvalidWebViewClient());
-            webView.LoadUrl("https://203.177.71.218:5001");
+            //webView.SetWebViewClient(new WebViewClient());
+            //webView.SetWebViewClient(new InvalidWebViewClient());
+            //webView.LoadUrl("http://119.92.196.92:5000");
             // Not required for Invalid certificate, but required for my site.
-            WebSettings ws = webView.Settings;
-            ws.JavaScriptEnabled = true;
-            ws.AllowFileAccess = true;
+            //WebSettings ws = webView.Settings;
+            //ws.JavaScriptEnabled = true;
+            //ws.AllowFileAccess = true;
+
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

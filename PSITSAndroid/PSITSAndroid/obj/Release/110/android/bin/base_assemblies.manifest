@@ -1,0 +1,23 @@
+Hash 32     Hash 64             Blob ID  Blob idx  Name
+0xfb8fb74b  0x55a53ecbce60c091  000      0000      PSITSAndroid
+0xa2e0939b  0x4288cfb749e4c631  000      0001      Xamarin.AndroidX.Activity
+0x3dbaaf8f  0x8168042fd44a7c7a  000      0002      Xamarin.AndroidX.AppCompat
+0xc86c06e3  0x90bf592ea44f6673  000      0003      Xamarin.AndroidX.Core
+0x2568904f  0x8df4cb880b10061b  000      0004      Xamarin.AndroidX.CustomView
+0xb18af942  0x0c1ccf42c3c21c44  000      0005      Xamarin.AndroidX.DrawerLayout
+0x6a96652d  0xc1b8989a7ad20fb0  000      0006      Xamarin.AndroidX.Fragment
+0x146817a2  0x2da6b911e3063621  000      0007      Xamarin.AndroidX.Lifecycle.Common
+0xd90e5f5a  0x58d75d486341cfb2  000      0008      Xamarin.AndroidX.Lifecycle.LiveData.Core
+0x785e97f1  0xf5c6c68c9e45303b  000      0009      Xamarin.AndroidX.Lifecycle.ViewModel
+0x6bcd3296  0xf5b1dfc36cac272b  000      0010      Xamarin.AndroidX.Loader
+0x52114ed3  0x197cf449ebe482d1  000      0011      Xamarin.AndroidX.SavedState
+0x1a605985  0x4836f704f0e652c5  000      0012      Xamarin.Essentials
+0x3751ef41  0xbab63e4543a86cec  000      0013      Xamarin.Google.Guava.ListenableFuture
+0xc8a662e9  0x77b654e585b55834  000      0014      Java.Interop
+0xcf3163e6  0x01accec39cafe242  000      0015      Mono.Android
+0x1bc4415d  0xe99c30c1484d7f4f  000      0016      mscorlib
+0xf76edc75  0x98f9bc61168392ac  000      0017      System.Core
+0x41761b2c  0xe03056ea4e39aa26  000      0018      System
+0x132b30dd  0x31042a9aade235bb  000      0019      System.Numerics
+0x8334206b  0x6a3a4366801b8264  000      0020      System.Net.Http
+0xc197c562  0x8ac2470b209ebae3  000      0021      Mono.Security
