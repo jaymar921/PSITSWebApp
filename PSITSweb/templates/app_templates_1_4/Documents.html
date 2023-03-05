@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .contents{
+        position: relative;
+        height:400px;
+        min-height: 80%;
+    }
+
+    .btn-containers{
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+<div class="contents">
+    
+    <div class="btn-containers">
+        <br><br>
+        <h1>Documents</h1><br><br>
+        <a class="normalButton" href="/uploads/parents-consent.pdf">Parent's Consent</a>
+    </div>
+</div>
+{% endblock %}

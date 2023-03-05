@@ -61,6 +61,10 @@ from webApp_utility import save_redirection, checkImageExist, is_blocked_route
         - Pia Abellana
 """
 
+# Globals
+officers = GETAllPSITSOfficer()
+officers = rankOfficers(officers)
+
 
 @app.route("/")
 def webpage():
@@ -199,8 +203,7 @@ def about_us():
     save_redirection('about_us')
     if is_blocked_route('about_us'):
         return redirect(url_for('maintenance_page'))
-    officers = GETAllPSITSOfficer()
-    officers = rankOfficers(officers)
+    
     if "username" in session:
         if isAdmin(session['username']):
             return render_template("aboutUs.html",
