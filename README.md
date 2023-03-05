@@ -62,7 +62,7 @@ Contributors
 - Bootstrap for Front-End
 - [Python, MYSQL, JavaScript, C#]
 
-The web app is hosted at UC-Banilad's server, you can access it [here](http://203.177.71.218:5000/PSITS). Note that the link is not permanent, once the turn over was implemented, a new link may be created from where the new system was hosted.
+The web app is hosted at UC-Banilad's server, you can access it [here](http://119.92.196.92:5000/PSITS). Note that the link is not permanent, once the turn over was implemented, a new link may be created from where the new system was hosted.
 
 &nbsp;
 
