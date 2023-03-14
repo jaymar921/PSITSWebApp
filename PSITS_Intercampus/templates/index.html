@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSITS INTERCAMPUS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css')}}" type="text/css"/>
+    <link rel="stylesheet" href="../static/index.css" type="text/css"/>
+</head>
+<body>
+    <div class="container">
+        <div class="form">
+            <h1>Administration</h1>
+            <h4>Intercampus PSITS</h4>
+            
+            <div>
+                <div>
+                    <label>ID Number</label>
+                </div>
+                <div>
+                    <input id="idno" type="number" placeholder="ID Number"/>
+                </div>
+            </div>
+            <br>
+            <div>
+                <div>
+                    <label>Password</label>
+                </div>
+                <div>
+                    <input id="pass" type="password" placeholder="Password"/>
+                </div>
+            </div>
+            <br>
+            <div>
+                <button type="button" onclick="loginAccount()">Login</button>
+            </div>
+        </div>
+    </div>
+    <footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer>
+    <script>
+        const getCreds = () => {
+            const idno = document.querySelector('#idno').value;
+            const pass = document.querySelector('#pass').value;
+
+            return {idno, pass};
+        }
+
+        const loginAccount = async () => {
+            const {idno, pass} = getCreds();
+
+            const response = await fetch('/api/getacc', {
+                headers:{
+                    "idno": idno,
+                    "pass": pass
+                },
+            });
+
+            const data = await response.json();
+            
+            if(data.status == 'ok'){
+                location.href = `/login/${data.access_key}`
+            }
+        }
+    </script>
+</body>
+</html>
