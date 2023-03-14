@@ -1,0 +1,70 @@
+body{
+    background-color: #36454F;
+    background-image: url('R.jpg');
+    background-size: cover;
+    background-repeat:no-repeat;
+    margin: 0;
+    color: white;
+    height: 100vh;
+}
+
+.container{
+    width: 100%;
+    height: 100%;
+}
+
+.left-menu{
+    position: absolute;
+    width: 25%;
+    min-width: 300px;
+    height: 100%;
+    background-color: bisque;
+    text-align: center;
+    color: black;
+}
+
+.right-container{
+    position: absolute;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    text-align: center;
+    color: black;
+    right: 0;
+    left: 300px;
+}
+
+.buttons-block{
+    position: relative;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.buttons-block button{
+    cursor: pointer;
+    width: 80%;
+    outline: none;
+    border: 1px solid white;
+    padding: 20px;
+}
+
+.buttons-block button:hover, .logout-button button:hover{
+    border: 1px solid black;
+}
+
+.logout-button{
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logout-button button{
+    cursor: pointer;
+    width: 100%;
+    outline: none;
+    border: 1px solid transparent;
+    padding: 20px;
+}

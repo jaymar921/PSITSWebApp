@@ -38,7 +38,7 @@ def logout():
 def adminHome():
     if 'username' not in session:
         return redirect(url_for('loginPage'))
-    return render_template('home.html')
+    return render_template('home.html', data=session['data'])
 
 
 @app.route('/api/getacc', methods=['GET'])
@@ -97,13 +97,29 @@ def getUserAdmin(uid, password):
     data: dict = executeQueryReturnParam(query, (uid, password))
     if len(data) > 0:
         if str(data[0]['isadmin']).lower() == 'true':
+            session['data'] = data[0]
             return True
     return False
+
+def getUsersAdmin():
+    query: str = 'SELECT * FROM `psits_intercampus_admin` where isadmin="TRUE"'
+    data: dict = executeQueryReturn(query)
+    users: list = []
+    if len(data) > 0:
+        for u in data:
+            users.append(u)
+    return users
 
 
 def hashData(data: str) -> str:
     result = hashlib.md5(data.encode()).hexdigest()
     return str(result)
+
+# Avoid going back after logout
+@app.after_request
+def after_request(response):
+    response.headers.add('Cache-Control', 'no-store,no-cache,must-revalidate,post-check=0,pre-check=0')
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

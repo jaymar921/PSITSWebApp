@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSITS INTERCAMPUS ADMIN</title>
+    <link rel="stylesheet" href="../static/home.css" type="text/css"/>
+    <script src="https://kit.fontawesome.com/55a8472328.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="left-menu">
+            <h3>Logged in as {{data.lastname}}</h3>
+            <hr>
+            <h3>Administration</h3>
+            <div class="buttons-block">
+                <button><i class="fa-solid fa-user"></i> Admins</button>
+                <button><i class="fa-solid fa-book"></i> Register</button>
+                <button><i class="fa-solid fa-calendar-days"></i> Event</button>
+            </div>
+            <div class="logout-button">
+                <button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </div>
+        </div>
+        <div class="right-container">
+            
+        </div>
+    </div>
+    <script src="../static/home.js"></script>
+</body>
+</html>
