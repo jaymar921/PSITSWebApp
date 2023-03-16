@@ -15,22 +15,27 @@ body{
 
 .left-menu{
     position: absolute;
-    width: 25%;
-    min-width: 300px;
+    width: 300px;
     height: 100%;
     background-color: bisque;
     text-align: center;
     color: black;
+    left: 0;
 }
 
 .right-container{
     position: absolute;
-    height: 100%;
+    max-width: 1600px;
+    min-width: 100px;
+    height: 97%;
     background-color: rgba(0,0,0,0.2);
     text-align: center;
     color: black;
     right: 0;
     left: 300px;
+    padding: 10px;
+    border: none;
+    overflow: hidden;
 }
 
 .buttons-block{
@@ -67,4 +72,101 @@ body{
     outline: none;
     border: 1px solid transparent;
     padding: 20px;
+}
+
+.admins-container, .registration-container, .events-container, .metrics-container{
+    position: absolute;
+    border: 1px solid transparent;
+    height: 95%;
+    min-width: 650px;
+    width: 96.5%;
+    background-color: rgba(255,255,255,0.7);
+    padding: 10px;
+    overflow: auto;
+}
+
+.admins-table{
+    width: 100%;
+}
+
+.admins-table-container{
+    height: 150px;
+    overflow: auto;
+    background-color: white;
+}
+
+table{
+    width: 100%;
+    background-color: white;
+    border: 1px solid #f2f2f2;
+    border-collapse: collapse;
+}
+
+table th{
+    border: 2px solid black;
+}
+
+table td{
+    border: 2px solid grey;
+}
+
+.active{
+    background-color: #2196F3;
+}
+
+.hidden{
+    opacity: 0;
+    z-index: 0;
+}
+
+.show{
+    opacity: 1;
+    z-index: 1;
+}
+
+button{
+    cursor: pointer;
+}
+
+.admins-form{
+    position: relative;
+    display: flex;
+    width: calc(300px + 150px);
+    padding: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.admins-form div{
+    margin: auto;
+}
+
+.admins-form div input, select{
+    width: 250px;
+    padding: 8px;
+}
+
+.admins-form div p{
+    width: 150px;
+    text-align: right;
+    font-weight: 900;
+}
+
+.admins-form div button{
+    padding: 5px 15px 5px 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.admins-graph{
+    width: 300px;
+    height: 300px;
+}
+
+.admins-form div .center{
+    text-align: center;
+}
+
+.admins-form div .left{
+    text-align: left;
 }

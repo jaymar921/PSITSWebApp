@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSITS INTERCAMPUS ADMIN</title>
     <link rel="stylesheet" href="../static/home.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/w3shools.css" type="text/css"/>
     <script src="https://kit.fontawesome.com/55a8472328.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -15,18 +16,386 @@
             <hr>
             <h3>Administration</h3>
             <div class="buttons-block">
-                <button><i class="fa-solid fa-user"></i> Admins</button>
-                <button><i class="fa-solid fa-book"></i> Register</button>
-                <button><i class="fa-solid fa-calendar-days"></i> Event</button>
+                <button id="admins" onclick="btnClicked('admins')"><i class="fa-solid fa-user"></i> Admins</button>
+                <button id="registration" onclick="btnClicked('registration')"><i class="fa-solid fa-book"></i> Registration</button>
+                <button id="events" onclick="btnClicked('events')"><i class="fa-solid fa-calendar-days"></i> Events</button>
+                <button id="metrics" onclick="btnClicked('metrics')"><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
             </div>
             <div class="logout-button">
                 <button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </div>
         </div>
         <div class="right-container">
-            
+
+            <!-- ADMIN -->
+            <div id="admins-container" class="admins-container hidden">
+                <div class="admins-table">
+                    <h1>Admins</h1>
+                    <div class="admins-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Number</th>
+                                    <th>Fullname</th>
+                                    <th>Course</th>
+                                    <th>Year</th>
+                                    <th>Campus</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-data">
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>BSIT</td>
+                                    <td>4</td>
+                                    <td>UC Main</td>
+                                    <td>jayharronabejar@gmail.com</td>
+                                    <td><button>Revoke</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h2>Allow admin registration: 
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </h2>
+                </div>
+            </div>
+
+
+            <!-- REGISTRATION -->
+            <div id="registration-container" class="registration-container hidden">
+                <div class="admins-table">
+                    <h1>Registration</h1>
+                    <div class="admins-form">
+                        <div><p>Event</p></div>
+                        <div>
+                            <select>
+                                <option value="ICT Congress 2023">ICT Congress 2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Search</p></div>
+                        <div><input type="text" placeholder="ID Number | Fullname"></div>
+                    </div>
+                    <div class="admins-table-container">
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Number</th>
+                                    <th>Fullname</th>
+                                    <th>Campus</th>
+                                    <th>Event</th>
+                                    <th>Payment</th>
+                                    <th>TShirt Size</th>
+                                    <th>Claimed</th>
+                                    <th>Attended</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-data">
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>L</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>20220885</td>
+                                    <td>Jeshelle Andrea Colonia</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>M</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>L</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>20220885</td>
+                                    <td>Jeshelle Andrea Colonia</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>M</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>L</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>20220885</td>
+                                    <td>Jeshelle Andrea Colonia</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>M</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>L</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>20220885</td>
+                                    <td>Jeshelle Andrea Colonia</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>M</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>19889781</td>
+                                    <td>Jayharron Mar Abejar</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>L</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>20220885</td>
+                                    <td>Jeshelle Andrea Colonia</td>
+                                    <td>UC Main</td>
+                                    <td>ICT Congress 2023</td>
+                                    <td>FULL</td>
+                                    <td>M</td>
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox"></td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h2>Register Student</h2>
+                    <div class="admins-form">
+                        <div><p>ID Number</p></div>
+                        <div><input type="text" placeholder="ID Number"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Fullname</p></div>
+                        <div><input type="text" placeholder="Fullname"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Campus</p></div>
+                        <div>
+                            <select>
+                                <option value="UC Main">UC MAIN</option>
+                                <option value="UC PT">UC PARDO TALISAY</option>
+                                <option value="UC BN">UC BANILAD</option>
+                                <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="admins-form">
+                        <div><p>PAYMENT</p></div>
+                        <div>
+                            <select>
+                                <option value="FULL">FULL (T-Shirt & Ticket)</option>
+                                <option value="TSHIRT">T-SHIRT only</option>
+                                <option value="TICKET">TICKET only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>TSHIRT SIZE</p></div>
+                        <div>
+                            <select>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M" selected>M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="2XL">2XL</option>
+                                <option value="3XL">3XL</option>
+                                <option value="4XL">4XL</option>
+                                <option value="5XL">5XL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admins-form">
+                        <div><button><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- EVENT-->
+            <div id="events-container"  class="registration-container hidden">
+                <div class="admins-table">
+                    <h1>Events</h1>
+                    <div class="admins-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Venue</th>
+                                    <th>Attendees</th>
+                                    <th>Host</th>
+                                    <th>Price (Ticket+Tshirt)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-data">
+                                <tr>
+                                    <td>ICT Congress 2023</td>
+                                    <td>Skyhall SM Seaside</td>
+                                    <td>0/1200</td>
+                                    <td>UC LM</td>
+                                    <td>P550</td>
+                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h2>Add Event</h2>
+                    <div class="admins-form">
+                        <div><p>Event Name</p></div>
+                        <div><input type="text" placeholder="Event Name"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Venue</p></div>
+                        <div><input type="text" placeholder="Venue"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Attendees</p></div>
+                        <div><input type="number" placeholder="Attendees"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Host</p></div>
+                        <div><input type="text" placeholder="Host"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Registration Price</p></div>
+                        <div><input type="number" placeholder="Registration Price"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>T-Shirt Price</p></div>
+                        <div><input type="number" placeholder="Tshirt Price"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><button><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVENT-->
+            <div id="metrics-container"  class="metrics-container hidden">
+                <div class="admins-table">
+                    <h1>Data</h1>
+                </div>
+                <div class="admins-form">
+                    <div><p>Event</p></div>
+                    <div>
+                        <select>
+                            <option value="ICT Congress 2023">ICT Congress 2023</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admins-form">
+                    <div class="admins-graph">
+                        <div class="graphSec px-2" >
+                            <h4 class="text-center py-3">Attendees</h4>
+                            <canvas id="attendeesChart" width="800" height="600"></canvas>
+                            <h4>Total Attendees: 207</h4>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="admins-form">
+                    <div>
+                        <p class="center">Revenue</p>
+                    </div>
+                </div>
+                <div class="admins-form">
+                    <div>
+                        <p>Reg Fee + TShirt</p>
+                    </div>
+                    <div>
+                        <p class="left">P12,345</p>
+                    </div>
+                </div>
+                <div class="admins-form">
+                    <div>
+                        <p>Reg Free only</p>
+                    </div>
+                    <div>
+                        <p class="left">P12,345</p>
+                    </div>
+                </div>
+                <div class="admins-form">
+                    <div>
+                        <p>TShirt only</p>
+                    </div>
+                    <div>
+                        <p class="left">P12,345</p>
+                    </div>
+                </div>
+                <div class="admins-form">
+                    <div>
+                        <p>Total amount:</p>
+                    </div>
+                    <div>
+                        <p class="left">P37,035</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.2/dist/Chart.min.js"></script>
     <script src="../static/home.js"></script>
 </body>
 </html>
