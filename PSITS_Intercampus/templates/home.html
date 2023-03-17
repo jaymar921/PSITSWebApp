@@ -45,15 +45,7 @@
                                 </tr>
                             </thead>
                             <tbody id="admin-data">
-                                <tr>
-                                    <td>19889781</td>
-                                    <td>Jayharron Mar Abejar</td>
-                                    <td>BSIT</td>
-                                    <td>4</td>
-                                    <td>UC Main</td>
-                                    <td>jayharronabejar@gmail.com</td>
-                                    <td><button>Revoke</button></td>
-                                </tr>
+                                <!-- DATA IS INSERTED HERE VIA JS -->
                             </tbody>
                         </table>
                     </div>
@@ -76,8 +68,8 @@
                     <div class="admins-form">
                         <div><p>Event</p></div>
                         <div>
-                            <select>
-                                <option value="ICT Congress 2023">ICT Congress 2023</option>
+                            <select id="reg_id">
+                                <option value="NONE" disabled selected>SELECT EVENT</option>
                             </select>
                         </div>
                     </div>
@@ -101,7 +93,7 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-data">
+                            <tbody id="registry-data">
                                 <tr>
                                     <td>19889781</td>
                                     <td>Jayharron Mar Abejar</td>
@@ -220,16 +212,20 @@
                     <h2>Register Student</h2>
                     <div class="admins-form">
                         <div><p>ID Number</p></div>
-                        <div><input type="text" placeholder="ID Number"></div>
+                        <div><input id="reg_idno" type="text" placeholder="ID Number"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>Fullname</p></div>
-                        <div><input type="text" placeholder="Fullname"></div>
+                        <div><input id="reg_fullname" type="text" placeholder="Fullname (firstname and lastname)"></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p>Email Address</p></div>
+                        <div><input id="reg_email" type="text" placeholder="Email Address"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>Campus</p></div>
                         <div>
-                            <select>
+                            <select id="reg_campus">
                                 <option value="UC Main">UC MAIN</option>
                                 <option value="UC PT">UC PARDO TALISAY</option>
                                 <option value="UC BN">UC BANILAD</option>
@@ -241,7 +237,7 @@
                     <div class="admins-form">
                         <div><p>PAYMENT</p></div>
                         <div>
-                            <select>
+                            <select id="reg_payment">
                                 <option value="FULL">FULL (T-Shirt & Ticket)</option>
                                 <option value="TSHIRT">T-SHIRT only</option>
                                 <option value="TICKET">TICKET only</option>
@@ -251,7 +247,8 @@
                     <div class="admins-form">
                         <div><p>TSHIRT SIZE</p></div>
                         <div>
-                            <select>
+                            <select id="reg_size">
+                                <option value="NONE" disabled>NOT APPLICABLE</option>
                                 <option value="XS">XS</option>
                                 <option value="S">S</option>
                                 <option value="M" selected>M</option>
@@ -265,7 +262,7 @@
                         </div>
                     </div>
                     <div class="admins-form">
-                        <div><button><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                        <div><button onclick="registerStudent()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
                     </div>
                 </div>
             </div>
@@ -287,15 +284,8 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-data">
-                                <tr>
-                                    <td>ICT Congress 2023</td>
-                                    <td>Skyhall SM Seaside</td>
-                                    <td>0/1200</td>
-                                    <td>UC LM</td>
-                                    <td>P550</td>
-                                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button><button><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
-                                </tr>
+                            <tbody id="events-data">
+                                
                             </tbody>
                         </table>
                     </div>
@@ -304,30 +294,37 @@
                     <h2>Add Event</h2>
                     <div class="admins-form">
                         <div><p>Event Name</p></div>
-                        <div><input type="text" placeholder="Event Name"></div>
+                        <div><input id="event_name" type="text" placeholder="Event Name"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>Venue</p></div>
-                        <div><input type="text" placeholder="Venue"></div>
+                        <div><input id="event_venue" type="text" placeholder="Venue"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>Attendees</p></div>
-                        <div><input type="number" placeholder="Attendees"></div>
+                        <div><input id="event_attendees" type="number" placeholder="Attendees"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>Host</p></div>
-                        <div><input type="text" placeholder="Host"></div>
+                        <div>
+                            <select id="event_host">
+                                <option value="UC Main">UC Main</option>
+                                <option value="UC LM">UC Lapu-Lapu Mandaue</option>
+                                <option value="UC BN">UC Banilad</option>
+                                <option value="UC PT">UC Pardo Talisay</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="admins-form">
                         <div><p>Registration Price</p></div>
-                        <div><input type="number" placeholder="Registration Price"></div>
+                        <div><input id="event_reg" type="number" placeholder="Registration Price"></div>
                     </div>
                     <div class="admins-form">
                         <div><p>T-Shirt Price</p></div>
-                        <div><input type="number" placeholder="Tshirt Price"></div>
+                        <div><input id="event_tshirt" type="number" placeholder="Tshirt Price"></div>
                     </div>
                     <div class="admins-form">
-                        <div><button><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                        <div><button onclick="registerEvents()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
                     </div>
                 </div>
             </div>
