@@ -9,7 +9,7 @@ import datetime
 
 
 from Database import updateAnnouncement, SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, GETAllMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
-    ,getAllAccounts, getAccountWithPassword, GetAllPromo, getAnnouncement, getAnnouncements, API_TARGET
+    ,getAllAccounts, getAccountWithPassword, GetAllPromo, getAnnouncement, getAnnouncements, API_TARGET, getMCSData
 # from EmailAPI import pushEmail
 from Models import Quiz, Questionaires, Announcement
 from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, contentVerifier,directoryExist, createDir, admins, binary_search
@@ -646,3 +646,7 @@ def api_account_search(search):
             mimetype='application/json'
         )
     return response
+
+@app.route('/PSITS/api/mcs')
+def getMcs():
+    return {"data":getMCSData()}

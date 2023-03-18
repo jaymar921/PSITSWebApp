@@ -345,7 +345,16 @@
   }
 </script>
 <div class="community-container" onclick="closeInfo()">
+    <h2 style="text-align: center">PSITS Minecraft Server</h2>
+    <div style="width: fit-content;position: relative;left:50%;transform: translateX(-50%);">
+      <img style="width:150px;position: relative;left:50%;transform: translateX(-50%);" src="{{url_for('static', filename='images/minecraft_PNG70.png')}}">
+      <span id="mcsSpan" style="width: 150px;font-weight: 900;white-space: pre-line;"></span>
+    </div>
+    <br>
+
     <h1 style="text-align: center; color:#074873; ">PSITS Community</h1> <br>
+
+    
         {% set count = namespace(value=0) %}
 
     <div class="row community-container" style="margin: auto;">
@@ -400,10 +409,34 @@
                 
             </div>
         {% endfor %}
+        
     </div>
+    
     
 </div>
 <br />
 <script src="{{url_for('static', filename='jquery.js')}}"></script>
 <script src="{{url_for('static', filename='progress.js')}}"></script>
+<script>
+  const updateMCS = async () => {
+    fetch('/PSITS/api/mcs')
+    .then(res => res.json())
+    .then(data => {
+      let names = '';
+      data.data.names.split(',').forEach(name => {
+        names += "&nbsp;&nbsp;&nbsp;-"+name + "<br>"
+      })
+      document.querySelector('#mcsSpan').innerHTML = `
+        Server Address: <a style='color:orange;text-decoration-line: underline' href='http://119.92.196.92:25565' target='_blank'>119.92.196.92:25565</a> <i class="fa fa-server" aria-hidden="true"></i>
+        Minecraft Version: <a style='color:red;'>1.19.3</a>
+        Online: <a style='color:green;'>${data.data.users}</a> <i class="fa fa-user" aria-hidden="true"></i>
+        Players:
+          ${names}
+      `;
+    })
+  }
+
+  setInterval(()=>{updateMCS()}, 25000);
+  updateMCS()
+</script>
 {% endblock %}

@@ -1097,3 +1097,8 @@ def getAnnouncement(id) -> Announcement:
             content=content.get('content')
         )
         return c
+
+def getMCSData():
+    query: str = f"SELECT * FROM `psits_mcs` WHERE id={1}"
+    return executeQueryReturn(query)[0]
+    
