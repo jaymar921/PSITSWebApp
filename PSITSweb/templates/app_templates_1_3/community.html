@@ -424,7 +424,8 @@
     .then(data => {
       let names = '';
       data.data.names.split(',').forEach(name => {
-        names += "&nbsp;&nbsp;&nbsp;-"+name + "<br>"
+        if(name !== '')
+          names += "&nbsp;&nbsp;&nbsp;-"+name + "<br>";
       })
       document.querySelector('#mcsSpan').innerHTML = `
         Server Address: <a style='color:orange;text-decoration-line: underline' href='http://119.92.196.92:25565' target='_blank'>119.92.196.92:25565</a> <i class="fa fa-server" aria-hidden="true"></i>
