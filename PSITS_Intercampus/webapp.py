@@ -84,7 +84,7 @@ def api_events():
     return {"message":"success", "inserted_data":event_data}
 
 
-@app.route('/api/registry', methods=['POST', 'GET'])
+@app.route('/api/registry', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def api_registry():
     if 'username' not in session:
         return {"message":"access-denied"}
@@ -92,6 +92,16 @@ def api_registry():
         h_ = request.headers.get('eventId')
         eventID = h_ if h_ is not None else 0
         return {"message":"success", "data":executeQueryReturn(f'SELECT * FROM psits_intercampus_registry where event_id={eventID}')}
+    if request.method.lower() == 'put':
+        uid = request.headers.get("eventId");
+        checked = request.headers.get("checked"); # True or False
+        option = request.headers.get("option"); # claimed or attended
+        executeQueryCommit(f'UPDATE psits_intercampus_registry set {option}="{checked}" where id={uid}')
+        return {"message":f"success update '{option}' to '{checked}'"}
+    if request.method.lower() == 'delete':
+        uid = request.headers.get("eventId");
+        executeQueryCommit(f'DELETE from psits_intercampus_registry where id={uid}')
+        return {"message":f"success delete"}
     registry_data: dict = request.json
     if len(executeQueryReturn(f'SELECT * FROM `psits_intercampus_admin` where idno={registry_data["idno"]}')) == 0:
         # CREATE THE ACCOUNT IF NOT FOUND
@@ -132,8 +142,8 @@ def api_registry():
             {registry_data['eventID']},
             "{registry_data['payment']}",
             "{registry_data['shirtsize']}",
-            "FALSE",
-            "FALSE",
+            "false",
+            "false",
             "{USER_DATA['lastname']}, {USER_DATA['firstname']}|{EVENT_DATA['event_name']}|{USER_DATA['campus']}"
         )
     """

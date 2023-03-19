@@ -204,7 +204,8 @@ const updateEventsTable = async () => {
          const col_remove = document.createElement('td');
          const col_removebtn = document.createElement('button');
          col_removebtn.addEventListener('click', (e)=> {
-            removeEvent(event.id);
+            if(confirm(`Delete ${event.event_name}'s data?`))
+                removeEvent(event.id);
          })
          col_removebtn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
          col_remove.appendChild(col_removebtn);
@@ -345,6 +346,15 @@ const loadRegistryCache = async () => {
             registryMapCache.delete(id);
     })
 
+    // update the old data with new one
+    registryCache.forEach(registry => {
+        if(registryMapCache.has(registry.idno)){
+            registryMapCache.set(registry.idno,{
+                ...registry
+            })
+        }
+    })
+
     updateRegistryTable();
 }
 
@@ -374,10 +384,37 @@ const updateRegistryTable = async () => {
         shirtsize.innerHTML = registry.shirt_size;
 
         const claimed = document.createElement('td');
+        const claimedCheckbox = document.createElement('input');
+        claimedCheckbox.type = 'checkbox';
+        claimedCheckbox.checked = registry.claimed.toLowerCase() === "true"? true : false;
+
+        claimedCheckbox.addEventListener('change', (e)=>{
+            if(e.target.checked)
+                updateRegistryOption(registry.id, 'claimed', 'true');
+            else updateRegistryOption(registry.id, 'claimed', 'false');
+        })
+        claimed.appendChild(claimedCheckbox);
         
         const attended  = document.createElement('td');
+        const attendedCheckbox = document.createElement('input');
+        attendedCheckbox.type = 'checkbox';
+        attendedCheckbox.checked = registry.attended.toLowerCase() === "true"? true : false;
+
+        attendedCheckbox.addEventListener('change', (e)=>{
+            if(e.target.checked)
+                updateRegistryOption(registry.id, 'attended', 'true');
+            else updateRegistryOption(registry.id, 'attended', 'false');
+        })
+        attended.appendChild(attendedCheckbox);
 
         const action  = document.createElement('td');
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
+        deleteBtn.addEventListener('click', (e)=>{
+            if(confirm(`Delete ${registry.meta_data.split('|')[0]}'s data?`))
+                updateRegistryOption(registry.id, 'delete', 'true');
+        })
+        action.appendChild(deleteBtn);
 
 
 
@@ -393,7 +430,27 @@ const updateRegistryTable = async () => {
         registryTable.appendChild(table_row);
     })
 }
-setInterval(()=>{loadRegistryCache()}, 1000);
+setInterval(()=>{loadRegistryCache()}, 2000);
+
+const updateRegistryOption = async (id, option, checked) => {
+    if(option !== 'delete'){
+        fetch('/api/registry',{
+            method:'PUT',
+            headers: {
+                'eventId': id,
+                'checked': checked,
+                'option': option
+            }
+        })
+    }else{
+        fetch('/api/registry',{
+            method:'DELETE',
+            headers: {
+                'eventId': id
+            }
+        })
+    }
+}
 
 // weather api
 // https://api.open-meteo.com/v1/forecast?latitude=10.32&longitude=123.85&hourly=temperature_2m,rain
