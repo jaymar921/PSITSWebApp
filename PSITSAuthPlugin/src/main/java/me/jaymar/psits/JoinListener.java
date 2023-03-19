@@ -34,6 +34,7 @@ public class JoinListener implements Listener {
     private void OnJoin(PlayerJoinEvent event){
         event.setJoinMessage("");
         UUIDS.add(event.getPlayer().getUniqueId().toString());
+        event.getPlayer().sendMessage(ChatColor.GREEN+"=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
         event.getPlayer().sendMessage(ChatColor.AQUA+"Welcome to PSITS MC Server!");
         event.getPlayer().sendMessage(ChatColor.YELLOW+"Please Enter your ID number: ");
         new BukkitRunnable(){
@@ -43,7 +44,7 @@ public class JoinListener implements Listener {
             public void run() {
                 if(UUIDS.contains(uuid)){
                     event.getPlayer().teleport(location);
-                    event.getPlayer().sendTitle(ChatColor.RED+"Account Login",ChatColor.BLUE+"Enter your ID number and Password", 0, 20, 5);
+                    event.getPlayer().sendTitle(ChatColor.RED+"PSITS Login",ChatColor.BLUE+"Enter your ID number and Password", 0, 20, 5);
                 }else {
                     cancel();
                 }
@@ -92,14 +93,20 @@ public class JoinListener implements Listener {
                             // rename the player
                             event.getPlayer().setDisplayName(account.getName());
                             event.getPlayer().setCustomName(account.getName());
+                            event.getPlayer().setPlayerListName(account.getName());
+                            event.getPlayer().setCustomNameVisible(true);
                             event.getPlayer().sendMessage(ChatColor.GREEN + "Feel free to walk around, gather resources and build something!");
                         }else {
                             event.getPlayer().sendMessage(ChatColor.RED+"Invalid Password! Try again...");
+                            if(Math.random() <= 0.5){
+                                event.getPlayer().sendMessage(ChatColor.RED+"If you forgot your password, reset your password at "+ChatColor.AQUA+"PSITS UC Main Website"+ChatColor.RED+". It will take 5 minutes to take effect.");
+                            }
                         }
                         return;
                     }
                 }
                 event.getPlayer().sendMessage(ChatColor.RED+"ID number not found! Enter your ID Again");
+                event.getPlayer().sendMessage(ChatColor.RED+"Make sure that you are using your "+ChatColor.AQUA+"ID Number"+ChatColor.RED+" registered at the "+ChatColor.AQUA+"PSITS UC Main Website");
                 LOGGED_DATA.remove(uuid);
 
             }else {

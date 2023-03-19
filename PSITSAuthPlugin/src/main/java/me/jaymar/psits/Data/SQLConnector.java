@@ -1,6 +1,8 @@
 package me.jaymar.psits.Data;
 
 import me.jaymar.psits.PluginCore;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.List;
@@ -46,7 +48,36 @@ public class SQLConnector {
                 accountsList.add(account);
             }
 
-            PluginCore.getPlugin(PluginCore.class).getLogger().info("Loaded "+accountsList.size() + " Accounts");
+            //PluginCore.getPlugin(PluginCore.class).getLogger().info("Loaded "+accountsList.size() + " Accounts");
+
+        }catch (Exception error){
+            PluginCore.getPlugin(PluginCore.class).getLogger().info(error.getMessage());
+        }
+    }
+
+    public static void UpdateUserCount(){
+        try{
+            // get the connection
+            Connection connection = new SQLConnector().Connect();
+            if(connection == null)
+                throw new Exception("Failed to connect to database");
+            int onlinePlayers = Bukkit.getOnlinePlayers().size();
+            String names = "";
+            for(Player p : Bukkit.getOnlinePlayers()){
+                names += p.getCustomName() + ",";
+            }
+            try{
+                String query = "insert into `psits_mcs` values(?,?,?)";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, 1);
+                statement.setInt(2, onlinePlayers);
+                statement.setString(3, names);
+                statement.executeUpdate();
+            }catch (Exception e){
+                String query = "update `psits_mcs` set users="+onlinePlayers+", names='"+names+"' where id=1";
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(query);
+            }
 
         }catch (Exception error){
             PluginCore.getPlugin(PluginCore.class).getLogger().info(error.getMessage());
