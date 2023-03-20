@@ -35,6 +35,12 @@
             <div>
                 <button type="button" onclick="loginAccount()">Login</button>
             </div>
+            {% if ALLOW_REGISTRATION %}
+            <br>
+            <div>
+                <button type="button" onclick="location.href='/registration';">Register</button>
+            </div>
+            {% endif %}
         </div>
     </div>
     <footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer>

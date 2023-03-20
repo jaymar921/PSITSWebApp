@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from mysql import connector
-import hashlib
+import hashlib, random
 
 # DUE TO LACK TO TIME, I MADE IT A SINGLE FILE
 app = Flask(__name__)
@@ -12,13 +12,25 @@ db_username = 'root'
 db_password = ''
 db_host = '127.0.0.1'
 
+# Attributes
+ALLOW_REGISTRATION = False
 temp_data = []
+TEMP_DATA_RAFFLE: dict = {}
 
 @app.route('/')
 def loginPage():
     if 'username' in session:
         return redirect(url_for('adminHome'))
-    return render_template('index.html') 
+    return render_template('index.html', ALLOW_REGISTRATION=ALLOW_REGISTRATION) 
+
+@app.route('/registration')
+def registrationPage():
+    if 'username' in session:
+        return redirect(url_for('adminHome'))
+    if not ALLOW_REGISTRATION:
+        return redirect(url_for('loginPage'))
+    return render_template('create_account.html') 
+
 
 
 @app.route('/login/<uid>')
@@ -39,6 +51,11 @@ def adminHome():
     if 'username' not in session:
         return redirect(url_for('loginPage'))
     return render_template('home.html', data=session['data'])
+
+@app.route('/raffle/<key>')
+def raffle(key):
+    print(TEMP_DATA_RAFFLE[key])
+    return render_template('raffle.html', key=key)
 
 
 # PSITS API
@@ -83,6 +100,34 @@ def api_events():
     addRegisterEvent(event_data)
     return {"message":"success", "inserted_data":event_data}
 
+@app.route('/api/register_admin',methods=['POST', 'DELETE'])
+def registerAdmin():
+    if request.method.lower() == 'delete':
+        if 'username' not in session:
+            return {"message":"access-denied"}
+        idno = request.headers.get('idno')
+        if(idno == '19889781'):
+            return {"message":"Could not remove super admin"}
+        executeQueryCommit(f'delete from `psits_intercampus_admin` where idno={idno}')
+        return {"message":f"Revoked user : {idno}"}
+    registry_data: dict = request.json
+    
+    user: dict = {
+            "idno": registry_data['idno'],
+            "firstname": registry_data['firstname'].upper(),
+            "lastname": registry_data['lastname'].upper(),
+            "course": registry_data['course'].upper(),
+            "year": registry_data['year'],
+            "campus": registry_data['campus'],
+            "email": registry_data['email'],
+            "password": hashData(registry_data['password']),
+            "isadmin": 'TRUE',
+        }
+    try:
+        registerUser(user)
+    except Exception as e:
+        return {"message":"error", "status": "error"}
+    return {"message":"success", "status": "ok"}
 
 @app.route('/api/registry', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def api_registry():
@@ -91,7 +136,13 @@ def api_registry():
     if request.method.lower() == 'get':
         h_ = request.headers.get('eventId')
         eventID = h_ if h_ is not None else 0
-        return {"message":"success", "data":executeQueryReturn(f'SELECT * FROM psits_intercampus_registry where event_id={eventID}')}
+
+        reqData = {}
+        try:
+            reqData = executeQueryReturn(f'SELECT * FROM psits_intercampus_registry where event_id={eventID}')
+        except Exception as e:
+            pass
+        return {"message":"success", "data":reqData}
     if request.method.lower() == 'put':
         uid = request.headers.get("eventId");
         checked = request.headers.get("checked"); # True or False
@@ -151,6 +202,52 @@ def api_registry():
 
     return {"message":"success"}
 
+@app.route('/api/allowadmin', methods=['GET','PUT'])
+def api_isAdminAllowed():
+    if 'username' not in session:
+        return {"message":"access-denied"}
+    global ALLOW_REGISTRATION
+    if request.method.lower() == 'get':
+        return {"message" : "success", "allowed": str(ALLOW_REGISTRATION)}
+    
+    req = request.headers.get('allow')
+
+    if(req.lower() == 'true'):
+        ALLOW_REGISTRATION = True
+    else: ALLOW_REGISTRATION = False
+
+    return  {"message" : "success", "allow registration": ALLOW_REGISTRATION}
+
+@app.route('/api/rafflegenerator', methods=['POST', 'GET'])
+def raffle_generator():
+    if 'username' not in session:
+        return {"message":"access-denied"}
+    
+    global TEMP_DATA_RAFFLE
+
+    if request.method.lower() == 'get':
+        return {"message":"success", "data":TEMP_DATA_RAFFLE[request.headers.get('raffle_key')]}
+
+    request_data = []
+
+    clientRequest = request.json
+    # if using event
+    if clientRequest['useEvent']:
+        # get the event id
+        eventID = clientRequest['eventID']
+        sql_data: dict = {}
+        if clientRequest['attendeesOnly']:
+            sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and attended="true"')
+        else: sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID}')
+        
+        for info in sql_data:
+            request_data.append(f"{info['meta_data'].split('|')[0]} - {info['meta_data'].split('|')[2]} CAMPUS")
+    else:
+        request_data = clientRequest['data']
+    _key = hashData(str(random.random()*random.random()/random.random()))
+
+    TEMP_DATA_RAFFLE[_key] = request_data
+    return {"message":"success","raffle_key":_key}
 
 
 # MYSQL DATABASE

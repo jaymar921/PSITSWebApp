@@ -2,7 +2,13 @@ let currentActiveWindow = '';
 const logout = () => {
     location.href = '/logout'
 }
-
+const allowReqFetch = () => {
+    fetch('/api/allowadmin')
+    .then(r => r.json())
+    .then(data => {
+        document.querySelector('#allow-reg').checked = data.allowed == 'True' ? true:false;
+    })
+}
 const btnClicked = (btn) => {
     if(getWindow()){
         document.querySelector(`#${getWindow()}`).classList.remove('active');
@@ -14,7 +20,7 @@ const btnClicked = (btn) => {
         document.querySelector(`#${btn}-container`).classList.add('show');
     currentActiveWindow = btn;
 
-    if(currentActiveWindow === 'registration')
+    if(currentActiveWindow === 'registration' || currentActiveWindow === 'raffle')
         setSelectOptionsRegistry();
 }
 
@@ -28,6 +34,8 @@ const getWindow = () => {
             return 'events';
         case 'metrics':
             return 'metrics';
+        case 'raffle':
+            return 'raffle';
     }
     return null;
 }
@@ -111,6 +119,9 @@ function updateAdminsTable(){
         const col_revoke = document.createElement('td');
         const col_revokebtn = document.createElement('button');
         col_revokebtn.innerHTML = 'Revoke';
+        col_revokebtn.addEventListener('click', (e)=> {
+            deleteUser(admin.idno);
+        })
         col_revoke.appendChild(col_revokebtn);
 
 
@@ -127,7 +138,15 @@ function updateAdminsTable(){
 
 
 setInterval(()=>{loadAdminsCache()}, 1000);
-
+const deleteUser = async (id) =>{
+    fetch('/api/register_admin', {
+        method: 'DELETE',
+        headers: {
+            'idno':id
+        }
+    }).then(r => r.json())
+    .then(d => alert(d.message));
+}
 /*
     EVENTS PAGE
 */
@@ -310,52 +329,78 @@ const setSelectOptionsRegistry = async () => {
             event_options.appendChild(option);
         })
     });
+    fetch('/api/events')
+    .then(res => res.json())
+    .then(data => {
+        const event_options = document.querySelector('#metrics_id');
+        event_options.innerHTML = '';
+        data.events.forEach(ev => {
+            const option = document.createElement('option');
+            option.innerHTML = ev.event_name;
+            option.value = ev.id;
+            event_options.appendChild(option);
+        })
+    });
+    fetch('/api/events')
+    .then(res => res.json())
+    .then(data => {
+        const event_options = document.querySelector('#raffle_id');
+        event_options.innerHTML = '';
+        data.events.forEach(ev => {
+            const option = document.createElement('option');
+            option.innerHTML = ev.event_name;
+            option.value = ev.id;
+            event_options.appendChild(option);
+        })
+    });
 }
 
 let registryCache = [];
 let registryMapCache = new Map();
 const registryTable = document.querySelector('#registry-data');
 const loadRegistryCache = async () => {
-    if(getWindow() !== 'registration')
-        return;
-    await fetch('/api/registry',{
-        headers:{
-            "eventId": document.querySelector('#reg_id').value
-        }
-    }).then(res => res.json())
-    .then(data => registryCache=data.data);
+    try{
+        if(getWindow() !== 'registration')
+            return;
+        await fetch('/api/registry',{
+            headers:{
+                "eventId": document.querySelector('#reg_id').value
+            }
+        }).then(res => res.json())
+        .then(data => registryCache=data.data);
 
-    // add the new items in map
-    registryCache.forEach(registry => {
-        if(!registryMapCache.has(registry.idno)){
-            registryMapCache.set(registry.idno,{
-                ...registry
-            })
-        }
-    })
+        // add the new items in map
+        registryCache.forEach(registry => {
+            if(!registryMapCache.has(registry.idno)){
+                registryMapCache.set(registry.idno,{
+                    ...registry
+                })
+            }
+        })
 
-    // remove item if not in cache but in map
-    let ids_map = [];
-    registryMapCache.forEach((v, k)=> {ids_map.push(k)});
+        // remove item if not in cache but in map
+        let ids_map = [];
+        registryMapCache.forEach((v, k)=> {ids_map.push(k)});
 
-    let ids_cache = [];
-    registryCache.forEach((v)=> {ids_cache.push(v.idno)});
+        let ids_cache = [];
+        registryCache.forEach((v)=> {ids_cache.push(v.idno)});
 
-    ids_map.forEach(id=>{
-        if(!ids_cache.includes(id))
-            registryMapCache.delete(id);
-    })
+        ids_map.forEach(id=>{
+            if(!ids_cache.includes(id))
+                registryMapCache.delete(id);
+        })
 
-    // update the old data with new one
-    registryCache.forEach(registry => {
-        if(registryMapCache.has(registry.idno)){
-            registryMapCache.set(registry.idno,{
-                ...registry
-            })
-        }
-    })
+        // update the old data with new one
+        registryCache.forEach(registry => {
+            if(registryMapCache.has(registry.idno)){
+                registryMapCache.set(registry.idno,{
+                    ...registry
+                })
+            }
+        })
 
-    updateRegistryTable();
+        updateRegistryTable();
+    }catch{}
 }
 
 const updateRegistryTable = async () => {
@@ -450,6 +495,84 @@ const updateRegistryOption = async (id, option, checked) => {
             }
         })
     }
+}
+
+document.querySelector('#allow-reg').addEventListener('change', ({target})=> {
+    if(confirm(`Set admin registration to: ${target.checked}?`)){
+        fetch('/api/allowadmin',{
+            method: 'PUT',
+            headers:{
+                "allow": target.checked
+            }
+        })
+    }
+})
+
+/*
+    RAFFLE
+*/
+
+document.querySelector('#use-event-toggle').addEventListener('change', ({target}) => {
+    if(target.checked){
+        document.querySelector('#raffle-use-event').innerHTML = 'Use Event:'
+        document.querySelector('#use-custom').classList.add('hidden');
+        document.querySelector('#use-event').classList.remove('hidden');
+
+        document.querySelector('#use-custom').classList.remove('show');
+        document.querySelector('#use-event').classList.add('show');
+
+    }else{
+        document.querySelector('#raffle-use-event').innerHTML = 'Custom:'
+        
+        document.querySelector('#use-event').classList.add('hidden');
+        document.querySelector('#use-custom').classList.remove('hidden');
+
+        document.querySelector('#use-custom').classList.add('show');
+        document.querySelector('#use-event').classList.remove('show');
+
+    }
+})
+
+document.querySelector('#attendees_only').addEventListener('change', ({target}) => {
+    if(target.checked){
+        document.querySelector('#raffle-att-only').innerHTML = 'Attendees only: '
+    }else{
+        document.querySelector('#raffle-att-only').innerHTML = 'Include everyone: '
+    }
+})
+
+document.querySelector('#custom-opt').addEventListener('change', ({target}) => {
+    if(target.checked){
+        document.querySelector('#raffle-custom-opt').innerHTML = 'Comma Separated: '
+    }else{
+        document.querySelector('#raffle-custom-opt').innerHTML = 'New line Separated: '
+    }
+})
+
+const submitGenerateRaffle = async () => {
+    const useEvent = document.querySelector('#use-event-toggle').checked;
+    const eventID = document.querySelector('#raffle_id').value;
+    const attendeesOnly = document.querySelector('#attendees_only').checked;
+
+    const commaSeparated = document.querySelector('#custom-opt').checked;
+    const inputData = document.querySelector('#raffleinputData').value;
+    
+    const data = inputData.split(commaSeparated?",":"\n");
+
+    fetch('/api/rafflegenerator', {
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            useEvent,
+            eventID,
+            attendeesOnly,
+            data
+        })
+    })
+    .then(r => r.json())
+    .then(data => location.href=`/raffle/${data.raffle_key}`)
 }
 
 // weather api

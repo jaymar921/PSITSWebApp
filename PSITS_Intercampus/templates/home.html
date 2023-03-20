@@ -16,9 +16,10 @@
             <hr>
             <h3>Administration</h3>
             <div class="buttons-block">
-                <button id="admins" onclick="btnClicked('admins')"><i class="fa-solid fa-user"></i> Admins</button>
+                <button id="admins" onclick="btnClicked('admins');allowReqFetch()"><i class="fa-solid fa-user"></i> Admins</button>
                 <button id="registration" onclick="btnClicked('registration')"><i class="fa-solid fa-book"></i> Registration</button>
                 <button id="events" onclick="btnClicked('events')"><i class="fa-solid fa-calendar-days"></i> Events</button>
+                <button id="raffle" onclick="btnClicked('raffle')"><i class="fa-solid fa-gamepad"></i> Raffle</button>
                 <button id="metrics" onclick="btnClicked('metrics')"><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
             </div>
             <div class="logout-button">
@@ -53,7 +54,7 @@
                 <div>
                     <h2>Allow admin registration: 
                         <label class="switch">
-                            <input type="checkbox">
+                            <input id="allow-reg" type="checkbox">
                             <span class="slider"></span>
                         </label>
                     </h2>
@@ -228,8 +229,8 @@
                 <div class="admins-form">
                     <div><p>Event</p></div>
                     <div>
-                        <select>
-                            <option value="ICT Congress 2023">ICT Congress 2023</option>
+                        <select id="metrics_id">
+                            <option value="NONE" disabled selected>SELECT EVENT</option>
                         </select>
                     </div>
                 </div>
@@ -278,6 +279,74 @@
                     </div>
                     <div>
                         <p class="left">P37,035</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- RAFFLE-->
+            <div id="raffle-container"  class="metrics-container hidden">
+                <div class="admins-table">
+                    <h1>Raffle</h1>
+                </div>
+                
+                    
+                <div>
+                    <h2><a id="raffle-use-event">Use Event: </a> 
+                        <label class="switch left">
+                            <input id="use-event-toggle" type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </h2>
+                </div>
+                <br>
+                <div style="position: absolute; left: 50%; transform: translateX(-50%);" id="use-event" class="show">
+                    <div class="admins-form">
+                        <div><p>Event</p></div>
+                        <div>
+                            <select id="raffle_id">
+                                <option value="NONE" disabled selected>SELECT EVENT</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admins-form">
+                        <div>
+                            <h2><a id="raffle-att-only">Attendees only: </a> 
+                                <label class="switch left">
+                                    <input id="attendees_only" type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: absolute; left: 50%; transform: translateX(-50%);" id="use-custom" class="hidden">
+                    <div class="admins-form">
+                        <div>
+                            <h2><a id="raffle-custom-opt">Comma Separated: </a> 
+                                <label class="switch left">
+                                    <input id="custom-opt" type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </h2>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="admins-form">
+                        <div><p style="text-align: center;">Data input</p></div>
+                    </div>
+                    <div class="admins-form">
+                        <div>
+                            <textarea id="raffleinputData" style="width: 250px;height: 200px; resize: none;" placeholder="input the data here"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <br><br><br><br><br><br>
+                <br><br><br><br><br><br>
+                <br><br><br><br><br><br>
+                <div class="admins-form">
+                    <div>
+                        <button onclick="submitGenerateRaffle()">Generate</button>
                     </div>
                 </div>
             </div>
