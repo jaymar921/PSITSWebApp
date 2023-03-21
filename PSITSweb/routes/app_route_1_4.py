@@ -526,3 +526,24 @@ def psits_documents():
         logout="none",
         admin='none'
     )
+
+
+@app.route("/PSITS/Games")
+def psits_games():
+    if 'username' in session:
+        return render_template(
+            "app_templates_1_4/Games.html",
+            title='PSITS Games',
+            login="none",
+            logout="block",
+            admin='none',
+            account=session['username'],
+            account_data=getAccountByID(session['username'])
+        )
+    return render_template(
+        "app_templates_1_4/Games.html",
+        title='PSITS Games',
+        login="block",
+        logout="none",
+        admin='none'
+    )
