@@ -4,3 +4,4 @@ PSITSweb/SERVER_FILES/*
 PSITSweb/configuration.psits_config
 PSITSweb_ASP.NET/PSITS Web Application/obj/Debug/netcoreapp3.1/project.razor.json
 PSITSweb/configuration.psits_config
+PSITS_Intercampus/sendmailapi.py
