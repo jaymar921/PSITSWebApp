@@ -20,7 +20,7 @@
                 <button id="registration" onclick="btnClicked('registration')"><i class="fa-solid fa-book"></i> Registration</button>
                 <button id="events" onclick="btnClicked('events')"><i class="fa-solid fa-calendar-days"></i> Events</button>
                 <button id="raffle" onclick="btnClicked('raffle')"><i class="fa-solid fa-gamepad"></i> Raffle</button>
-                <button id="metrics" onclick="btnClicked('metrics')"><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
+                <button id="metrics" onclick="btnClicked('metrics')" disabled><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
             </div>
             <div class="logout-button">
                 <button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="admins-form">
                         <div><p>Search</p></div>
-                        <div><input type="text" placeholder="ID Number | Fullname"></div>
+                        <div><input id="reg_search" type="text" placeholder="ID Number | Fullname"></div>
                     </div>
                     <div class="admins-table-container">
                         
@@ -117,12 +117,19 @@
                     <div class="admins-form">
                         <div><p>Campus</p></div>
                         <div>
-                            <select id="reg_campus">
+                            <select id="reg_campus_selection">
                                 <option value="UC Main">UC MAIN</option>
                                 <option value="UC PT">UC PARDO TALISAY</option>
                                 <option value="UC BN">UC BANILAD</option>
                                 <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
+                                <option value="OTHER">OTHER</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="admins-form hidden" id="reg_otherCampus">
+                        <div><p>Other Campus</p></div>
+                        <div>
+                            <input id="reg_campus" type="text" placeholder="Campus">
                         </div>
                     </div>
                     

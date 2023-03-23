@@ -398,15 +398,26 @@ const loadRegistryCache = async () => {
                 })
             }
         })
-
-        updateRegistryTable();
     }catch{}
 }
 
 const updateRegistryTable = async () => {
     registryTable.innerHTML = '';
-    registryMapCache.forEach(registry => {
-        
+
+    // sort the registryCache
+    const arrSorted = registryCache.sort(function(a,b){
+        const nameA = a.meta_data.split('|')[0].toLowerCase();
+        const nameB = b.meta_data.split('|')[0].toLowerCase();
+        if(nameA < nameB)
+            return -1;
+        if(nameA > nameB)
+            return 1;
+        return 0;
+    });
+
+    const toSearch = document.querySelector('#reg_search').value;
+
+    arrSorted.forEach(registry => {
         // creating each new elements for the table
         const table_row = document.createElement('tr');
 
@@ -472,10 +483,21 @@ const updateRegistryTable = async () => {
         table_row.appendChild(claimed);
         table_row.appendChild(attended);
         table_row.appendChild(action);
-        registryTable.appendChild(table_row);
+
+        let found = true;
+        if(toSearch !== ''){
+            if(registry.meta_data.split('|')[0]){
+                if(!registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && !registry.idno.toString().startsWith(toSearch)){
+                    found = false;
+                }
+            }
+        }
+        if(found)
+            registryTable.appendChild(table_row);
     })
 }
 setInterval(()=>{loadRegistryCache()}, 2000);
+setInterval(()=>{updateRegistryTable()}, 200);
 
 const updateRegistryOption = async (id, option, checked) => {
     if(option !== 'delete'){
@@ -505,6 +527,16 @@ document.querySelector('#allow-reg').addEventListener('change', ({target})=> {
                 "allow": target.checked
             }
         })
+    }
+})
+
+document.querySelector('#reg_campus_selection').addEventListener('change', ({target})=> {
+    if(target.value === 'OTHER'){
+        document.querySelector('#reg_otherCampus').classList.remove('hidden');
+        document.querySelector('#reg_campus').value = '';
+    }else{
+        document.querySelector('#reg_otherCampus').classList.add('hidden');
+        document.querySelector('#reg_campus').value = target.value;
     }
 })
 
