@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from mysql import connector
 import hashlib, random
+from sendmailapi import email_verification
 
 # DUE TO LACK TO TIME, I MADE IT A SINGLE FILE
 app = Flask(__name__)
 app.secret_key = 'PSITS2023BYABEJAR'
+PORT = 3000
 
 # database manipulation
 db_name = 'psitswebapp'
@@ -178,6 +180,8 @@ def api_registry():
 
     print(USER_DATA)
     print(registry_data)
+
+    REF_CODE = ReferenceGenerator()
     query: str = f"""
         INSERT INTO psits_intercampus_registry(
             `idno`,  
@@ -195,10 +199,13 @@ def api_registry():
             "{registry_data['shirtsize']}",
             "false",
             "false",
-            "{USER_DATA['lastname']}, {USER_DATA['firstname']}|{EVENT_DATA['event_name']}|{USER_DATA['campus']}"
+            "{USER_DATA['lastname']}, {USER_DATA['firstname']}|{EVENT_DATA['event_name']}|{USER_DATA['campus']}|{REF_CODE}"
         )
     """
     executeQueryCommit(query)
+
+    # Send Email
+    email_verification(registry_data['email'], REF_CODE, f"{USER_DATA['firstname']} {USER_DATA['lastname']}", EVENT_DATA['event_name'])
 
     return {"message":"success"}
 
@@ -325,6 +332,13 @@ def hashData(data: str) -> str:
     result = hashlib.md5(data.encode()).hexdigest()
     return str(result)
 
+def getRandomChar():
+    a = ['A','B','C','D','E', 'F', 'G']
+    return a[random.randint(0,6)]
+
+def ReferenceGenerator():
+    return f"{random.randint(10,99)}{getRandomChar()}{getRandomChar()}{random.randint(100,999)}{getRandomChar()}"
+
 # Avoid going back after logout
 @app.after_request
 def after_request(response):
@@ -332,4 +346,4 @@ def after_request(response):
     return response
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=PORT, debug=True)
