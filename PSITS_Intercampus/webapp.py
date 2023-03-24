@@ -18,6 +18,7 @@ db_host = '127.0.0.1'
 ALLOW_REGISTRATION = False
 temp_data = []
 TEMP_DATA_RAFFLE: dict = {}
+API_KEY = '01c63b90a6dcf13484a987bc0e1d5312'
 
 @app.route('/')
 def loginPage():
@@ -133,10 +134,24 @@ def registerAdmin():
 
 @app.route('/api/registry', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def api_registry():
+    session_key = request.headers.get('access-key')
+    global API_KEY
+
     if 'username' not in session:
-        return {"message":"access-denied"}
+        if not session_key in API_KEY:
+            return {"message":"access-denied"}
+    
     if request.method.lower() == 'get':
         h_ = request.headers.get('eventId')
+        r_c = request.headers.get('regCode')
+
+        if r_c is not None:
+            try:
+                reqData = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where meta_data LIKE "%{r_c}%"')[0]
+                return {"message":"success", "data":reqData}
+            except:
+                return {"message":"not found"}
+
         eventID = h_ if h_ is not None else 0
 
         reqData = {}
