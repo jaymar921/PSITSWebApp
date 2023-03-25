@@ -364,7 +364,7 @@ const loadRegistryCache = async () => {
             return;
         await fetch('/api/registry',{
             headers:{
-                "regID": document.querySelector('#reg_id').value
+                "eventId": document.querySelector('#reg_id').value
             }
         }).then(res => res.json())
         .then(data => registryCache=data.data);
@@ -497,14 +497,14 @@ const updateRegistryTable = async () => {
     })
 }
 setInterval(()=>{loadRegistryCache()}, 2000);
-setInterval(()=>{updateRegistryTable()}, 200);
+setInterval(()=>{updateRegistryTable()}, 1000);
 
 const updateRegistryOption = async (id, option, checked) => {
     if(option !== 'delete'){
         fetch('/api/registry',{
             method:'PUT',
             headers: {
-                'eventId': id,
+                'regID': id,
                 'checked': checked,
                 'option': option
             }
