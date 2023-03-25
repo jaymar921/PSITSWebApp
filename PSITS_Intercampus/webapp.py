@@ -161,7 +161,7 @@ def api_registry():
             pass
         return {"message":"success", "data":reqData}
     if request.method.lower() == 'put':
-        uid = request.headers.get("eventId");
+        uid = request.headers.get("regID");
         checked = request.headers.get("checked"); # True or False
         option = request.headers.get("option"); # claimed or attended
         executeQueryCommit(f'UPDATE psits_intercampus_registry set {option}="{checked}" where id={uid}')

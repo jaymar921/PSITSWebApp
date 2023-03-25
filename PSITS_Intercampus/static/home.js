@@ -364,7 +364,7 @@ const loadRegistryCache = async () => {
             return;
         await fetch('/api/registry',{
             headers:{
-                "eventId": document.querySelector('#reg_id').value
+                "regID": document.querySelector('#reg_id').value
             }
         }).then(res => res.json())
         .then(data => registryCache=data.data);
