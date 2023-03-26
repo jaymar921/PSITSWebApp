@@ -10,15 +10,15 @@ PORT = 3000
 
 # database manipulation
 db_name = 'psitswebapp'
-db_username = 'root'
-db_password = ''
+db_username = 'user'
+db_password = 'pass'
 db_host = '127.0.0.1'
 
 # Attributes
 ALLOW_REGISTRATION = False
 temp_data = []
 TEMP_DATA_RAFFLE: dict = {}
-API_KEY = '01c63b90a6dcf13484a987bc0e1d5312'
+API_KEY = '@key--here'
 
 @app.route('/')
 def loginPage():
