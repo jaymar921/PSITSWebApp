@@ -279,6 +279,9 @@ const registerStudent = async () => {
     const payment = document.querySelector('#reg_payment').value;
     const shirtsize = document.querySelector('#reg_size').value;
     const eventID = document.querySelector('#reg_id').value;
+    const reg_btn = document.querySelector('#reg_save');
+
+    reg_btn.disabled = true;
     
     fetch('/api/registry',{
         method: 'POST',
@@ -300,6 +303,7 @@ const registerStudent = async () => {
             document.querySelector('#reg_idno').value = '';
             document.querySelector('#reg_fullname').value = '';
             document.querySelector('#reg_email').value = '';
+            reg_btn.disabled = false;
         }
     });
 }
