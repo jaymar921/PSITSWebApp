@@ -317,6 +317,13 @@ function ExtractFullname(fullname) {
         if(i > 0) firstname+=' ';
         firstname += names[i]
     }
+
+    let lastnameFirst = fullname.split(',');
+    
+    if(lastnameFirst.length > 1){
+        lastname = lastnameFirst[0];
+        firstname = lastnameFirst[1];
+    }
     return {firstname, lastname}
 }
 
@@ -501,7 +508,7 @@ const updateRegistryTable = async () => {
     })
 }
 setInterval(()=>{loadRegistryCache()}, 2000);
-setInterval(()=>{updateRegistryTable()}, 1000);
+setInterval(()=>{updateRegistryTable()}, 500);
 
 const updateRegistryOption = async (id, option, checked) => {
     if(option !== 'delete'){

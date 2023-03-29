@@ -20,7 +20,7 @@ temp_data = []
 TEMP_DATA_RAFFLE: dict = {}
 API_KEY = '@key--here'
 
-@app.route('/')
+@app.route('/login')
 def loginPage():
     if 'username' in session:
         return redirect(url_for('adminHome'))
