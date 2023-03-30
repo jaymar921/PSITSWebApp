@@ -1,4 +1,50 @@
-body{
+
+/* Remove input number arrows */
+/* --------------------------------- */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+button{
+    background-color:#002e48;
+    color:white;
+    width:100%;
+    height:50px;
+}
+
+
+
+
+
+
+.loginForm{
+    width:30%;
+    margin:auto;
+    padding:50px;
+}
+.input-group{
+    margin-top:5px;
+    margin-bottom:5px;
+    height:50px;
+}
+
+@media only screen and (max-width:1000px){
+    .loginForm{
+        width:90%;
+    }
+}
+
+
+/* --------------------------------- */
+/* body{
     background-color: #36454F;
     background-image: url('R.jpg');
     background-size: cover;
@@ -13,7 +59,7 @@ body{
     height: 100%;
 }
 
-.form{
+ .form{
     position: absolute;
     width: 350px;
     left: 50%;
@@ -63,4 +109,4 @@ footer{
 
 footer a{
     color: rgb(158, 158, 158);
-}
+} */

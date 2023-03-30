@@ -1,160 +1,170 @@
+{% extends 'base.html'%}
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+{% block head %}
+<!-- <head> -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSITS INTERCAMPUS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='create_account.css')}}" type="text/css"/>
     <link rel="stylesheet" href="../static/create_account.css" type="text/css"/>
-</head>
+<!-- </head> -->
+{% endblock %}
+
+{% block content %}
 <body>
-    <div class="container">
-        <div class="form">
-            <h1>Administration</h1>
-            <h4>Intercampus PSITS</h4>
-            <h4>Registration</h4>
+    
 
-            <div style="display: flex;margin: auto;">
+<div class="container">
+    <div class="form">
+        <h1>Administration</h1>
+        <h4>Intercampus PSITS</h4>
+        <h4>Registration</h4>
 
-                <div style="margin: auto">
+        <div style="display: flex;margin: auto;">
+
+            <div style="margin: auto">
+                <div>
                     <div>
-                        <div>
-                            <label>ID Number</label>
-                        </div>
-                        <div>
-                            <input id="idno" type="number" placeholder="ID Number"/>
-                        </div>
+                        <label>ID Number</label>
                     </div>
-                    <br>
                     <div>
-                        <div>
-                            <label>Lastname</label>
-                        </div>
-                        <div>
-                            <input id="ln" type="text" placeholder="Lastname"/>
-                        </div>
+                        <input id="idno" type="number" placeholder="ID Number"/>
                     </div>
-                    <br>
-                    <div>
-                        <div>
-                            <label>Firstname</label>
-                        </div>
-                        <div>
-                            <input id="fn" type="text" placeholder="Firstname"/>
-                        </div>
-                    </div>
-                    <br>
                 </div>
-                <div style="margin: auto">
+                <br>
+                <div>
                     <div>
-                        <div>
-                            <label>Course</label>
-                        </div>
-                        <div>
-                            <input id="course" type="text" placeholder="Course"/>
-                        </div>
+                        <label>Lastname</label>
                     </div>
-                    <br>
                     <div>
-                        <div>
-                            <label>Year</label>
-                        </div>
-                        <div>
-                            <select id="year">
-                                <option value="1">1st Year</option>
-                                <option value="2">2nd Year</option>
-                                <option value="3">3rd Year</option>
-                                <option value="4">4th Year</option>
-                                <option value="PROF">Professor</option>
-                            </select>
-                        </div>
+                        <input id="ln" type="text" placeholder="Lastname"/>
                     </div>
-                    <br>
-                    <div>
-                        <div>
-                            <label>Email</label>
-                        </div>
-                        <div>
-                            <input id="email" type="text" placeholder="Email"/>
-                        </div>
-                    </div>
-                    <br>
-                    
                 </div>
+                <br>
+                <div>
+                    <div>
+                        <label>Firstname</label>
+                    </div>
+                    <div>
+                        <input id="fn" type="text" placeholder="Firstname"/>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div style="margin: auto">
+                <div>
+                    <div>
+                        <label>Course</label>
+                    </div>
+                    <div>
+                        <input id="course" type="text" placeholder="Course"/>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <div>
+                        <label>Year</label>
+                    </div>
+                    <div>
+                        <select id="year">
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="PROF">Professor</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <div>
+                        <label>Email</label>
+                    </div>
+                    <div>
+                        <input id="email" type="text" placeholder="Email"/>
+                    </div>
+                </div>
+                <br>
+                
+            </div>
 
+        </div>
+        <div>
+            <div>
+                <label>Campus</label>
             </div>
             <div>
-                <div>
-                    <label>Campus</label>
-                </div>
-                <div>
-                    <select id="campus">
-                        <option value="UC Main">UC MAIN</option>
-                        <option value="UC PT">UC PARDO TALISAY</option>
-                        <option value="UC BN">UC BANILAD</option>
-                        <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
-                    </select>
-                </div>
-            </div>
-            <br>
-            <div>
-                <div>
-                    <label>Password</label>
-                </div>
-                <div>
-                    <input id="pass" type="password" placeholder="Password"/>
-                </div>
-            </div>
-            <br>
-            <div>
-                <button type="button" onclick="createAccount()">Register</button>
+                <select id="campus">
+                    <option value="UC Main">UC MAIN</option>
+                    <option value="UC PT">UC PARDO TALISAY</option>
+                    <option value="UC BN">UC BANILAD</option>
+                    <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
+                </select>
             </div>
         </div>
+        <br>
+        <div>
+            <div>
+                <label>Password</label>
+            </div>
+            <div>
+                <input id="pass" type="password" placeholder="Password"/>
+            </div>
+        </div>
+        <br>
+        <div>
+            <button type="button" onclick="createAccount()">Register</button>
+        </div>
     </div>
-    <footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer>
-    <script>
-        const getCreds = () => {
-            const idno = document.querySelector('#idno').value;
-            const pass = document.querySelector('#pass').value;
-            const lastname = document.querySelector('#ln').value;
-            const firstname = document.querySelector('#fn').value;
-            const course = document.querySelector('#course').value;
-            const year = document.querySelector('#year').value;
-            const email = document.querySelector('#email').value;
-            const campus = document.querySelector('#campus').value;
+</div>
+<footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer>
+<script>
+    const getCreds = () => {
+        const idno = document.querySelector('#idno').value;
+        const pass = document.querySelector('#pass').value;
+        const lastname = document.querySelector('#ln').value;
+        const firstname = document.querySelector('#fn').value;
+        const course = document.querySelector('#course').value;
+        const year = document.querySelector('#year').value;
+        const email = document.querySelector('#email').value;
+        const campus = document.querySelector('#campus').value;
 
-            return {idno, pass, lastname, firstname, course, year, campus, email};
+        return {idno, pass, lastname, firstname, course, year, campus, email};
+    }
+
+    const createAccount = async () => {
+        const {idno, pass:password, lastname, firstname, course, year, campus, email} = getCreds();
+
+        const response = await fetch('/api/register_admin', {
+            method: 'POST',
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify(
+                {
+                    idno,
+                    firstname,
+                    lastname,
+                    course,
+                    year,
+                    campus,
+                    email,
+                    password
+                }
+            )
+        });
+
+        const data = await response.json();
+        
+        if(data.status === 'ok'){
+            location.href = `/`
         }
-
-        const createAccount = async () => {
-            const {idno, pass:password, lastname, firstname, course, year, campus, email} = getCreds();
-
-            const response = await fetch('/api/register_admin', {
-                method: 'POST',
-                headers:{
-                    "Content-Type": "application/json"
-                },
-                body:JSON.stringify(
-                    {
-                        idno,
-                        firstname,
-                        lastname,
-                        course,
-                        year,
-                        campus,
-                        email,
-                        password
-                    }
-                )
-            });
-
-            const data = await response.json();
-            
-            if(data.status === 'ok'){
-                location.href = `/`
-            }
-        }
-    </script>
+    }
+</script>
 </body>
-</html>
+{% endblock %}

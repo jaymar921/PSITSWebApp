@@ -1,0 +1,16 @@
+
+#content {
+    min-height: calc(100% - 50px);
+    /* Subtract the height of the footer */
+    padding-bottom: 50px;
+    /* Add padding to make room for the footer */
+}
+
+#footer {
+
+    position: relative;
+    margin-top: -50px;
+    /* Set the footer to overlap the main content area */
+
+    width: 100%;
+}

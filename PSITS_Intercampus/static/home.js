@@ -119,6 +119,7 @@ function updateAdminsTable(){
         const col_revoke = document.createElement('td');
         const col_revokebtn = document.createElement('button');
         col_revokebtn.innerHTML = 'Revoke';
+        col_revokebtn.setAttribute("class", "btn btn-outline-danger");
         col_revokebtn.addEventListener('click', (e)=> {
             deleteUser(admin.idno);
         })
@@ -222,6 +223,7 @@ const updateEventsTable = async () => {
  
          const col_remove = document.createElement('td');
          const col_removebtn = document.createElement('button');
+         col_removebtn.setAttribute("class", "btn btn-outline-danger");
          col_removebtn.addEventListener('click', (e)=> {
             if(confirm(`Delete ${event.event_name}'s data?`))
                 removeEvent(event.id);

@@ -1,6 +1,5 @@
 body{
-    background-color: #36454F;
-    background-image: url('R.jpg');
+ background-color: white;
     background-size: cover;
     background-repeat:no-repeat;
     margin: 0;
@@ -17,10 +16,16 @@ body{
     position: absolute;
     width: 300px;
     height: 100%;
-    background-color: bisque;
+    background-color: #002e48;
+    color:white;
     text-align: center;
-    color: black;
+    color: rgb(64, 64, 64);
     left: 0;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.left-menu hr{
+    opacity:0.1;
 }
 
 .right-container{
@@ -30,7 +35,7 @@ body{
     height: 97%;
     background-color: rgba(0,0,0,0.2);
     text-align: center;
-    color: black;
+    color: rgb(64, 64, 64);
     right: 0;
     left: 300px;
     padding: 10px;
@@ -47,14 +52,17 @@ body{
 
 .buttons-block button{
     cursor: pointer;
-    width: 80%;
-    outline: none;
+    width: 90%;
+    height:50px;
+    margin-top:5px;
+    margin-bottom:5px;
+    /* outline: none;
     border: 1px solid white;
-    padding: 20px;
+    padding: 20px; */
 }
 
 .buttons-block button:hover, .logout-button button:hover{
-    border: 1px solid black;
+    /* border: 1px solid black; */
 }
 
 .logout-button{
@@ -64,6 +72,7 @@ body{
     width: 80%;
     left: 50%;
     transform: translateX(-50%);
+    
 }
 
 .logout-button button{
@@ -71,43 +80,48 @@ body{
     width: 100%;
     outline: none;
     border: 1px solid transparent;
+   
     padding: 20px;
 }
 
 .admins-container, .registration-container, .events-container, .metrics-container{
     position: absolute;
     border: 1px solid transparent;
+    margin:auto;
     height: 95%;
     min-width: 650px;
-    width: 96.5%;
-    background-color: rgba(255,255,255,0.7);
-    padding: 10px;
+    width: 98.8%;
+    background-color: white;
+    padding: 30px;
     overflow: auto;
+    text-align: left;
+
 }
 
 .admins-table{
     width: 100%;
+
 }
 
 .admins-table-container{
     height: 150px;
     overflow: auto;
-    background-color: white;
+    /* background-color: white; */
 }
 
 table{
     width: 100%;
-    background-color: white;
+    /* background-color: white;
     border: 1px solid #f2f2f2;
-    border-collapse: collapse;
+    border-collapse: collapse; */
 }
 
 table th{
-    border: 2px solid black;
+    /* border: 2px solid black; */
 }
 
 table td{
-    border: 2px solid grey;
+    /* border: 2px solid grey; */
 }
 
 .active{
@@ -135,6 +149,7 @@ button{
     padding: 0;
     left: 50%;
     transform: translateX(-50%);
+
 }
 
 .admins-form div{
@@ -153,9 +168,10 @@ button{
 }
 
 .admins-form div button{
-    padding: 5px 15px 5px 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin:auto;
+    width:300px;
+    height:50px;
+    margin-top:20px;
 }
 
 .admins-graph{

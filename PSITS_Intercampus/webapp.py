@@ -3,16 +3,24 @@ from mysql import connector
 import hashlib, random
 from sendmailapi import email_verification
 
+
 # DUE TO LACK TO TIME, I MADE IT A SINGLE FILE
 app = Flask(__name__)
 app.secret_key = 'PSITS2023BYABEJAR'
 PORT = 3000
 
+
+
+
+
 # database manipulation
 db_name = 'psitswebapp'
-db_username = 'user'
-db_password = 'pass'
-db_host = '127.0.0.1'
+db_username = 'root'
+db_password = ''
+db_host = 'localhost'
+
+
+
 
 # Attributes
 ALLOW_REGISTRATION = False
@@ -279,8 +287,10 @@ def ConnectDB():
         host=db_host,
         user=db_username,
         password=db_password,
-        database=db_name
+        database=db_name,
+     
     )
+
 
 def executeQueryReturn(query: str) -> dict:
     db = ConnectDB()
@@ -307,6 +317,7 @@ def executeQueryCommit(query: str):
     cursor = db.cursor(dictionary=True)
     cursor.execute(query)
     db.commit()
+    cursor.commit()
     cursor.close()
     db.close()
     return None

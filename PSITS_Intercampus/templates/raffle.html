@@ -1,9 +1,12 @@
+{% extends 'base.html'%}
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> 
 <html class="no-js" lang="en"> <!--<![endif]-->
 
-<head>
+
+{% block head %}
+<!-- <head> -->
 	<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>Random Name Picker</title>
@@ -26,7 +29,10 @@ body { background:#fafad2; }
 .copyright { font-size:11px;font-family:Tahoma;color:#9B59B6; }
 </style>
 
-</head>
+<!-- </head> -->
+{% endblock %}
+
+
 <body onload="reset();">
 	<br>
 	&nbsp;<button class="success button" id="go" onclick="go();">GO!</button>
