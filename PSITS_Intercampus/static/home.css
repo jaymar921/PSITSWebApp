@@ -1,172 +1,194 @@
 body{
-    background-color: #36454F;
-    background-image: url('R.jpg');
-    background-size: cover;
-    background-repeat:no-repeat;
-    margin: 0;
-    color: white;
-    height: 100vh;
-}
-
-.container{
-    width: 100%;
-    height: 100%;
-}
-
-.left-menu{
-    position: absolute;
-    width: 300px;
-    height: 100%;
-    background-color: bisque;
-    text-align: center;
-    color: black;
-    left: 0;
-}
-
-.right-container{
-    position: absolute;
-    max-width: 1600px;
-    min-width: 100px;
-    height: 97%;
-    background-color: rgba(0,0,0,0.2);
-    text-align: center;
-    color: black;
-    right: 0;
-    left: 300px;
-    padding: 10px;
-    border: none;
-    overflow: hidden;
-}
-
-.buttons-block{
-    position: relative;
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.buttons-block button{
-    cursor: pointer;
-    width: 80%;
-    outline: none;
-    border: 1px solid white;
-    padding: 20px;
-}
-
-.buttons-block button:hover, .logout-button button:hover{
-    border: 1px solid black;
-}
-
-.logout-button{
-    position: absolute;
-    bottom: 10px;
-    text-align: center;
-    width: 80%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.logout-button button{
-    cursor: pointer;
-    width: 100%;
-    outline: none;
-    border: 1px solid transparent;
-    padding: 20px;
-}
-
-.admins-container, .registration-container, .events-container, .metrics-container{
-    position: absolute;
-    border: 1px solid transparent;
-    height: 95%;
-    min-width: 650px;
-    width: 96.5%;
-    background-color: rgba(255,255,255,0.7);
-    padding: 10px;
-    overflow: auto;
-}
-
-.admins-table{
-    width: 100%;
-}
-
-.admins-table-container{
-    height: 150px;
-    overflow: auto;
     background-color: white;
-}
+       background-size: cover;
+       background-repeat:no-repeat;
+       margin: 0;
+       color: white;
+       height: 100vh;
+   }
+   
+   .container{
+       width: 100%;
+       height: 100%;
+   }
+   
+   .left-menu{
+       position: absolute;
+       width: 300px;
+       height: 100%;
+       background-color: #002e48;
+       color:white;
+       text-align: center;
+       color: rgb(64, 64, 64);
+       left: 0;
+       box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+   }
+   
+   .left-menu hr{
+       opacity:0.1;
+   }
+   
+   .right-container{
+       position: absolute;
+       max-width: 1600px;
+       min-width: 100px;
+       height: 97%;
+       background-color: rgba(0,0,0,0.2);
+       text-align: center;
+       color: rgb(64, 64, 64);
+       right: 0;
+       left: 300px;
+       padding: 10px;
+       border: none;
+       overflow: hidden;
+   }
+   
+   .buttons-block{
+       position: relative;
+       display: block;
+       text-align: center;
+       margin-top: 10px;
+   }
+   
+   .buttons-block button{
+       cursor: pointer;
+       width: 90%;
+       height:50px;
+       margin-top:5px;
+       margin-bottom:5px;
+       /* outline: none;
+       border: 1px solid white;
+       padding: 20px; */
+   }
+   
+   .buttons-block button:hover, .logout-button button:hover{
+       /* border: 1px solid black; */
+   }
+   
+   .logout-button{
+       position: absolute;
+       bottom: 10px;
+       text-align: center;
+       width: 80%;
+       left: 50%;
+       transform: translateX(-50%);
+       
+   }
+   
+   .logout-button button{
+       cursor: pointer;
+       width: 100%;
+       outline: none;
+       border: 1px solid transparent;
+      
+       padding: 20px;
+   }
+   
+   .admins-container, .registration-container, .events-container, .metrics-container{
+       position: absolute;
+       border: 1px solid transparent;
+       margin:auto;
+       height: 95%;
+       min-width: 650px;
+       width: 98.8%;
+       background-color: white;
+       padding: 30px;
+       overflow: auto;
+       text-align: left;
+   
+   }
+   
+   .admins-table{
+       width: 100%;
+   
+   }
+   
+   .admins-table-container{
+       height: 150px;
+       overflow: auto;
+       /* background-color: white; */
+   }
 
-table{
-    width: 100%;
-    background-color: white;
-    border: 1px solid #f2f2f2;
-    border-collapse: collapse;
-}
-
-table th{
-    border: 2px solid black;
-}
-
-table td{
-    border: 2px solid grey;
-}
-
-.active{
-    background-color: #2196F3;
-}
-
-.hidden{
-    opacity: 0;
-    z-index: 0;
-}
-
-.show{
-    opacity: 1;
-    z-index: 1;
-}
-
-button{
-    cursor: pointer;
-}
-
-.admins-form{
-    position: relative;
-    display: flex;
-    width: calc(300px + 150px);
-    padding: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.admins-form div{
-    margin: auto;
-}
-
-.admins-form div input, select{
-    width: 250px;
-    padding: 8px;
-}
-
-.admins-form div p{
-    width: 150px;
-    text-align: right;
-    font-weight: 900;
-}
-
-.admins-form div button{
-    padding: 5px 15px 5px 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-.admins-graph{
-    width: 300px;
-    height: 300px;
-}
-
-.admins-form div .center{
-    text-align: center;
-}
-
-.admins-form div .left{
-    text-align: left;
-}
+   .admins-table-container-higher{
+        height: 350px;
+        overflow: auto;
+        /* background-color: white; */
+    }
+   
+   table{
+       width: 100%;
+       /* background-color: white;
+       border: 1px solid #f2f2f2;
+       border-collapse: collapse; */
+   }
+   
+   table th{
+       /* border: 2px solid black; */
+   }
+   
+   table td{
+       /* border: 2px solid grey; */
+   }
+   
+   .active{
+       background-color: #2196F3;
+   }
+   
+   .hidden{
+       opacity: 0;
+       z-index: 0;
+   }
+   
+   .show{
+       opacity: 1;
+       z-index: 1;
+   }
+   
+   button{
+       cursor: pointer;
+   }
+   
+   .admins-form{
+       position: relative;
+       display: flex;
+       width: calc(300px + 150px);
+       padding: 0;
+       left: 50%;
+       transform: translateX(-50%);
+   
+   }
+   
+   .admins-form div{
+       margin: auto;
+   }
+   
+   .admins-form div input, select{
+       width: 250px;
+       padding: 8px;
+   }
+   
+   .admins-form div p{
+       width: 150px;
+       text-align: right;
+       font-weight: 900;
+   }
+   
+   .admins-form div button{
+       margin:auto;
+       width:300px;
+       height:50px;
+       margin-top:20px;
+   }
+   
+   .admins-graph{
+       width: 300px;
+       height: 300px;
+   }
+   
+   .admins-form div .center{
+       text-align: center;
+   }
+   
+   .admins-form div .left{
+       text-align: left;
+   }

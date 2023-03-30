@@ -1,73 +1,96 @@
+{% extends 'base.html'%}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+{% block head %}
+<!-- <head> -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSITS INTERCAMPUS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css')}}" type="text/css"/>
-    <link rel="stylesheet" href="../static/index.css" type="text/css"/>
-</head>
-<body>
-    <div class="container">
-        <div class="form">
-            <h1>Administration</h1>
-            <h4>Intercampus PSITS</h4>
-            
-            <div>
-                <div>
-                    <label>ID Number</label>
-                </div>
-                <div>
-                    <input id="idno" type="number" placeholder="ID Number"/>
-                </div>
-            </div>
-            <br>
-            <div>
-                <div>
-                    <label>Password</label>
-                </div>
-                <div>
-                    <input id="pass" type="password" placeholder="Password"/>
-                </div>
-            </div>
-            <br>
-            <div>
-                <button type="button" onclick="loginAccount()">Login</button>
-            </div>
-            {% if ALLOW_REGISTRATION %}
-            <br>
-            <div>
-                <button type="button" onclick="location.href='/registration';">Register</button>
-            </div>
-            {% endif %}
+    <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+    <style>
+        #content {
+    min-height: calc(100% - 50px);
+    /* Subtract the height of the footer */
+    padding-bottom: 50px;
+    /* Add padding to make room for the footer */
+}
+
+#footer {
+
+    position: relative;
+    margin-top: -50px;
+    /* Set the footer to overlap the main content area */
+
+    width: 100%;
+}
+
+    </style>
+<!-- </head> -->
+{% endblock %}
+
+{% block content %}
+    <body>
+        <br><br><br><br><br><br>
+   
+   
+
+        <div class="loginForm">
+        <h1>PSITS </h1>
+      
+        <h4>Intercampus Administration</h4>
+        <hr>
+        <h4>Log in</h4>
+        <div class="input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg"><i class="fa-solid fa-user"></i></span>
+            <input type="number" min="0" max="99999999" class="form-control"id="idno" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="ID Number" />
+          </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="pass" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="Password"/>
+          </div>
+        <br>
+        <div>
+            <button type="button" class="btn text-white" onclick="loginAccount()" style=" background-color:#002e48;">Login</button>
         </div>
+        {% if ALLOW_REGISTRATION %}
+        <br>
+        <div>
+            <button type="button" class="btn text-white" onclick="location.href='/registration';" style=" background-color:#002e48;">Register</button>
+        </div>
+        {% endif %}
     </div>
-    <footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer>
-    <script>
-        const getCreds = () => {
-            const idno = document.querySelector('#idno').value;
-            const pass = document.querySelector('#pass').value;
 
-            return {idno, pass};
+<!-- <footer>Created by: <a href="https://jayharronabejar.info" target="_blank">Jayharron Mar Abejar</a></footer> -->
+
+
+
+
+<script>
+    const getCreds = () => {
+        const idno = document.querySelector('#idno').value;
+        const pass = document.querySelector('#pass').value;
+
+        return {idno, pass};
+    }
+
+    const loginAccount = async () => {
+        const {idno, pass} = getCreds();
+
+        const response = await fetch('/api/getacc', {
+            headers:{
+                "idno": idno,
+                "pass": pass
+            },
+        });
+
+        const data = await response.json();
+        console.log(data);
+        if(data.status == 'ok'){
+            location.href = `/login/${data.access_key}`
         }
-
-        const loginAccount = async () => {
-            const {idno, pass} = getCreds();
-
-            const response = await fetch('/api/getacc', {
-                headers:{
-                    "idno": idno,
-                    "pass": pass
-                },
-            });
-
-            const data = await response.json();
-            
-            if(data.status == 'ok'){
-                location.href = `/login/${data.access_key}`
-            }
-        }
-    </script>
+    }
+</script>
 </body>
-</html>
+{% endblock %}

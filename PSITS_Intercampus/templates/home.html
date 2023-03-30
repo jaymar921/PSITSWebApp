@@ -1,6 +1,9 @@
+{% extends 'base.html'%}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  
+{% block head %}
+<!-- <head> -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,358 +11,395 @@
     <link rel="stylesheet" href="../static/home.css" type="text/css"/>
     <link rel="stylesheet" href="../static/w3shools.css" type="text/css"/>
     <script src="https://kit.fontawesome.com/55a8472328.js" crossorigin="anonymous"></script>
-</head>
+<!-- </head> -->
+{% endblock %}
+
+{% block content %}
 <body>
-    <div class="container">
-        <div class="left-menu">
-            <h3>Logged in as {{data.lastname}}</h3>
-            <hr>
-            <h3>Administration</h3>
-            <div class="buttons-block">
-                <button id="admins" onclick="btnClicked('admins');allowReqFetch()"><i class="fa-solid fa-user"></i> Admins</button>
-                <button id="registration" onclick="btnClicked('registration')"><i class="fa-solid fa-book"></i> Registration</button>
-                <button id="events" onclick="btnClicked('events')"><i class="fa-solid fa-calendar-days"></i> Events</button>
-                <button id="raffle" onclick="btnClicked('raffle')"><i class="fa-solid fa-gamepad"></i> Raffle</button>
-                <button id="metrics" onclick="btnClicked('metrics')" disabled><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
+    
+
+<div class="container">
+    <div class="left-menu">
+        <br>
+        <div style="display:flex; margin:auto; width:70%;">
+            <img src="{{url_for('static',filename='psits.png')}}" style="width:50px; height:50px;" alt="">
+            <div style="text-align: left; margin-left:5px; color:white;">
+                <h3 style="margin-bottom:-5px;">PSITS</h3>
+                <h5>Administration</h5>
             </div>
-            <div class="logout-button">
-                <button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-            </div>
+           
         </div>
-        <div class="right-container">
+        <hr>
+        
+        <img src="{{url_for('static',filename='user.svg')}}" style="width:50px;height:50px;margin:auto; opacity:0.7;" alt="">
+        <h5 style="margin-bottom:-2px; color:white;">{{data.lastname}}</h5>
+        {% if data.isadmin == 'true'%}
+        <p style="font-size:14px; color:white;">Admin</p>
+        {% else %}
+        <p>User</p>
+        {% endif %}
 
-            <!-- ADMIN -->
-            <div id="admins-container" class="admins-container hidden">
-                <div class="admins-table">
-                    <h1>Admins</h1>
-                    <div class="admins-table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Number</th>
-                                    <th>Fullname</th>
-                                    <th>Course</th>
-                                    <th>Year</th>
-                                    <th>Campus</th>
-                                    <th>Email</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-data">
-                                <!-- DATA IS INSERTED HERE VIA JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h2>Allow admin registration: 
-                        <label class="switch">
-                            <input id="allow-reg" type="checkbox">
-                            <span class="slider"></span>
-                        </label>
-                    </h2>
+        
+     
+      
+        <div class="buttons-block">
+            <button type="button" class="btn btn-secondary" id="admins" onclick="btnClicked('admins');allowReqFetch()"><i class="fa-solid fa-user"></i> Admins</button>
+            <button type="button" class="btn btn-secondary" id="registration" onclick="btnClicked('registration')"><i class="fa-solid fa-book"></i> Registration</button>
+            <button type="button" class="btn btn-secondary" id="events" onclick="btnClicked('events')"><i class="fa-solid fa-calendar-days"></i> Events</button>
+            <button type="button" class="btn btn-secondary" id="raffle" onclick="btnClicked('raffle')"><i class="fa-solid fa-gamepad"></i> Raffle</button>
+            <button type="button" class="btn btn-secondary" id="metrics" onclick="btnClicked('metrics')" disabled><i class="fa fa-pie-chart" aria-hidden="true"></i> Data</button>
+        </div>
+        <div class="logout-button">
+            <button type="button" class="btn btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </div>
+    <div class="right-container">
+
+        <!-- ADMIN -->
+        <div id="admins-container" class="admins-container hidden">
+            <div class="admins-table">
+                <h1>Admins</h1>
+                      <div>
+                        <hr>
+                <h5>Allow admin registration: 
+                    <label class="switch">
+                        <input id="allow-reg" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </h5>
+            </div>
+                <div class="admins-table-container-higher">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>ID Number</th>
+                                <th>Fullname</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Campus</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-data">
+                            <!-- DATA IS INSERTED HERE VIA JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
+      
+        </div>
 
 
-            <!-- REGISTRATION -->
-            <div id="registration-container" class="registration-container hidden">
-                <div class="admins-table">
-                    <h1>Registration</h1>
-                    <div class="admins-form">
-                        <div><p>Event</p></div>
-                        <div>
-                            <select id="reg_id">
-                                <option value="NONE" disabled selected>SELECT EVENT</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Search</p></div>
-                        <div><input id="reg_search" type="text" placeholder="ID Number | Fullname"></div>
-                    </div>
-                    <div class="admins-table-container">
-                        
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Number</th>
-                                    <th>Fullname</th>
-                                    <th>Campus</th>
-                                    <th>Event</th>
-                                    <th>Payment</th>
-                                    <th>TShirt Size</th>
-                                    <th>Claimed</th>
-                                    <th>Attended</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="registry-data">
-                                <!-- REGISTRY DATA HERE -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h2>Register Student</h2>
-                    <div class="admins-form">
-                        <div><p>ID Number</p></div>
-                        <div><input id="reg_idno" type="text" placeholder="ID Number"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Fullname</p></div>
-                        <div><input id="reg_fullname" type="text" placeholder="Fullname (firstname and lastname)"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Email Address</p></div>
-                        <div><input id="reg_email" type="text" placeholder="Email Address"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Campus</p></div>
-                        <div>
-                            <select id="reg_campus_selection">
-                                <option value="UC Main">UC MAIN</option>
-                                <option value="UC PT">UC PARDO TALISAY</option>
-                                <option value="UC BN">UC BANILAD</option>
-                                <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
-                                <option value="OTHER">OTHER</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form hidden" id="reg_otherCampus">
-                        <div><p>Other Campus</p></div>
-                        <div>
-                            <input id="reg_campus" type="text" placeholder="Campus">
-                        </div>
-                    </div>
-                    
-                    <div class="admins-form">
-                        <div><p>PAYMENT</p></div>
-                        <div>
-                            <select id="reg_payment">
-                                <option value="FULL">FULL (T-Shirt & Ticket)</option>
-                                <option value="TSHIRT">T-SHIRT only</option>
-                                <option value="TICKET">TICKET only</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>TSHIRT SIZE</p></div>
-                        <div>
-                            <select id="reg_size">
-                                <option value="NONE" disabled>NOT APPLICABLE</option>
-                                <option value="XS">XS</option>
-                                <option value="S">S</option>
-                                <option value="M" selected>M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                                <option value="2XL">2XL</option>
-                                <option value="3XL">3XL</option>
-                                <option value="4XL">4XL</option>
-                                <option value="5XL">5XL</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form">
-                        <div><button id="reg_save" onclick="registerStudent()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- EVENT-->
-            <div id="events-container"  class="registration-container hidden">
-                <div class="admins-table">
-                    <h1>Events</h1>
-                    <div class="admins-table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Event</th>
-                                    <th>Venue</th>
-                                    <th>Attendees</th>
-                                    <th>Host</th>
-                                    <th>Price (Ticket+Tshirt)</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="events-data">
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h2>Add Event</h2>
-                    <div class="admins-form">
-                        <div><p>Event Name</p></div>
-                        <div><input id="event_name" type="text" placeholder="Event Name"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Venue</p></div>
-                        <div><input id="event_venue" type="text" placeholder="Venue"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Attendees</p></div>
-                        <div><input id="event_attendees" type="number" placeholder="Attendees"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Host</p></div>
-                        <div>
-                            <select id="event_host">
-                                <option value="UC Main">UC Main</option>
-                                <option value="UC LM">UC Lapu-Lapu Mandaue</option>
-                                <option value="UC BN">UC Banilad</option>
-                                <option value="UC PT">UC Pardo Talisay</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>Registration Price</p></div>
-                        <div><input id="event_reg" type="number" placeholder="Registration Price"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p>T-Shirt Price</p></div>
-                        <div><input id="event_tshirt" type="number" placeholder="Tshirt Price"></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><button onclick="registerEvents()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EVENT-->
-            <div id="metrics-container"  class="metrics-container hidden">
-                <div class="admins-table">
-                    <h1>Data</h1>
-                </div>
+        <!-- REGISTRATION -->
+        <div id="registration-container" class="registration-container hidden">
+            <div class="admins-table">
+                <h1>Registration</h1>
+                <div style="display:flex;">
                 <div class="admins-form">
                     <div><p>Event</p></div>
                     <div>
-                        <select id="metrics_id">
+                        <select id="reg_id">
                             <option value="NONE" disabled selected>SELECT EVENT</option>
                         </select>
                     </div>
                 </div>
                 <div class="admins-form">
-                    <div class="admins-graph">
-                        <div class="graphSec px-2" >
-                            <h4 class="text-center py-3">Attendees</h4>
-                            <canvas id="attendeesChart" width="800" height="600"></canvas>
-                            <h4>Total Attendees: 207</h4>
-                        </div>
-                    </div>
+                    <div><p>Search</p></div>
+                    <div><input id="reg_search" type="text" placeholder="ID Number | Fullname"></div>
                 </div>
+            </div>
+            <br>
+                <div class="admins-table-container">
+                    
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>ID Number</th>
+                                <th>Fullname</th>
+                                <th>Campus</th>
+                                <th>Event</th>
+                                <th>Payment</th>
+                                <th>TShirt Size</th>
+                                <th>Claimed</th>
+                                <th>Attended</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registry-data">
+                            <!-- REGISTRY DATA HERE -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <hr>
+                <h2>Register Student</h2>
+                <hr>
                 <br>
                 <div class="admins-form">
+                    <div><p>ID Number</p></div>
+                    <div><input id="reg_idno" type="text" placeholder="ID Number"></div>
+                    
+                </div>
+                <div class="admins-form">
+                    <div><p>Fullname</p></div>
+                    <div><input id="reg_fullname" type="text" placeholder="Fullname (firstname and lastname)"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>Email Address</p></div>
+                    <div><input id="reg_email" type="text" placeholder="Email Address"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>Campus</p></div>
                     <div>
-                        <p class="center">Revenue</p>
+                        <select id="reg_campus_selection">
+                            <option value="UC Main">UC MAIN</option>
+                            <option value="UC PT">UC PARDO TALISAY</option>
+                            <option value="UC BN">UC BANILAD</option>
+                            <option value="UC LM">UC LAPU-LAPU MANDAUE</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admins-form hidden" id="reg_otherCampus">
+                    <div><p>Other Campus</p></div>
+                    <div>
+                        <input id="reg_campus" type="text" placeholder="Campus">
+                    </div>
+                </div>
+                
+                <div class="admins-form">
+                    <div><p>PAYMENT</p></div>
+                    <div>
+                        <select id="reg_payment">
+                            <option value="FULL">FULL (T-Shirt & Ticket)</option>
+                            <option value="TSHIRT">T-SHIRT only</option>
+                            <option value="TICKET">TICKET only</option>
+                        </select>
                     </div>
                 </div>
                 <div class="admins-form">
+                    <div><p>TSHIRT SIZE</p></div>
                     <div>
-                        <p>Reg Fee + TShirt</p>
-                    </div>
-                    <div>
-                        <p class="left">P12,345</p>
-                    </div>
-                </div>
-                <div class="admins-form">
-                    <div>
-                        <p>Reg Free only</p>
-                    </div>
-                    <div>
-                        <p class="left">P12,345</p>
-                    </div>
-                </div>
-                <div class="admins-form">
-                    <div>
-                        <p>TShirt only</p>
-                    </div>
-                    <div>
-                        <p class="left">P12,345</p>
+                        <select id="reg_size">
+                            <option value="NONE" disabled>NOT APPLICABLE</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M" selected>M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="2XL">2XL</option>
+                            <option value="3XL">3XL</option>
+                            <option value="4XL">4XL</option>
+                            <option value="5XL">5XL</option>
+                        </select>
                     </div>
                 </div>
                 <div class="admins-form">
+                    <div><button class="btn text-white" style=" background-color:#002e48;"  id="reg_save" onclick="registerStudent()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- EVENT-->
+        <div id="events-container"  class="registration-container hidden">
+            <div class="admins-table">
+                <h1>Events</h1>
+                <div class="admins-table-container">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Event</th>
+                                <th>Venue</th>
+                                <th>Attendees</th>
+                                <th>Host</th>
+                                <th>Price (Ticket+Tshirt)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-data">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <hr>
+                <h2>Add Event</h2>
+                <hr>
+                <br>
+                <div class="admins-form">
+                    <div><p>Event Name</p></div>
+                    <div><input id="event_name" type="text" placeholder="Event Name"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>Venue</p></div>
+                    <div><input id="event_venue" type="text" placeholder="Venue"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>Attendees</p></div>
+                    <div><input id="event_attendees" type="number" placeholder="Attendees"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>Host</p></div>
                     <div>
-                        <p>Total amount:</p>
+                        <select id="event_host">
+                            <option value="UC Main">UC Main</option>
+                            <option value="UC LM">UC Lapu-Lapu Mandaue</option>
+                            <option value="UC BN">UC Banilad</option>
+                            <option value="UC PT">UC Pardo Talisay</option>
+                        </select>
                     </div>
-                    <div>
-                        <p class="left">P37,035</p>
+                </div>
+                <div class="admins-form">
+                    <div><p>Registration Price</p></div>
+                    <div><input id="event_reg" type="number" placeholder="Registration Price"></div>
+                </div>
+                <div class="admins-form">
+                    <div><p>T-Shirt Price</p></div>
+                    <div><input id="event_tshirt" type="number" placeholder="Tshirt Price"></div>
+                </div>
+                <div class="admins-form">
+                    <div><button class="btn text-white" style=" background-color:#002e48;" onclick="registerEvents()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENT-->
+        <div id="metrics-container"  class="metrics-container hidden">
+            <div class="admins-table">
+                <h1>Data</h1>
+            </div>
+            <div class="admins-form">
+                <div><p>Event</p></div>
+                <div>
+                    <select id="metrics_id">
+                        <option value="NONE" disabled selected>SELECT EVENT</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admins-form">
+                <div class="admins-graph">
+                    <div class="graphSec px-2" >
+                        <h4 class="text-center py-3">Attendees</h4>
+                        <canvas id="attendeesChart" width="800" height="600"></canvas>
+                        <h4>Total Attendees: 207</h4>
                     </div>
                 </div>
             </div>
-
-
-            <!-- RAFFLE-->
-            <div id="raffle-container"  class="metrics-container hidden">
-                <div class="admins-table">
-                    <h1>Raffle</h1>
-                </div>
-                
-                    
+            <br>
+            <div class="admins-form">
                 <div>
-                    <h2><a id="raffle-use-event">Use Event: </a> 
-                        <label class="switch left">
-                            <input id="use-event-toggle" type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </h2>
+                    <p class="center">Revenue</p>
+                </div>
+            </div>
+            <div class="admins-form">
+                <div>
+                    <p>Reg Fee + TShirt</p>
+                </div>
+                <div>
+                    <p class="left">P12,345</p>
+                </div>
+            </div>
+            <div class="admins-form">
+                <div>
+                    <p>Reg Free only</p>
+                </div>
+                <div>
+                    <p class="left">P12,345</p>
+                </div>
+            </div>
+            <div class="admins-form">
+                <div>
+                    <p>TShirt only</p>
+                </div>
+                <div>
+                    <p class="left">P12,345</p>
+                </div>
+            </div>
+            <div class="admins-form">
+                <div>
+                    <p>Total amount:</p>
+                </div>
+                <div>
+                    <p class="left">P37,035</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- RAFFLE-->
+        <div id="raffle-container"  class="metrics-container hidden">
+            <div class="admins-table">
+                <h1>Raffle</h1>
+            </div>
+            
+                <hr> 
+                <br>
+            <div >
+                <h2><a id="raffle-use-event">Use Event: </a> 
+                    <label class="switch left">
+                        <input id="use-event-toggle" type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </h2>
+            </div>
+            <br>
+            <div id="use-event" class="show">
+                <div class="admins-form">
+                    <div><p>Event</p></div>
+                    <div>
+                        <select id="raffle_id">
+                            <option value="NONE" disabled selected>SELECT EVENT</option>
+                        </select>
+                    </div>
                 </div>
                 <br>
-                <div style="position: absolute; left: 50%; transform: translateX(-50%);" id="use-event" class="show">
-                    <div class="admins-form">
-                        <div><p>Event</p></div>
-                        <div>
-                            <select id="raffle_id">
-                                <option value="NONE" disabled selected>SELECT EVENT</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="admins-form">
-                        <div>
-                            <h2><a id="raffle-att-only">Attendees only: </a> 
-                                <label class="switch left">
-                                    <input id="attendees_only" type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div style="position: absolute; left: 50%; transform: translateX(-50%);" id="use-custom" class="hidden">
-                    <div class="admins-form">
-                        <div>
-                            <h2><a id="raffle-custom-opt">Comma Separated: </a> 
-                                <label class="switch left">
-                                    <input id="custom-opt" type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </h2>
-                        </div>
-                        <div></div>
-                    </div>
-                    <div class="admins-form">
-                        <div><p style="text-align: center;">Data input</p></div>
-                    </div>
-                    <div class="admins-form">
-                        <div>
-                            <textarea id="raffleinputData" style="width: 250px;height: 200px; resize: none;" placeholder="input the data here"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <br><br><br><br><br><br>
-                <br><br><br><br><br><br>
-                <br><br><br><br><br><br>
                 <div class="admins-form">
                     <div>
-                        <button onclick="submitGenerateRaffle()">Generate</button>
+                        <h2><a id="raffle-att-only">Attendees only: </a> 
+                            <label class="switch left">
+                                <input id="attendees_only" type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </h2>
                     </div>
+                </div>
+            </div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%);" id="use-custom" class="hidden">
+                <div class="admins-form">
+                    <div>
+                        <h2><a id="raffle-custom-opt">Comma Separated: </a> 
+                            <label class="switch left">
+                                <input id="custom-opt" type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </h2>
+                    </div>
+                    <div></div>
+                </div>
+                <div class="admins-form">
+                    <div><p style="text-align: center;">Data input</p></div>
+                </div>
+                <div class="admins-form">
+                    <div>
+                        <textarea id="raffleinputData" style="width: 250px;height: 200px; resize: none;" placeholder="input the data here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br>
+            <div class="admins-form">
+                <div>
+                    <button class="btn text-white" style=" background-color:#002e48;" onclick="submitGenerateRaffle()">Generate</button>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.2/dist/Chart.min.js"></script>
-    <script src="../static/home.js"></script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.2/dist/Chart.min.js"></script>
+<script src="../static/home.js"></script>
 </body>
-</html>
+{% endblock %}

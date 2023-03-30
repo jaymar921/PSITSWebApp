@@ -10,8 +10,8 @@ PORT = 3000
 
 # database manipulation
 db_name = 'psitswebapp'
-db_username = 'user'
-db_password = 'pass'
+db_username = 'root'
+db_password = ''
 db_host = '127.0.0.1'
 
 # Attributes
