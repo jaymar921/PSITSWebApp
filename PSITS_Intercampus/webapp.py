@@ -57,7 +57,7 @@ def adminHome():
 
 @app.route('/raffle/<key>')
 def raffle(key):
-    print(TEMP_DATA_RAFFLE[key])
+    # print(TEMP_DATA_RAFFLE[key])
     return render_template('raffle.html', key=key)
 
 
