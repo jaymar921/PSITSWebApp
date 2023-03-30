@@ -348,7 +348,7 @@ def hashData(data: str) -> str:
     return str(result)
 
 def getRandomChar():
-    a = ['A','B','C','D','E', 'F', 'G']
+    a = ['A','B','C','D','E', 'F', 'G', 'H', 'I', 'J', 'K','L']
     return a[random.randint(0,6)]
 
 def ReferenceGenerator():
