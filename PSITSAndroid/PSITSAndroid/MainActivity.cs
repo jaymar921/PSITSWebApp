@@ -20,7 +20,7 @@ namespace PSITSAndroid
             webView.SetWebViewClient(new WebViewClient());
             SetContentView(webView);
             webView.Settings.JavaScriptEnabled = true;
-            webView.LoadUrl("http://119.92.196.92:5000");
+            webView.LoadUrl("http://103.44.234.157:5000/");
 
             //webView.SetWebViewClient(new WebViewClient());
             //webView.SetWebViewClient(new InvalidWebViewClient());
