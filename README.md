@@ -54,12 +54,18 @@ Contributors
     <kbd><img width="64" height="64"  src="https://github.com/jaymar921/PSITSWebApp/blob/master/PSITSweb/static/images/devs/ferrer.png"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mariella Ferrer</b>&nbsp;&nbsp;(UI Designer)
 </p>
 
+<p align="left">
+    <kbd><img width="64" height="64"  src="https://avatars.githubusercontent.com/u/56842307?v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>James Dylan Caramonte</b>&nbsp;&nbsp;(Mobile Developer [ADMIN SIDE])
+</p>
+
 ### Tools/Languages used for project development
 - PyCharm Python programming IDE
 - VSCode IDE
 - MySQL for Database
 - Magic Bell Email API
 - Bootstrap for Front-End
+- React-Native [Admin Side]
+- Xamarin [Webview]
 - [Python, MYSQL, JavaScript, C#]
 
 The web app is hosted at UC-Banilad's server, you can access it [here](http://119.92.196.92:5000/PSITS). Note that the link is not permanent, once the turn over was implemented, a new link may be created from where the new system was hosted.
