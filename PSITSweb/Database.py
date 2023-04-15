@@ -868,7 +868,7 @@ def UPDATEMerchOrder(merch: MerchOrder):
     
 
     query: str = f"update `orders` set account_id={merch.account_id},order_date='{merch.order_date}'," \
-                 f"status='{merch.status}',quantity={merch.quantity}," \
+                 f"status='{merch.status}',quantity={merch.quantity}, reference='{merch.reference}'," \
                  f"additional_info='{merch.additional_info}' where uid={merch.uid} and merch_id={merch.merchandise_id};"
 
     executeQueryCommit(query)

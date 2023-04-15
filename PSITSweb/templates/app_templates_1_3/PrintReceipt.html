@@ -19,13 +19,14 @@
         <hr>
         <div>
           <h1 style="text-align: center;">PSITS Receipt</h1>
+          
+          <div id="qrcode" class="qr_code" style="position: relative;left: 50%; transform: translateX(-50%);"></div>
           <!--
-          <div id="qrcode" class="qr_code"></div>
           <script type="text/javascript">
             new QRCode(document.getElementById("qrcode"), {
                 text: "{{ref}}",
-                width: 180,
-                height: 180,
+                width: 64,
+                height: 64,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
@@ -62,6 +63,7 @@
         <div style="display: flex;">
             <label style="font-size: 12px;">Quantity: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{ORDER.order.quantity}}&nbsp;</a>
         </div>
+        <!--
         <div style="display: flex;">
             {% if promocode_valid %}
             <label style="font-size: 12px;">Promocode: </label><a title="VALID PROMOCODE" style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">{{promocode}}&nbsp;</a>
@@ -69,6 +71,7 @@
             <label style="font-size: 12px;">Promocode: </label><a title="INVALID PROMOCODE" style="position: absolute;color:black; font-size: 12px; text-align: right; right: 3px; width: 100%; text-decoration: line-through; font-weight:900;">{{promocode}}&nbsp;</a>
             {% endif %}
         </div>
+        -->
         <hr>
         <div style="display: flex;">
             <label style="font-size: 12px;">Total: </label><a style="position: absolute;color:black; font-size: 12px; text-align: right; left: 0px; width: 181px; font-weight:900;">₱{{total}}</a>

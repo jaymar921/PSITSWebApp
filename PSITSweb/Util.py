@@ -65,6 +65,9 @@ def getRandomChar():
 def PriceParseRef(price: str):
     return f"@REFP{price}-{random.randint(100000000,999999999)}{getRandomChar()}"
 
+def UpdatePriceParseRef(old_ref: str,price: str):
+    return f"@REFP{price}-{old_ref}"
+
 
 def GetPriceRef(string: str) -> float:
     if (re.search('@REFP(\d*\.?\d)+\-[0-9]+', string)):

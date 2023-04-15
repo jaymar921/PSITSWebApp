@@ -11,7 +11,7 @@ from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATE
 from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, Email, \
     OrderAccount, PROMO, AccountOrdersLW
-from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData, CONFIGURATION
+from Util import GetReference, isAdmin, PriceParseRef, deprecated, hashData, CONFIGURATION, UpdatePriceParseRef
 from webApp_utility import checkImageExist
 from routes.app_route_1_3_api import updateAccountOrdersLightWeight
 
@@ -137,6 +137,7 @@ def psits_order_product():
                     DISCOUNTED_PRICE = DISCOUNTED_PRICE - \
                         (DISCOUNTED_PRICE * percentage)
                     DeductPromoSlot(promo.code)
+                    additional_info = f'{additional_info}\nPromocode: {promo.code}'
 
             # Generate a reference Code
             REF_CODE: str = PriceParseRef(DISCOUNTED_PRICE)

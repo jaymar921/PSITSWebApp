@@ -8,10 +8,10 @@ import pandas as pd
 
 
 from Database import SEARCHMerchOrder, SEARCHMerchandise, getAccountByID, UPDATEMerchOrder, getAccount, DELETEMerchOrder, updateAccount, databaseLog, GETAllMerchandise\
-    ,getAllAccounts, getAccountWithPassword, GetAllPromo
+    ,getAllAccounts, getAccountWithPassword, GetAllPromo, GetPromo
 # from EmailAPI import pushEmail
 from Models import AccountOrders, MerchOrder, Merchandise, Account, ORDER_STATUS, AccountOrdersLW
-from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef
+from Util import GetReference, isAdmin, ifKeyPermitted, hashData, GetPriceRef, UpdatePriceParseRef
 from webApp_utility import save_redirection, is_blocked_route
 
 # GLOBALS
@@ -94,7 +94,7 @@ def merch_order_updater():
     while True:
         # I avoid loading SQL simultaneously
         merch = SEARCHMerchOrder('all')
-        time.sleep(1)
+        time.sleep(3)
         updateMerch(merch, GETAllMerchandise())
         preloadAccountOrders_LightWeight()
         time.sleep(50)
@@ -189,6 +189,27 @@ def api_transactions_get(search):
                 continue
         
         if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
+            if 'ORDER' in account_order.status.upper():
+                _infoFrag: list = account_order.info.split('\n')
+                for _i in _infoFrag:
+                    _i_frag = _i.split(":")
+                    if len(_i_frag) == 2:
+                        if "PROMOCODE" in _i_frag[0].upper().strip():
+                            promo = GetPromo(_i_frag[1].strip())
+                            if promo is None:
+                                print(f'Promo no longer exist on Order {account_order.ref_code}')
+                                # get the merch actual price
+                                for m in ACCOUNT_ORDERS:
+                                    if m.reference == account_order.ref_code:
+                                        if UpdatePriceParseRef(account_order.ref_code, m.merch.price) != m.order.reference:
+                                            # GET THE ORIGINAL REF
+                                            print(f'original price: {m.merch.price} | removed discounted price')
+                                            account_order.discounted_price = m.merch.price
+                                            m.order.reference = UpdatePriceParseRef(account_order.ref_code, m.merch.price)
+                                            UPDATEMerchOrder(m.order)
+
+                                #UPDATEMerchOrder()
+                                
             ORDERS.append(account_order)
 
     ORDERS_JSON: list = []
@@ -637,7 +658,7 @@ def showCSVData(fn, search):
                         search = search.lower()
                     data: list = []
 
-                    data.append("\"REF #\",\"NAME\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
+                    data.append("\"REF #\",\"IDNO\",\"NAME\",\"EMAIL\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
 
                     # Prepare the searching
                     product_to_search = ''
@@ -697,8 +718,9 @@ def showCSVData(fn, search):
                             if 'size' in item.lower():
                                 if len(item.split(':')) > 1:
                                     size = size + item.split(':')[1].strip() + ', '
+                        
 
-                        val = f"\"{account_order.ref_code}\",\"{account_order.fullname}\",\"{account_order.product}\",\"{account_order.order_date}\",\"{account_order.quantity}\",\"{account_order.info}\",\"{size[:-2]}\",\"{account_order.status}\"\n"
+                        val = f"\"{account_order.ref_code}\",\"{account_order.idno}\",\"{account_order.fullname}\",\"{account_order.email}\",\"{account_order.product}\",\"{account_order.order_date}\",\"{account_order.quantity}\",\"{account_order.info}\",\"{size[:-2]}\",\"{account_order.status}\"\n"
                         data.append(val)
 
                     CSVtoExl(data)
@@ -737,7 +759,7 @@ def psits_receipt_generator(uid):
         price = '{:.2f}'.format(float(GetPriceRef(accountOrder.order.reference)))
         
         
-        _addInfo = order.additional_info.split(' ')
+        _addInfo = order.additional_info.split('\n')
         promocode: str = ''
         try:
             stop = False
@@ -759,7 +781,6 @@ def psits_receipt_generator(uid):
     if 'print' in request.args:
         try:
             if bool(request.args['print']) == True:
-                accountOrder.order.additional_info = accountOrder.order.additional_info.replace('Promocode:','')
                 return render_template('app_templates_1_3/PrintReceipt.html',  
                 ORDER = accountOrder, 
                 ref = uid, 

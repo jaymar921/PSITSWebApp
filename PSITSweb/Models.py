@@ -268,7 +268,7 @@ class PROMO:
 
 
 class AccountOrdersLW:
-    def __init__(self, reference_code, fullname, product, info, qty, amt, status, discounted_price, order_date, size):
+    def __init__(self,idno, email, reference_code, fullname, product, info, qty, amt, status, discounted_price, order_date, size):
         self.ref_code = reference_code
         self.fullname = fullname
         self.product = product
@@ -279,6 +279,8 @@ class AccountOrdersLW:
         self.discounted_price = discounted_price
         self.order_date = order_date
         self.size = size
+        self.idno = idno
+        self.email = email
 
     @staticmethod
     def parse(accountOrder: AccountOrders):
@@ -289,6 +291,8 @@ class AccountOrdersLW:
                 if len(item.split(':')) > 1:
                     size = size + item.split(':')[1].strip() + ', '
         return AccountOrdersLW(
+            accountOrder.account.uid,
+            accountOrder.account.email,
             accountOrder.reference,
             f'{accountOrder.account.lastname}, {accountOrder.account.firstname}',
             accountOrder.merch.title,
