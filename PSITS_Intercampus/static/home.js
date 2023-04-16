@@ -273,6 +273,17 @@ document.querySelector('#reg_payment').addEventListener('change', (e)=>{
     }
 })
 
+function ValidateEmail(email) 
+{
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+  {
+    return true;
+  }
+    alert("You have entered an invalid email address!")
+    return false
+}
+
+
 const registerStudent = async () => {
     const idno = document.querySelector('#reg_idno').value;
     const fullname = document.querySelector('#reg_fullname').value;
@@ -284,6 +295,17 @@ const registerStudent = async () => {
     const reg_btn = document.querySelector('#reg_save');
 
     reg_btn.disabled = true;
+
+    if(idno === '' || fullname === '' || email === 'email'){
+        alert('Fill up all the fields')
+        reg_btn.disabled = false;
+        return;
+    }
+
+    if(!ValidateEmail(email)){
+        reg_btn.disabled = false;
+        return;
+    }
     
     fetch('/api/registry',{
         method: 'POST',
@@ -305,6 +327,7 @@ const registerStudent = async () => {
             document.querySelector('#reg_idno').value = '';
             document.querySelector('#reg_fullname').value = '';
             document.querySelector('#reg_email').value = '';
+            alert(`Registered ${fullname}`)
         }
         reg_btn.disabled = false;
     }).catch(e => reg_btn.disabled = false);
@@ -491,8 +514,8 @@ const updateRegistryTable = async () => {
         table_row.appendChild(fullname);
         table_row.appendChild(campus);
         table_row.appendChild(event);
-        table_row.appendChild(payment);
-        table_row.appendChild(shirtsize);
+        //table_row.appendChild(payment);
+        //table_row.appendChild(shirtsize);
         table_row.appendChild(claimed);
         table_row.appendChild(attended);
         table_row.appendChild(action);

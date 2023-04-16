@@ -119,9 +119,9 @@
                                 <th>Fullname</th>
                                 <th>Campus</th>
                                 <th>Event</th>
-                                <th>Payment</th>
-                                <th>TShirt Size</th>
-                                <th>Claimed</th>
+                                <!--<th>Payment</th>
+                                <th>TShirt Size</th>-->
+                                <th>Claimed T-Shirt</th>
                                 <th>Attended</th>
                                 <th>Action</th>
                             </tr>
@@ -169,17 +169,17 @@
                     </div>
                 </div>
                 
-                <div class="admins-form">
+                <div class="admins-form hidden">
                     <div><p>PAYMENT</p></div>
                     <div>
                         <select id="reg_payment">
-                            <option value="FULL">FULL (T-Shirt & Ticket)</option>
+                            <option value="FULL" selected>FULL (T-Shirt & Ticket)</option>
                             <option value="TSHIRT">T-SHIRT only</option>
                             <option value="TICKET">TICKET only</option>
                         </select>
                     </div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form hidden">
                     <div><p>TSHIRT SIZE</p></div>
                     <div>
                         <select id="reg_size">
