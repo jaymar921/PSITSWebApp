@@ -288,7 +288,7 @@ const registerStudent = async () => {
     const idno = document.querySelector('#reg_idno').value;
     const fullname = document.querySelector('#reg_fullname').value;
     const email = document.querySelector('#reg_email').value;
-    const campus = document.querySelector('#reg_campus').value;
+    const campus = document.querySelector('#reg_campus_selection').value;
     const payment = document.querySelector('#reg_payment').value;
     const shirtsize = document.querySelector('#reg_size').value;
     const eventID = document.querySelector('#reg_id').value;
@@ -566,6 +566,7 @@ document.querySelector('#allow-reg').addEventListener('change', ({target})=> {
     }
 })
 
+/*
 document.querySelector('#reg_campus_selection').addEventListener('change', ({target})=> {
     if(target.value === 'OTHER'){
         document.querySelector('#reg_otherCampus').classList.remove('hidden');
@@ -575,7 +576,7 @@ document.querySelector('#reg_campus_selection').addEventListener('change', ({tar
         document.querySelector('#reg_campus').value = target.value;
     }
 })
-
+*/
 /*
     RAFFLE
 */
