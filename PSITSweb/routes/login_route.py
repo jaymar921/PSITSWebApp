@@ -89,17 +89,18 @@ def reset_password_html():
     hostname = socket.gethostname()
     IPAddress = socket.gethostbyname(hostname)
 
-    EmailAPI.pushEmail(Models.Email(
+    EmailAPI.email_verification(Models.Email(
         'Password Reset', 
         user.email, 
         f'''
         
-            Hello {user.firstname} {user.lastname}, 
-            you have requested a password reset, 
-            click this link: {IPAddress}:{CONFIGURATION()['PORT']}/PSITS/ResetPassword/{user.uid}/{key} 
-
+            Hello {user.firstname} {user.lastname}, <br>
+            you have requested a password reset, <br>
+            click this link: <a style='font-weight:200;color:aqua;' href='http://{CONFIGURATION()['APP_HOST']}:{CONFIGURATION()['PORT']}/PSITS/ResetPassword/{user.uid}/{key}'>PASSWORD-RESET</a> <br><br>
+                
             If you have not requested this. Just ignore this email.
-        
+            <br><br>
+            <a style='font-weight:999;font-size:9px'>Contact the developers for any concerns</a>
         '''
         ))
 

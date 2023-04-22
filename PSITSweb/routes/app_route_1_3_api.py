@@ -197,7 +197,7 @@ def api_transactions_get(search):
                         if "PROMOCODE" in _i_frag[0].upper().strip():
                             promo = GetPromo(_i_frag[1].strip())
                             if promo is None:
-                                print(f'Promo no longer exist on Order {account_order.ref_code}')
+                                
                                 # get the merch actual price
                                 for m in ACCOUNT_ORDERS:
                                     if m.reference == account_order.ref_code:
@@ -326,14 +326,13 @@ def api_transactions_get_tally(search):
         product_key: str = account_order.product
         if reference_found or student_to_search or status_to_search or product_to_search or (search == 'all'):
             if account_order.status == ORDER_STATUS.ORDERED.value:
-                ORDERS_TALLY += (account_order.discounted_price *
-                                account_order.quantity)
+                ORDERS_TALLY += (float(account_order.discounted_price) * float(account_order.quantity))
                 # get the sales
                 if key_format in monthly_orders:
-                    amount = monthly_orders[key_format] + account_order.discounted_price * account_order.quantity
+                    amount = monthly_orders[key_format] + float(account_order.discounted_price) * float(account_order.quantity)
                     monthly_orders[key_format] = amount
                 else:
-                    monthly_orders[key_format] = account_order.discounted_price * account_order.quantity
+                    monthly_orders[key_format] = float(account_order.discounted_price) * float(account_order.quantity)
 
                 # get the orders
                 
@@ -348,10 +347,10 @@ def api_transactions_get_tally(search):
                             account_order.quantity)
                 # get the sales
                 if key_format in monthly_sales:
-                    amount = monthly_sales[key_format] + account_order.discounted_price * account_order.quantity
+                    amount = monthly_sales[key_format] + float(account_order.discounted_price) * float(account_order.quantity)
                     monthly_sales[key_format] = amount
                 else:
-                    monthly_sales[key_format] = account_order.discounted_price * account_order.quantity
+                    monthly_sales[key_format] = float(account_order.discounted_price) * float(account_order.quantity)
 
                 # get the orders
                 
@@ -362,8 +361,7 @@ def api_transactions_get_tally(search):
                     merch_orders[product_key] = account_order.quantity
                 
             if account_order.status != ORDER_STATUS.CANCELLED.value:
-                TOTAL_TALLY += (account_order.discounted_price *
-                                account_order.quantity)
+                TOTAL_TALLY += (float(account_order.discounted_price) * float(account_order.quantity))
 
     response_data: dict = {
         'reserve': ORDERS_TALLY,
@@ -658,7 +656,7 @@ def showCSVData(fn, search):
                         search = search.lower()
                     data: list = []
 
-                    data.append("\"REF #\",\"IDNO\",\"NAME\",\"EMAIL\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
+                    data.append("\"REF #\",\"IDNO\",\"NAME\",\"COURSE-YEAR\",\"EMAIL\",\"PRODUCT\",\"ORDER DATE\",\"QUANTITY\",\"ADDITIONAL INFO\",\"SIZE\",\"STATUS\"\n")
 
                     # Prepare the searching
                     product_to_search = ''
@@ -720,7 +718,7 @@ def showCSVData(fn, search):
                                     size = size + item.split(':')[1].strip() + ', '
                         
 
-                        val = f"\"{account_order.ref_code}\",\"{account_order.idno}\",\"{account_order.fullname}\",\"{account_order.email}\",\"{account_order.product}\",\"{account_order.order_date}\",\"{account_order.quantity}\",\"{account_order.info}\",\"{size[:-2]}\",\"{account_order.status}\"\n"
+                        val = f"\"{account_order.ref_code}\",\"{account_order.idno}\",\"{account_order.fullname}\",\"{account_order.course_year}\",\"{account_order.email}\",\"{account_order.product}\",\"{account_order.order_date}\",\"{account_order.quantity}\",\"{account_order.info}\",\"{size[:-2]}\",\"{account_order.status}\"\n"
                         data.append(val)
 
                     CSVtoExl(data)

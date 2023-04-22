@@ -281,6 +281,7 @@ class AccountOrdersLW:
         self.size = size
         self.idno = idno
         self.email = email
+        self.course_year = '';
 
     @staticmethod
     def parse(accountOrder: AccountOrders):
@@ -290,7 +291,7 @@ class AccountOrdersLW:
             if 'size' in item.lower():
                 if len(item.split(':')) > 1:
                     size = size + item.split(':')[1].strip() + ', '
-        return AccountOrdersLW(
+        a_data = AccountOrdersLW(
             accountOrder.account.uid,
             accountOrder.account.email,
             accountOrder.reference,
@@ -304,6 +305,8 @@ class AccountOrdersLW:
             accountOrder.order.order_date,
             size[:-2]
             )
+        a_data.course_year =f'{accountOrder.account.course}-{accountOrder.account.year}'
+        return a_data
 
     def toJSON(self):
         data: dict = {

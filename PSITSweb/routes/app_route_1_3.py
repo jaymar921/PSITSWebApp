@@ -111,6 +111,7 @@ def community_page():
         '19889781': ['FullStack Developer', 'border-gradient-orange shimmer', 'border-cool-orange', {'icons': [{'fa-brands fa-github': 'https://github.com/jaymar921', 'fa-brands fa-youtube': 'https://www.youtube.com/@jaymar921', 'fa-solid fa-book': 'https://jaymar921.github.io/jayharronabejar/'}]}],
         # Sir DD
         '613000': ['PSITS Adviser', 'border-gradient-purple shimmer', '', {'icons': [{'fa-brands fa-github': 'https://github.com/dennisdurano'}]}],
+        '10000001': ['CCS Dean', 'border-gradient-purple shimmer', '', {}],
         # Jeshelle
         '20220885': ['3rd Year Rep.', 'border-gradient-purple', '', {}],
         # Pia
