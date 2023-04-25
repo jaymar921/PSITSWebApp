@@ -343,8 +343,7 @@ def api_transactions_get_tally(search):
                     merch_orders_reserve[product_key] = account_order.quantity
                 
             elif account_order.status != ORDER_STATUS.ORDERED.value and account_order.status != ORDER_STATUS.CANCELLED.value:
-                PAID_TALLY += (account_order.discounted_price *
-                            account_order.quantity)
+                PAID_TALLY += (float(account_order.discounted_price) * float(account_order.quantity))
                 # get the sales
                 if key_format in monthly_sales:
                     amount = monthly_sales[key_format] + float(account_order.discounted_price) * float(account_order.quantity)
