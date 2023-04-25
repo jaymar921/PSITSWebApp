@@ -523,7 +523,9 @@ const updateRegistryTable = async () => {
         let found = true;
         if(toSearch !== ''){
             if(registry.meta_data.split('|')[0]){
-                if(!registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && !registry.idno.toString().startsWith(toSearch)){
+                if( !registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && 
+                    !registry.idno.toString().startsWith(toSearch) && 
+                    !registry.meta_data.split('|')[2].toLowerCase().toString().startsWith(toSearch.toLowerCase())){
                     found = false;
                 }
             }
