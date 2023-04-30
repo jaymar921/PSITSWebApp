@@ -534,8 +534,61 @@ const updateRegistryTable = async () => {
             registryTable.appendChild(table_row);
     })
 }
-setInterval(()=>{loadRegistryCache()}, 2000);
+setInterval(()=>{loadRegistryCache()}, 5000);
 setInterval(()=>{updateRegistryTable()}, 500);
+
+const downloadRegCSV = () => {
+    // sort the registryCache
+    const arrSorted = registryCache.sort(function(a,b){
+        const nameA = a.meta_data.split('|')[0].toLowerCase();
+        const nameB = b.meta_data.split('|')[0].toLowerCase();
+        if(nameA < nameB)
+            return -1;
+        if(nameA > nameB)
+            return 1;
+        return 0;
+    });
+    let event_name = '';
+    const toSearch = document.querySelector('#reg_search').value;
+    let foundResult = `REF#,IDNO,LASTNAME,FIRSTNAME,CAMPUS,ATTENDED,TSHIRT-CLAIMED,SHIRT SIZE,\n`;
+    arrSorted.forEach(registry => {
+        let found = true;
+        if(toSearch !== ''){
+            if(registry.meta_data.split('|')[0]){
+                if( !registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && 
+                    !registry.idno.toString().startsWith(toSearch) && 
+                    !registry.meta_data.split('|')[2].toLowerCase().toString().startsWith(toSearch.toLowerCase())){
+                    found = false;
+                }
+            }
+        }
+        if(found){
+            const {attended, claimed, meta_data:Data, shirt_size, idno} = registry;
+            event_name = Data.split('|')[1];
+            let csv = `${Data.split("|")[3]},${idno},${Data.split("|")[0]},${Data.split("|")[2]},${attended.toLowerCase().includes('true')?"YES":""},${claimed.toLowerCase().includes('true')?"YES":""},${shirt_size}`;
+            foundResult += csv+',\n';
+        }
+            
+    })
+
+    console.log(foundResult);
+    event_name+=' Registration';
+    downloadCSV(foundResult,event_name);
+}
+
+const downloadCSV = (data,filename) => {
+    const blob = new Blob([data], { type: 'text/csv;,' });
+    
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+
+    a.setAttribute('href', url);
+
+    a.setAttribute('download', `${filename}.csv`);
+
+    a.click();
+}
 
 const updateRegistryOption = async (id, option, checked) => {
     if(option !== 'delete'){
