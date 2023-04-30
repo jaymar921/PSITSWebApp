@@ -418,6 +418,11 @@ def api_transactions_update():
         }
 
     # GET THE MATCHING ORDER
+    if len(SEARCHMerchOrder(ORDER_ID)) == 0:
+        return {
+            "status": 404,
+            "message": f"ORDER NOT FOUND"
+        }
     ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
     if not ORDER:
         return {
@@ -528,6 +533,11 @@ def api_transactions_delete(ref):
         }
 
     # GET THE MATCHING ORDER
+    if len(SEARCHMerchOrder(ORDER_ID)) == 0:
+        return {
+            "status": 404,
+            "message": f"ORDER NOT FOUND, MIGHT ALREADY BEEN DELETED"
+        }
     ORDER: MerchOrder = SEARCHMerchOrder(ORDER_ID)[0]
     if not ORDER:
         databaseLog(
