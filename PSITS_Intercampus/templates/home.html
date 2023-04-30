@@ -96,8 +96,14 @@
             <div class="admins-table">
                 <h1>Registration</h1>
                 <div style="display:flex;">
-                    <div>
+                    <div class="admins-form" style="margin-right: 10px;">
                         <button onclick="downloadRegCSV()" title="Download CSV based on filtered results"><i class="fa-solid fa-download"></i> CSV</button>
+                    </div>
+                    <div class="admins-form" style="margin-right: 10px;">
+                        <button onclick="resendEmail()" title="Resend Email to everyone"><i class="fa-solid fa-envelope"></i> Mail</button>
+                    </div>
+                    <div class="admins-form" style="margin-right: 10px;">
+                        <p style="text-align: center;margin: auto;" id="registration_results">Results: N</p>
                     </div>
                     <div class="admins-form">
                         <div><p>Event</p></div>
@@ -140,20 +146,20 @@
                 <h2>Register Student</h2>
                 <hr>
                 <br>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>ID Number</p></div>
-                    <div><input id="reg_idno" type="text" placeholder="ID Number"></div>
+                    <div><input id="reg_idno" type="number" placeholder="ID Number"></div>
                     
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Fullname</p></div>
                     <div><input id="reg_fullname" type="text" placeholder="Fullname (firstname and lastname)"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Email Address</p></div>
                     <div><input id="reg_email" type="text" placeholder="Email Address"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Campus</p></div>
                     <div>
                         <select id="reg_campus_selection">
@@ -165,14 +171,14 @@
                         </select>
                     </div>
                 </div>
-                <div class="admins-form hidden" id="reg_otherCampus">
+                <div class="admins-form form_center hidden" id="reg_otherCampus">
                     <div><p>Other Campus</p></div>
                     <div>
                         <input id="reg_campus" type="text" placeholder="Campus"  disabled>
                     </div>
                 </div>
                 
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>PAYMENT</p></div>
                     <div>
                         <select id="reg_payment" disabled>
@@ -182,7 +188,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>TSHIRT SIZE</p></div>
                     <div>
                         <select id="reg_size">
@@ -202,7 +208,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><button class="btn text-white" style=" background-color:#002e48;"  id="reg_save" onclick="registerStudent()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
                 </div>
             </div>
@@ -236,19 +242,19 @@
                 <h2>Add Event</h2>
                 <hr>
                 <br>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Event Name</p></div>
                     <div><input id="event_name" type="text" placeholder="Event Name"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Venue</p></div>
                     <div><input id="event_venue" type="text" placeholder="Venue"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Attendees</p></div>
                     <div><input id="event_attendees" type="number" placeholder="Attendees"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Host</p></div>
                     <div>
                         <select id="event_host">
@@ -259,15 +265,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>Registration Price</p></div>
                     <div><input id="event_reg" type="number" placeholder="Registration Price"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><p>T-Shirt Price</p></div>
                     <div><input id="event_tshirt" type="number" placeholder="Tshirt Price"></div>
                 </div>
-                <div class="admins-form">
+                <div class="admins-form form_center">
                     <div><button class="btn text-white" style=" background-color:#002e48;" onclick="registerEvents()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
                 </div>
             </div>

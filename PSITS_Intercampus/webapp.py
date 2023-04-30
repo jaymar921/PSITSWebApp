@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from mysql import connector
-import hashlib, random
+import hashlib, random, threading
 from sendmailapi import email_verification
 
 # DUE TO LACK TO TIME, I MADE IT A SINGLE FILE
@@ -271,7 +271,37 @@ def raffle_generator():
     TEMP_DATA_RAFFLE[_key] = request_data
     return {"message":"success","raffle_key":_key}
 
+@app.route('/api/resendmail/<eventID>')
+def resendEmail(eventID):
+    if 'username' not in session:
+        return {"message":"access-denied"}
+    
+    # prepare all the data
+    user_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_admin`')
+    sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID}')
 
+    if len(sql_data) > 0:
+        # loop through all the data
+        for registry in sql_data:
+            # grab the necessary info for mail sending
+            code: str = registry['meta_data'].split('|')[3]
+            name: str = registry['meta_data'].split('|')[0]
+            event: str = registry['meta_data'].split('|')[1]
+            idno: int = registry['idno']
+
+            user_email: str = ''
+            for user in user_data:
+                if user['idno'] == idno:
+                    user_email = user['email']
+                    break
+            
+            # call the mail sending in asynchronous manner
+            threading.Thread(target=mailSenderAsync, args=[user_email,code,name,event]).start()
+    return {"message":"Email Sender was called"}
+
+def mailSenderAsync(email: str, code: str, name: str, event: str):
+    email_verification(email,code,name,event)
+    pass
 # MYSQL DATABASE
 
 def ConnectDB():

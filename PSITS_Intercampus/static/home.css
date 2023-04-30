@@ -153,9 +153,6 @@ body{
        display: flex;
        width: calc(300px + 150px);
        padding: 0;
-       left: 50%;
-       transform: translateX(-50%);
-   
    }
    
    .admins-form div{
@@ -191,4 +188,9 @@ body{
    
    .admins-form div .left{
        text-align: left;
+   }
+
+   .form_center{
+    left: 50%;
+    transform: translateX(-50%);
    }

@@ -452,7 +452,7 @@ const updateRegistryTable = async () => {
     });
 
     const toSearch = document.querySelector('#reg_search').value;
-
+    let total_rows = 0;
     arrSorted.forEach(registry => {
         // creating each new elements for the table
         const table_row = document.createElement('tr');
@@ -525,16 +525,20 @@ const updateRegistryTable = async () => {
             if(registry.meta_data.split('|')[0]){
                 if( !registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && 
                     !registry.idno.toString().startsWith(toSearch) && 
-                    !registry.meta_data.split('|')[2].toLowerCase().toString().startsWith(toSearch.toLowerCase())){
+                    !registry.meta_data.split('|')[2].toLowerCase().toString().includes(toSearch.toLowerCase())){
                     found = false;
                 }
             }
         }
-        if(found)
+        if(found){
+            total_rows++;
             registryTable.appendChild(table_row);
+        }
     })
+
+    document.querySelector('#registration_results').innerHTML = `Result(s): ${total_rows}`;
 }
-setInterval(()=>{loadRegistryCache()}, 5000);
+setInterval(()=>{loadRegistryCache()}, 3000);
 setInterval(()=>{updateRegistryTable()}, 500);
 
 const downloadRegCSV = () => {
@@ -557,7 +561,7 @@ const downloadRegCSV = () => {
             if(registry.meta_data.split('|')[0]){
                 if( !registry.meta_data.split('|')[0].toLowerCase().startsWith(toSearch.toLowerCase()) && 
                     !registry.idno.toString().startsWith(toSearch) && 
-                    !registry.meta_data.split('|')[2].toLowerCase().toString().startsWith(toSearch.toLowerCase())){
+                    !registry.meta_data.split('|')[2].toLowerCase().toString().includes(toSearch.toLowerCase())){
                     found = false;
                 }
             }
@@ -697,6 +701,24 @@ const submitGenerateRaffle = async () => {
     })
     .then(r => r.json())
     .then(data => location.href=`/raffle/${data.raffle_key}`)
+}
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+const resendEmail = () => {
+    if(confirm('Are you sure you want to resend email\'s to all registered users?')){
+        const eventId = document.querySelector('#reg_id').value;
+
+        fetch('/api/resendmail/'+eventId)
+        .then(r => r.json())
+        .then(d => alert(d.message))
+        .catch(e => alert(e))
+    }
+        
 }
 
 // weather api
