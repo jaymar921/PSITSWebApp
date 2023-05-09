@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from mysql import connector
-import hashlib, random, threading
-from sendmailapi import email_verification
+import hashlib, random, threading, time
+from sendmailapi import email_verification, email_raffle_winner
 
 # DUE TO LACK TO TIME, I MADE IT A SINGLE FILE
 app = Flask(__name__)
@@ -59,6 +59,12 @@ def adminHome():
 def raffle(key):
     # print(TEMP_DATA_RAFFLE[key])
     return render_template('raffle.html', key=key)
+
+@app.route('/raffle/winners/<key>')
+def raffleWinners(key):
+    # print(TEMP_DATA_RAFFLE[key])
+    winners = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={key} and meta_data like "%raffle_winner%"')
+    return render_template('raffleWinners.html', data=winners)
 
 
 # PSITS API
@@ -134,18 +140,13 @@ def registerAdmin():
 
 @app.route('/api/registry', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def api_registry():
-    session_key = request.headers.get('access-key')
-    global API_KEY
-
-    if 'username' not in session:
-        if not session_key in API_KEY:
-            return {"message":"access-denied"}
     
     if request.method.lower() == 'get':
         h_ = request.headers.get('eventId')
         r_c = request.headers.get('regCode')
 
         if r_c is not None:
+            print('Attendance-Checker get code '+r_c)
             try:
                 reqData = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where meta_data LIKE "%{r_c}%"')[0]
                 return {"message":"success", "data":reqData}
@@ -240,7 +241,7 @@ def api_isAdminAllowed():
 
     return  {"message" : "success", "allow registration": ALLOW_REGISTRATION}
 
-@app.route('/api/rafflegenerator', methods=['POST', 'GET'])
+@app.route('/api/rafflegenerator', methods=['POST', 'GET', 'PUT'])
 def raffle_generator():
     if 'username' not in session:
         return {"message":"access-denied"}
@@ -249,18 +250,37 @@ def raffle_generator():
 
     if request.method.lower() == 'get':
         return {"message":"success", "data":TEMP_DATA_RAFFLE[request.headers.get('raffle_key')]}
+    elif request.method.lower() == 'put':
+        r_data = request.json
+        fullname = r_data['WinnerData'].split('-')[0].strip()
+        raffleEventId = r_data['raffleEventID']
+        user_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id = {raffleEventId} and meta_data like "%{fullname}%"')
+        if(len(user_data) > 0):
+            user_meta_Data = f"{user_data[0]['meta_data']}|raffle_winner:{r_data['winningPrice']}"
+            sql: str = f"UPDATE `psits_intercampus_registry` set meta_data='{user_meta_Data}' where event_id = {raffleEventId} and meta_data like '%{fullname}%'"
+            executeQueryCommit(sql)
+            firstname = r_data['Firstname']
+            lastname = r_data['Lastname']
+            user_email = executeQueryReturn(f'SELECT `email` from `psits_intercampus_admin` where lastname like "%{lastname}%" and firstname like "%{firstname}%"')
+            if(len(user_email) > 0):
+                user_email = user_email[0]['email']
+                print(user_email)
+                # uncomment this
+                threading.Thread(target=email_raffle_winner, args=[user_email,r_data['winningPrice'],f'{firstname} {lastname}', user_meta_Data.split('|')[1]]).start()
 
+        return {"message":"saved successfully"}
     request_data = []
 
     clientRequest = request.json
+    eventID = clientRequest['eventID']
     # if using event
     if clientRequest['useEvent']:
         # get the event id
-        eventID = clientRequest['eventID']
+        
         sql_data: dict = {}
         if clientRequest['attendeesOnly']:
-            sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and attended="true"')
-        else: sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID}')
+            sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and attended="true" and meta_data not like "%raffle_winner%"')
+        else: sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and meta_data not like "%raffle_winner%"')
         
         for info in sql_data:
             request_data.append(f"{info['meta_data'].split('|')[0]} - {info['meta_data'].split('|')[2]} CAMPUS")
@@ -268,7 +288,13 @@ def raffle_generator():
         request_data = clientRequest['data']
     _key = hashData(str(random.random()*random.random()/random.random()))
 
-    TEMP_DATA_RAFFLE[_key] = request_data
+    raffle_Price = clientRequest['rafflePrice']
+    raffle_data: dict = {
+        "data":request_data,
+        "price":raffle_Price,
+        'eventid':eventID
+    }
+    TEMP_DATA_RAFFLE[_key] = raffle_data
     return {"message":"success","raffle_key":_key}
 
 @app.route('/api/resendmail/<eventID>')
@@ -276,6 +302,11 @@ def resendEmail(eventID):
     if 'username' not in session:
         return {"message":"access-denied"}
     
+    
+    threading.Thread(target=mailSenderOperationAsync, args=[eventID]).start()
+    return {"message":"Email Sender was called"}
+
+def mailSenderOperationAsync(eventID):
     # prepare all the data
     user_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_admin`')
     sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID}')
@@ -295,9 +326,10 @@ def resendEmail(eventID):
                     user_email = user['email']
                     break
             
+            # sleep for 20s, avoid stressing the smtp
+            time.sleep(20)
             # call the mail sending in asynchronous manner
             threading.Thread(target=mailSenderAsync, args=[user_email,code,name,event]).start()
-    return {"message":"Email Sender was called"}
 
 def mailSenderAsync(email: str, code: str, name: str, event: str):
     email_verification(email,code,name,event)

@@ -684,6 +684,7 @@ const submitGenerateRaffle = async () => {
 
     const commaSeparated = document.querySelector('#custom-opt').checked;
     const inputData = document.querySelector('#raffleinputData').value;
+    const rafflePrice = document.querySelector('#raffle-price').value;
     
     const data = inputData.split(commaSeparated?",":"\n");
 
@@ -696,11 +697,17 @@ const submitGenerateRaffle = async () => {
             useEvent,
             eventID,
             attendeesOnly,
-            data
+            data,
+            rafflePrice
         })
     })
     .then(r => r.json())
     .then(data => location.href=`/raffle/${data.raffle_key}`)
+}
+
+const getRaffleWinners = () => {
+    const eventID = document.querySelector('#raffle_id').value;
+    location.href = '/raffle/winners/'+eventID
 }
 
 
@@ -710,7 +717,9 @@ function sleep(ms) {
 
 
 const resendEmail = () => {
-    if(confirm('Are you sure you want to resend email\'s to all registered users?')){
+    let population = registryCache.length;
+    let total = (((population * 20)/60)/60);
+    if(confirm(`Are you sure you want to resend email\'s to all registered users? Estimated time for completion: ${total} hours. We will slowly send emails to ${population} registrants`)){
         const eventId = document.querySelector('#reg_id').value;
 
         fetch('/api/resendmail/'+eventId)

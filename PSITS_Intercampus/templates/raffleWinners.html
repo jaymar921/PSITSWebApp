@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffle Winners</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .div_w{
+            position: relative;
+            width: 300px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .div_w div{
+            background-color: rgb(208, 143, 143);
+            padding: 5px;
+            border-radius: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: none;">
+        {% set prices = [] %}
+        {% for item in data %}
+            {% set meta_data = item.meta_data.split('|') %}
+            {% set currentPrice = meta_data[4].split(':')[1] %}
+            {% if currentPrice not in prices %}
+                {{ prices.append(currentPrice) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <h1 style="text-align: center;">Raffle Winners</h1>
+    {% for price in prices%}
+        <div class="div_w">
+            <h2>{{price}}</h2>
+            {% for user in data %}
+                {% set meta_data = user.meta_data.split('|') %}
+                {% set userprice = meta_data[4].split(':')[1] %}
+                {% if userprice == price %}
+                    <div>
+                        <h3>{{meta_data[0]}}</h3>
+                        <p>{{meta_data[2]}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>

@@ -358,8 +358,13 @@
                     </label>
                 </h2>
             </div>
+            <div style="display: flex;">
+                <h2><a>Raffle Price: </a> 
+                </h2>
+                <div style="margin-left: 10px;"><input style="width: 300px;padding: 5px" id="raffle-price" type="text" placeholder="Ex: Lamborghini Aventador S"></div>
+            </div>
             <br>
-            <div id="use-event" class="show">
+            <div id="use-event" style="position: absolute; left: 50%; transform: translateX(-50%);" class="show">
                 <div class="admins-form">
                     <div><p>Event</p></div>
                     <div>
@@ -403,9 +408,14 @@
             </div>
             <br><br><br><br><br><br>
             <br><br><br><br><br><br>
-            <div class="admins-form">
+            <div class="admins-form form_center">
                 <div>
                     <button class="btn text-white" style=" background-color:#002e48;" onclick="submitGenerateRaffle()">Generate</button>
+                </div>
+            </div>
+            <div class="admins-form form_center">
+                <div>
+                    <button class="btn text-white" style=" background-color:#002e48;" onclick="getRaffleWinners()">Winners</button>
                 </div>
             </div>
         </div>

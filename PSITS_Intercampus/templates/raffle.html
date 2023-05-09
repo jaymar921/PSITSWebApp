@@ -22,7 +22,7 @@
 #namesbox { min-height:400px;font-size:32px;color:#333;resize:none;border:1px solid #F39C12; }
 .extra { font-size:16px;margin-top:20px; }
 #result1 { background:#000;color:#fbe34b;padding:20px;z-index:10;margin-top:-150px; }
-#body { background:#F1C40F url(img/bg-noise-orange.png); }
+#body { background:#fffcf2 url(img/bg-noise-orange.png); }
 body { background:#fafad2; }
 #varnote { font-size:40px;text-align:center;padding:30px; }
 .copyright { font-size:11px;font-family:Tahoma;color:#9B59B6; }
@@ -36,9 +36,10 @@ body { background:#fafad2; }
    
 	<div class="row">
 		<div class="large-12 columns">
-			<h3 style="text-align:center;margin-top:30px;" id="headline">PSITE STUDENT CONGRESS 2023</h3>
-				<div id="varnote"><img src="../static/raffle/img/psitelogo_cv.png">
-				<div class="copyright"><strong>MARCH 31, 2023</strong></div>
+			<h2 style="text-align:center;margin-top:30px;" id="headline">ICT CONGRESS 2023</h2>
+      <h4 style="text-align:center;margin-top:30px;" id="price">RAFFLE</h4>
+				<div id="varnote"><img src="../static/raffle/img/uc_ict_congress_2023.png">
+				<div class="copyright"><strong>May 12, 2023</strong></div>
 			</div>
 			
 		  <div id="popdown">
@@ -53,13 +54,20 @@ body { background:#fafad2; }
 
   <script>
     let api_data = [];
+    let raffleEventID = -1;
+    let winningPrice = '';
     fetch('/api/rafflegenerator', {
       method: 'GET',
       headers: {
         'raffle_key':'{{key}}'
       }
     }).then(r => r.json())
-    .then(data => api_data=data.data)
+    .then(data => {
+      api_data=data.data.data;
+      document.getElementById('price').innerHTML = data.data.price;
+      raffleEventID = data.data.eventid;
+      winningPrice = data.data.price;
+    })
   </script>
   <script>
   document.write('<script src=' +
@@ -137,6 +145,7 @@ function namelist(){
 // does the actual animation
 function go(){
   $("#varnote").hide();
+  $("#price").hide();
   $('body').css({"overflow-y": "hidden"});
   $('#go').attr('disabled','disabled');
   $('#list').attr('disabled','disabled');
@@ -197,6 +206,9 @@ function go(){
 
   // make it stand out
   setTimeout("standout(text)",5000);
+  setTimeout(()=>{
+    $("#price").show();
+  },5000);
   //setTimeout("$('#playback').hide('slow')",11005);
 }
 
@@ -205,7 +217,7 @@ function standout(text){
         $('#result1').removeClass('name');
         $('.name').animate({opacity: .25});
         $('#result1').animate({height: '+=60px'});
-        $('#result1').append('<div class="extra"><a class="small alert button" href="#" onClick="removevictim();">Remove name from list</a></div>');
+        $('#result1').append('<div class="extra"><a class="small alert button" href="#" onClick="saveWinner();">Remove name from list</a></div>');
         $('#go').removeAttr('disabled','disabled');
         $('#list').removeAttr('disabled','disabled');
         $('#save').removeAttr('disabled','disabled');
@@ -224,17 +236,46 @@ function removevictim(){
 			nameupdated = nameupdated + "\n" + name;
 		}
 	}
+  $("#price").hide()
 	$('#namesbox').val("");
   $('#namesbox').val(nameupdated);
   $('#result1').html("Removed");
   $('#result1').fadeOut(1000, function(){
     $("div").remove("#result1");
+    
   });
   $("div").remove(".name");
   $("div").remove(".extra");
   $('#headline').text('OK, done! Let\'s see who is next? Just click "GO!" button for next roll.');
 }
 
+</script>
+
+<script>
+  const saveWinner = async () => {
+    const WinnerName = document.querySelector('#result1').innerHTML.split('<')[0];
+    const Lastname = WinnerName.split(',')[0].trim();
+    const Firstname = WinnerName.split(',')[1].split('-')[0].trim();
+    console.log(WinnerName,'|',Lastname,'|',Firstname);
+    fetch('/api/rafflegenerator', {
+      method: 'PUT',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        "WinnerData":WinnerName,
+        Lastname,
+        Firstname,
+        raffleEventID,
+        winningPrice
+      })
+    }).then(r => r.json())
+    .then(data => {
+      console.log('Server Response '+data);
+    }).then(d => {
+      removevictim();
+    }).catch(e => {removevictim()});
+  }
 </script>
 
 </body>
