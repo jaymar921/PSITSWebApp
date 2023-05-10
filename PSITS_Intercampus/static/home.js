@@ -685,6 +685,7 @@ const submitGenerateRaffle = async () => {
     const commaSeparated = document.querySelector('#custom-opt').checked;
     const inputData = document.querySelector('#raffleinputData').value;
     const rafflePrice = document.querySelector('#raffle-price').value;
+    const raffle_campus = document.querySelector('#raffle-campus').value;
     
     const data = inputData.split(commaSeparated?",":"\n");
 
@@ -698,7 +699,8 @@ const submitGenerateRaffle = async () => {
             eventID,
             attendeesOnly,
             data,
-            rafflePrice
+            rafflePrice,
+            'campus':raffle_campus
         })
     })
     .then(r => r.json())

@@ -266,21 +266,26 @@ def raffle_generator():
                 user_email = user_email[0]['email']
                 print(user_email)
                 # uncomment this
-                threading.Thread(target=email_raffle_winner, args=[user_email,r_data['winningPrice'],f'{firstname} {lastname}', user_meta_Data.split('|')[1]]).start()
+                # threading.Thread(target=email_raffle_winner, args=[user_email,r_data['winningPrice'],f'{firstname} {lastname}', user_meta_Data.split('|')[1]]).start()
 
         return {"message":"saved successfully"}
     request_data = []
 
     clientRequest = request.json
+    # get the event id
     eventID = clientRequest['eventID']
     # if using event
     if clientRequest['useEvent']:
-        # get the event id
-        
+        # campus
+        campus = clientRequest['campus']
+        if campus == 'ALL':
+            campus = ''
+        else:
+            campus = f'and meta_data like "%{campus}%"'
         sql_data: dict = {}
         if clientRequest['attendeesOnly']:
-            sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and attended="true" and meta_data not like "%raffle_winner%"')
-        else: sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and meta_data not like "%raffle_winner%"')
+            sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and attended="true" and meta_data not like "%raffle_winner%" {campus}')
+        else: sql_data = executeQueryReturn(f'SELECT * FROM `psits_intercampus_registry` where event_id={eventID} and meta_data not like "%raffle_winner%" {campus}')
         
         for info in sql_data:
             request_data.append(f"{info['meta_data'].split('|')[0]} - {info['meta_data'].split('|')[2]} CAMPUS")
