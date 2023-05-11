@@ -11,7 +11,7 @@ PORT = 3000
 # database manipulation
 db_name = 'psitswebapp'
 db_username = 'root'
-db_password = ''
+db_password = 'root'
 db_host = '127.0.0.1'
 
 # Attributes
@@ -172,6 +172,7 @@ def api_registry():
         executeQueryCommit(f'DELETE from psits_intercampus_registry where id={uid}')
         return {"message":f"success delete"}
     registry_data: dict = request.json
+    user_email = registry_data['email']
     if len(executeQueryReturn(f'SELECT * FROM `psits_intercampus_admin` where idno={registry_data["idno"]}')) == 0:
         # CREATE THE ACCOUNT IF NOT FOUND
         user: dict = {
@@ -181,7 +182,7 @@ def api_registry():
             "course": '',
             "year": '',
             "campus": registry_data['campus'],
-            "email": registry_data['email'],
+            "email": user_email,
             "password": '',
             "isadmin": 'FALSE',
         }
@@ -191,6 +192,9 @@ def api_registry():
     if(len(executeQueryReturn(f'SELECT * FROM `psits_intercampus_events` where id={registry_data["eventID"]}'))==0):
         return {"message":"failed, eventID not found"}
     
+    # update the user email
+    executeQueryCommit(f'UPDATE `psits_intercampus_admin` set email="{user_email}" where idno={registry_data["idno"]}')
+    # retrieve the data
     USER_DATA = executeQueryReturn(f'SELECT * FROM `psits_intercampus_admin` where idno={registry_data["idno"]}')[0]
     EVENT_DATA = executeQueryReturn(f'SELECT * FROM `psits_intercampus_events` where id={registry_data["eventID"]}')[0]
 
@@ -266,7 +270,7 @@ def raffle_generator():
                 user_email = user_email[0]['email']
                 print(user_email)
                 # uncomment this
-                # threading.Thread(target=email_raffle_winner, args=[user_email,r_data['winningPrice'],f'{firstname} {lastname}', user_meta_Data.split('|')[1]]).start()
+                threading.Thread(target=email_raffle_winner, args=[user_email,r_data['winningPrice'],f'{firstname} {lastname}', user_meta_Data.split('|')[1]]).start()
 
         return {"message":"saved successfully"}
     request_data = []
@@ -415,11 +419,11 @@ def hashData(data: str) -> str:
     return str(result)
 
 def getRandomChar():
-    a = ['A','B','C','D','E', 'F', 'G', 'H', 'I', 'J', 'K','L']
+    a = ['A','B','C','D','E', 'F', 'G', 'H', 'I', 'J', 'K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
     return a[random.randint(0,6)]
 
 def ReferenceGenerator():
-    return f"{random.randint(10,99)}{getRandomChar()}{getRandomChar()}{random.randint(100,999)}{getRandomChar()}"
+    return f"{random.randint(10,99)}{getRandomChar()}{getRandomChar()}{random.randint(100,999)}{getRandomChar()}{getRandomChar()}{random.randint(100,999)}{getRandomChar()}"
 
 # Avoid going back after logout
 @app.after_request
