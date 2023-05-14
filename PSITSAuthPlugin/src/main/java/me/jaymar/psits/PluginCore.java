@@ -1,5 +1,6 @@
 package me.jaymar.psits;
 
+import me.jaymar.psits.Data.APIConnector;
 import me.jaymar.psits.Data.DataHandler;
 import me.jaymar.psits.Data.PlayerInventory;
 import me.jaymar.psits.Data.SQLConnector;
@@ -8,6 +9,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +20,8 @@ public final class PluginCore extends JavaPlugin {
     public static List<PlayerInventory> playerInventories = new LinkedList<>();
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        reloadConfig();
         // Plugin startup logic
         PluginCore.inventoryConfig = new PlayerInventoryConfig(this);
 
@@ -24,9 +29,12 @@ public final class PluginCore extends JavaPlugin {
         ConfigurationSerialization.registerClass(PlayerInventory.class);
         // load the data
         playerInventories = (List<PlayerInventory>) inventoryConfig.getConfig().getList("PlayerData");
+
+        boolean hasSql = true;
         if(playerInventories == null)
             playerInventories = new LinkedList<>();
         if(SQLConnector.Connected()){
+            getLogger().info("Connected to database");
             new BukkitRunnable(){
                 @Override
                 public void run(){
@@ -40,10 +48,11 @@ public final class PluginCore extends JavaPlugin {
                     SQLConnector.UpdateUserCount();
                 }
             }.runTaskTimer(this, 10, 20*60);
-            Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(), this);
         }else {
-            getLogger().info("Failed to connect to database");
+            hasSql = false;
+            getLogger().info("Failed to connect to database, API calling instead");
         }
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(hasSql), this);
     }
 
     @Override

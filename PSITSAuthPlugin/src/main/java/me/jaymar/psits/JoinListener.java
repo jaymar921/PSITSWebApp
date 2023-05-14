@@ -1,5 +1,6 @@
 package me.jaymar.psits;
 
+import me.jaymar.psits.Data.APIConnector;
 import me.jaymar.psits.Data.Account;
 import me.jaymar.psits.Data.DataHandler;
 import me.jaymar.psits.Data.PlayerInventory;
@@ -29,10 +30,12 @@ public class JoinListener implements Listener {
     private Map<String, String> LOGGED_DATA = new HashMap<>();
     private final String CE3_CHAT_OVERRIDER = "§r";
     private boolean hasCE3 = false;
+    private boolean hasSql = false;
 
-    public JoinListener(){
+    public JoinListener(boolean hasSql){
         if(Bukkit.getServer().getPluginManager().getPlugin("CustomEnchantments3") != null)
             hasCE3 = true;
+        this.hasSql = hasSql;
     }
     @EventHandler
     private void OnJoin(PlayerJoinEvent event){
@@ -77,10 +80,8 @@ public class JoinListener implements Listener {
 
         UUIDS.remove(event.getPlayer().getUniqueId().toString());
         LOGGED_DATA.remove(event.getPlayer().getUniqueId().toString());
-        Bukkit.getServer().getOnlinePlayers().forEach( players -> {
-            players.sendMessage(ChatColor.YELLOW+"Goodbye "+ChatColor.AQUA+event.getPlayer().getName()+ChatColor.YELLOW+"!");
-        });
-
+        if(event.getPlayer().getCustomName() != null)
+            event.setQuitMessage(ChatColor.YELLOW+"Goodbye "+ChatColor.AQUA+event.getPlayer().getCustomName()+ChatColor.YELLOW+"!");
         // clear the inventory
         event.getPlayer().getInventory().setContents(new ItemStack[event.getPlayer().getInventory().getContents().length]);
     }
@@ -107,55 +108,18 @@ public class JoinListener implements Listener {
                 String id = LOGGED_DATA.get(uuid);
                 String password = message;
 
-                for(Account account : DataHandler.AccountList){
-                    if(String.valueOf(account.getID()).equals(id.trim())){
-                        if(StringUtility.hashString(password).equals(account.getPassword())){
-                            // welcome
-                            UUIDS.remove(uuid);
-                            Bukkit.getServer().getOnlinePlayers().forEach( players -> {
-                                players.sendMessage(ChatColor.YELLOW+"Welcome "+ChatColor.AQUA+account.getName()+ChatColor.YELLOW+"!");
-                            });
-                            PluginCore.getPlugin(PluginCore.class).getLogger().info(account.getName()+" joined the server");
-                            // rename the player
-                            event.getPlayer().setDisplayName(account.getName());
-                            event.getPlayer().setCustomName(account.getName());
-                            event.getPlayer().setPlayerListName(account.getName());
-                            event.getPlayer().setCustomNameVisible(true);
-                            event.getPlayer().sendMessage(ChatColor.GREEN + "Feel free to walk around, gather resources and build something!");
-
-
-                            for(PlayerInventory playerInventory : PluginCore.playerInventories){
-                                if(playerInventory == null)
-                                    continue;
-                                if(playerInventory.uuid.equals(LOGGED_DATA.get(uuid))){
-                                    new BukkitRunnable(){
-                                        final Location location_data = playerInventory.locationData;
-                                        @Override
-                                        public void run() {
-                                            player.teleport(location_data);
-                                        }
-                                    }.runTaskLater(PluginCore.getPlugin(PluginCore.class),10);
-                                    player.getInventory().setContents(playerInventory.inventoryData);
-                                    break;
-                                }
-                            }
-
-                            new BukkitRunnable(){
-                                @Override
-                                public void run() {
-                                    event.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
-                                }
-                            }.runTaskLater(PluginCore.getPlugin(PluginCore.class),10);
-
-                        }else {
-                            event.getPlayer().sendMessage(ChatColor.RED+"Invalid Password! Try again...");
-                            if(Math.random() <= 0.5){
-                                event.getPlayer().sendMessage(ChatColor.RED+"If you forgot your password, reset your password at "+ChatColor.AQUA+"PSITS UC Main Website"+ChatColor.RED+". It will take 5 minutes to take effect.");
-                            }
-                        }
-                        return;
+                if(hasSql){
+                    for(Account account : DataHandler.AccountList){
+                        if(retrieveAccount(id, password, account, event, uuid, player))
+                            return;
                     }
+                }else{
+                    Account account = APIConnector.getAccount(id);
+                    if(account != null)
+                        if(retrieveAccount(id, password, account, event, uuid, player))
+                            return;
                 }
+
                 event.getPlayer().sendMessage(ChatColor.RED+"ID number not found! Enter your ID Again");
                 event.getPlayer().sendMessage(ChatColor.RED+"Make sure that you are using your "+ChatColor.AQUA+"ID Number"+ChatColor.RED+" registered at the "+ChatColor.AQUA+"PSITS UC Main Website");
                 LOGGED_DATA.remove(uuid);
@@ -165,5 +129,57 @@ public class JoinListener implements Listener {
                 event.getPlayer().sendMessage(ChatColor.YELLOW+"Please Enter your Password: ");
             }
         }
+    }
+
+
+    public boolean retrieveAccount(String id, String password, Account account, AsyncPlayerChatEvent event, String uuid, Player player){
+        if(String.valueOf(account.getID()).equals(id.trim())){
+            if(StringUtility.hashString(password).equals(account.getPassword())){
+                // welcome
+                UUIDS.remove(uuid);
+                Bukkit.getServer().getOnlinePlayers().forEach( players -> {
+                    players.sendMessage(ChatColor.YELLOW+"Welcome "+ChatColor.AQUA+account.getName()+ChatColor.YELLOW+"!");
+                });
+                PluginCore.getPlugin(PluginCore.class).getLogger().info(account.getName()+" joined the server");
+                // rename the player
+                event.getPlayer().setDisplayName(account.getName());
+                event.getPlayer().setCustomName(account.getName());
+                event.getPlayer().setPlayerListName(account.getName());
+                event.getPlayer().setCustomNameVisible(true);
+                event.getPlayer().sendMessage(ChatColor.GREEN + "Feel free to walk around, gather resources and build something!");
+
+
+                for(PlayerInventory playerInventory : PluginCore.playerInventories){
+                    if(playerInventory == null)
+                        return true;
+                    if(playerInventory.uuid.equals(LOGGED_DATA.get(uuid))){
+                        new BukkitRunnable(){
+                            final Location location_data = playerInventory.locationData;
+                            @Override
+                            public void run() {
+                                player.teleport(location_data);
+                            }
+                        }.runTaskLater(PluginCore.getPlugin(PluginCore.class),10);
+                        player.getInventory().setContents(playerInventory.inventoryData);
+                        return true;
+                    }
+                }
+
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        event.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
+                    }
+                }.runTaskLater(PluginCore.getPlugin(PluginCore.class),10);
+
+            }else {
+                event.getPlayer().sendMessage(ChatColor.RED+"Invalid Password! Try again...");
+                if(Math.random() <= 0.5){
+                    event.getPlayer().sendMessage(ChatColor.RED+"If you forgot your password, reset your password at "+ChatColor.AQUA+"PSITS UC Main Website"+ChatColor.RED+". It will take 5 minutes to take effect.");
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
