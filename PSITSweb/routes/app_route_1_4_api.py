@@ -647,6 +647,15 @@ def api_account_search(search):
         )
     return response
 
+MCS_DATA = ''
+
 @app.route('/PSITS/api/mcs')
 def getMcs():
-    return {"data":getMCSData()}
+    global MCS_DATA
+    return {"data":MCS_DATA}
+
+@app.route('/PSITS/api_mcs/<data>')
+def UpdateMCS(data):
+    global MCS_DATA
+    MCS_DATA = data
+    return {"message:" : "success"}

@@ -100,7 +100,10 @@
       <img style="width:150px;position: relative;left:50%;transform: translateX(-50%);" src="{{url_for('static', filename='images/minecraft_PNG70.png')}}">
       <span id="mcsSpan" style="width: 150px;font-weight: 900;white-space: pre-line;"></span>
     </div>
+    
     <br>
+    <a style="position: absolute;left: 50%;transform: translateX(-50%);" class="backButton" href="/uploads/minecraft-1-19-51.apk" download><i class="fa-solid fa-mobile"></i> DOWNLOAD APK</a>
+    <br><br><br>
 </div>
 <script>
     const updateMCS = async () => {
@@ -108,9 +111,12 @@
       .then(res => res.json())
       .then(data => {
         let names = '';
-        data.data.names.split(',').forEach(name => {
-          if(name !== '')
+        let count = 0;
+        data.data.split(',').forEach(name => {
+          if(name !== ''){
             names += "&nbsp;&nbsp;&nbsp;- "+name + "<br>";
+            count++;
+          }
         })
         document.querySelector('#mcsSpan').innerHTML = `
           Server Address: 
@@ -119,6 +125,10 @@
           Minecraft Version: 
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-laptop"></i> <a style='color:red;'>1.19.4</a> 
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-mobile"></i> <a style='color:red;'>1.19.30-1.19.70</a>
+
+          Online: <a style='color:green;'>${count} </a> <i class="fa fa-user" aria-hidden="true"></i>
+          Players:
+            ${names}
         `;
       })
     }
