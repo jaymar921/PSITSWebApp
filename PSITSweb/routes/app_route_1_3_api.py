@@ -647,6 +647,30 @@ def api_account_p_search(search):
     return response
 
 
+@app.route('/PSITS/api_mcs/accounts/<search>', methods=['GET'])
+def api_mcs_account_p_search(search):
+    if search is None:
+        search = 0
+    try:
+        if int(search) > 0:
+            pass
+    except:
+        return {
+            "status": 500,
+            "message": f"Invalid ID number, should be a number not a string"
+        }
+    account: Account = getAccountWithPassword(search)
+    databaseLog(
+        f'API[GET] [MPAR] - Remote {request.remote_addr} - Permitted to access accounts ["{search}"]')
+    response = app.response_class(
+        response=json.dumps(account.toJSON(), indent=4,
+                            sort_keys=False, default=str),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+
 
 
 # create a CSV list for students and orders list
