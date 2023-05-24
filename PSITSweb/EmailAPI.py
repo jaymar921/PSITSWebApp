@@ -11,8 +11,8 @@ def pushEmail(email: Email):
     try:
         # DO NOT SHARE THIS API KEY AND API SECRET
         headers = {
-            'X-MAGICBELL-API-SECRET': 'jxJA5ivlksSWGYeTo8Rtv8+8YBbYIPssKeuFpWNj',
-            'X-MAGICBELL-API-KEY': 'c4ff39e59865e6d4807ae3d38c44975801aeb39c',
+            'X-MAGICBELL-API-SECRET': '',
+            'X-MAGICBELL-API-KEY': '',
         }
         data = {
             "notification": {
@@ -43,7 +43,7 @@ def email_verification(email: Email):
     # email clients that don't want to display the HTML.
 
     # Define these once; use them twice!
-    strFrom = 'psits.ccsmain@gmail.com'
+    strFrom = '----------------------'
     strTo = email.recipient  # RECEIPIENT EMAIL HERE
     try:
         # Create the root message and fill in the from, to, and subject headers
@@ -86,7 +86,7 @@ def email_verification(email: Email):
         mail = smtplib.SMTP('smtp.gmail.com', 587)
         mail.ehlo()
         mail.starttls()
-        mail.login('psits.ccsmain@gmail.com','hftjwdxqhpdavufn')
+        mail.login('----------------------','----------------------')
         mail.sendmail(strFrom, strTo, msgRoot.as_string())
         mail.quit()
         print(f"Success : Registration email was sent to {email.recipient}")

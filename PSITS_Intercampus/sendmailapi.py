@@ -12,7 +12,7 @@ def email_verification(email: str, code: str, name: str, event: str):
     # email clients that don't want to display the HTML.
 
     # Define these once; use them twice!
-    strFrom = 'psits.ccsmain@gmail.com'
+    strFrom = '----------------------'
     strTo = email  # RECEIPIENT EMAIL HERE
     try:
         # Create the root message and fill in the from, to, and subject headers
@@ -61,7 +61,7 @@ def email_verification(email: str, code: str, name: str, event: str):
         mail = smtplib.SMTP('smtp.gmail.com', 587)
         mail.ehlo()
         mail.starttls()
-        mail.login('psits.ccsmain@gmail.com','hftjwdxqhpdavufn')
+        mail.login('----------------------','----------------------')
         mail.sendmail(strFrom, strTo, msgRoot.as_string())
         mail.quit()
         print(f"Success : {event} email was sent to {email} | REF: {code}")
@@ -76,7 +76,7 @@ def email_raffle_winner(email: str, price: str, name: str, event: str):
     # email clients that don't want to display the HTML.
 
     # Define these once; use them twice!
-    strFrom = 'psits.ccsmain@gmail.com'
+    strFrom = '----------------------'
     strTo = email  # RECEIPIENT EMAIL HERE
     try:
         # Create the root message and fill in the from, to, and subject headers
@@ -122,7 +122,7 @@ def email_raffle_winner(email: str, price: str, name: str, event: str):
         mail = smtplib.SMTP('smtp.gmail.com', 587)
         mail.ehlo()
         mail.starttls()
-        mail.login('psits.ccsmain@gmail.com','hftjwdxqhpdavufn')
+        mail.login('----------------------','----------------------')
         mail.sendmail(strFrom, strTo, msgRoot.as_string())
         mail.quit()
         print(f"Success : {event} email was sent to {email} | RAFFLE PRICE {price}")
@@ -134,4 +134,4 @@ def email_raffle_winner(email: str, price: str, name: str, event: str):
 
 
 if __name__ == '__main__':
-    email_verification('ddurano@uc.edu.ph','ABC123DEF', "DURANO, DENNIS", "ICT Congress 2023")
+    email_verification('----------------------','ABC123DEF', "DURANO, DENNIS", "ICT Congress 2023")
