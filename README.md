@@ -17,7 +17,7 @@ For the school term <strong>A.Y. 2022-2023</strong> while the project owner is s
 ## The main team 
 Project Owner
 <p align="left">
-    <kbd><img width="128" height="128"  src="https://avatars.githubusercontent.com/u/72720429?s=96&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Jayharron Mar Abejar</b>&nbsp;&nbsp;(FullStack developer)
+    <kbd><img width="128" height="128"  src="https://avatars.githubusercontent.com/u/72720429?s=256&v=4"></kbd>&nbsp;&nbsp;&nbsp;&nbsp;<b>Jayharron Mar Abejar</b>&nbsp;&nbsp;(FullStack developer)
     
 Contributors
 
